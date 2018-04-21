@@ -2,26 +2,44 @@
 
 //Globals
 Console console;
-Customer d;
+Customer currentlyWaitingCustomer;
 Waiter ling;
 Restaurant pekingWong;
-Kitchen k;
+Kitchen kitchen;
 Time waitTime;
 PImage bgimg;
 PImage endimg;
-PFont cFood;
+PFont fontFood;
+
+float mouseScaledX = 0;
+float mouseScaledY = 0;
+
+float displayScale = 1.5f;
+
+IViewInterface iview;
 
 //Sets up the screen 
 void setup()
 {
+  /*iview = new IViewInterface(sketchPath("") + "Data");
+  
+  try {
+    iview.connect("123", 123, "123", 123);
+  } catch(IViewInterface.IViewException e) {
+    print(e);
+  }*/
+  
+  size(1280, 720, P3D);
+  surface.setResizable(true);
+
   bgimg = loadImage("Images/RestaurantFloorV3.jpg");
   endimg = loadImage("Images/endscreen.jpg");
-  size(1280, 720);
-  k = new Kitchen();
-  ling = new Waiter(k);
+
+  kitchen = new Kitchen();
+  ling = new Waiter(kitchen);
   waitTime = new Time();
   pekingWong = new Restaurant(ling);
-  cFood = createFont("AFont.ttf", 20);
+  fontFood = createFont("AFont.ttf", 20);
   waitTime.startTime();
   console = new Console(ling);
 }
@@ -29,45 +47,93 @@ void setup()
 //Calls the display functions of the globals, and updates them if necessary
 void draw()
 {
-  background(bgimg);
-  //ellipse(775,205, 50,50);
-  if (!pekingWong.strikeOut())
-  {
-    console.display();
-    pekingWong.update();
-    k.display();
-    checkD();
-    if (ling.waiterMoves)
-      ling.move();
-    ling.display();
-  } else { 
-    background(endimg);
-    textSize(65);
-    textFont(cFood);
-    text("" + ling.getPoints(), 500, 475);
+  background(0);
+
+  pushMatrix(); 
+
+  float displayScaleX = width / 1280.0f;
+  float displayScaleY = height / 720.0f;
+
+  // Keep the aspect ratio
+  displayScale = min(displayScaleX, displayScaleY);
+
+  // Calculate blank space to both sides of the window
+  float spaceX = width - (1280.0 * displayScale);
+  float spaceY = height - (720.0f * displayScale);
+
+  // We want the screen centered, so shift for half the empty space
+  float offsetX = spaceX / 2;
+  float offsetY = spaceY / 2;
+
+  translate(offsetX, offsetY);
+
+  // Scale mouse coords back to the size the game expects
+  mouseScaledX = (mouseX - offsetX) / displayScale;
+  mouseScaledY = (mouseY - offsetY) / displayScale;
+
+  // Scale game-drawing
+  scale(displayScale);
+
+  drawGame();
+
+  popMatrix();
+}
+
+void drawGame() {
+  image(bgimg, 1, 1);
+
+  if (!pekingWong.strikeOut()) {
+    drawRestaurant();
+  } else {
+    drawEndscreen();
   }
 }
 
+void drawRestaurant() {
+  ling.frameUpdate();
+
+  console.display();
+
+  pekingWong.update();
+
+  kitchen.display();
+
+  checkCurrentlyWaitingCustomer();
+
+  if (ling.isMoving)
+    ling.moveToStateTarget();
+
+  ling.display();
+}
+
+void drawEndscreen() {
+  image(endimg, 1, 1);
+  textSize(65);
+  textFont(fontFood);
+  text("" + ling.getNumPoints(), 500, 475);
+}
+
 //Checks the status of the current waiting customer
-void checkD()
+void checkCurrentlyWaitingCustomer()
 {
-  if (d != null) 
+  if (currentlyWaitingCustomer != null) 
   {
-    d.display();
-    if (d.state == 4) 
+    currentlyWaitingCustomer.display();
+    if (currentlyWaitingCustomer.state == CustomerState.LEFT_RESTAURANT_ANGRY) 
     {
       ling.points -= 5;
       ling.strikes++;
-      d = null;
+      currentlyWaitingCustomer = null;
     }
-  }
-  if (d == null)
-  {
-    if (pekingWong.waitList.peekMin() != null)
-    {
+  } else {
+    if (!pekingWong.waitList.isEmpty()) {
+      Customer mostImportant = (Customer)Collections.min(pekingWong.waitList);
+
       //println("new cust");
-      d = pekingWong.waitList.removeMin();
-      d.wait.startTime();
+      pekingWong.waitList.remove(mostImportant);
+      mostImportant.wait.startTime();
+
+      currentlyWaitingCustomer = mostImportant;
     }
   }
 }
@@ -75,55 +141,60 @@ void checkD()
 //When mouse-clicked, update the state of the waiter based on the object clicked
 void mouseClicked() 
 {
-  ling.waiterMoves = true;
-  ling.update();
+  ling.isMoving = true;
+  ling.onMouseClicked();
 }
 
 //When the mouse is pressed
 void mousePressed()
 {
-  if (d != null)
+  if (currentlyWaitingCustomer != null)
   {
-    if (d.overBox) { 
-      d.locked = true;
+    if (currentlyWaitingCustomer.overBox) { 
+      currentlyWaitingCustomer.locked = true;
     } else {
-      d.locked = false;
+      currentlyWaitingCustomer.locked = false;
     }
-    d.xOffset = mouseX-d.bx; 
-    d.yOffset = mouseY-d.by;
+    currentlyWaitingCustomer.xOffset = mouseScaledX - currentlyWaitingCustomer.bx; 
+    currentlyWaitingCustomer.yOffset = mouseScaledY - currentlyWaitingCustomer.by;
   }
 }
 
 //Utilized for the dragging mechanism of the customer
 void mouseDragged() 
 {
-  if (d != null) {
-    d.checkState();
+  if (currentlyWaitingCustomer != null) {
+    currentlyWaitingCustomer.checkState();
   }
 }
 
 //Checks if the mouse releases the customer onto a table
 void mouseReleased() 
 {
-  ling.waiterMoves = false;
-  if (d != null)
+  ling.isMoving = false;
+  if (currentlyWaitingCustomer != null)
   {
-    d.locked = false;
-    for (Table t : ling.getTables()) {
-      if (t.inside(d.bx, d.by)) {
-        if (t.getCust() == null) {
-          d.setState(1);
-          t.setCust(d);
-          t.state = 1;
+    currentlyWaitingCustomer.locked = false;
+    for (Table t : ling.getTableList()) {
+      if (t.inside(currentlyWaitingCustomer.bx, currentlyWaitingCustomer.by)) {
+        if (t.getSittingCustomer() == null) {
+
+          currentlyWaitingCustomer.setState(CustomerState.SITTING_ON_TABLE);
+
+          t.setSittingCustomer(currentlyWaitingCustomer);
+          t.state = TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER;
           t.setOrder(new Order(t));
-          d.setTable(t);
-          ling.addCustomer(d);
-          d = null;
+
+          currentlyWaitingCustomer.setTable(t);
+
+          ling.addCustomer(currentlyWaitingCustomer);
+
+          currentlyWaitingCustomer = null;
           return;
         }
       }
     }
-    d.bx = d.origX;
-    d.by = d.origY;
+    currentlyWaitingCustomer.bx = currentlyWaitingCustomer.origX;
+    currentlyWaitingCustomer.by = currentlyWaitingCustomer.origY;
   }
 }

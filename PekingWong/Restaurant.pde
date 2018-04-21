@@ -6,14 +6,13 @@ public class Restaurant {
   //instance vars
   private Kitchen kitchen;
   private Time calcSpawn;
-  ALHeap waitList;
+  ArrayList<Customer> waitList = new ArrayList<Customer>();
   ArrayList<Customer> serveList;
   Waiter BJB;
 
-  //overloaded constructor
+  // overloaded constructor
   public Restaurant(Waiter w) 
   {
-    waitList = new ALHeap();
     for (int i = 0; i < 5; i++)
     {
       waitList.add(new Customer());
@@ -26,7 +25,7 @@ public class Restaurant {
   }
 
   //Display Functions
-  
+
   //Displays the kitchen and all the customers on the serveList
   void display()
   {
@@ -36,7 +35,7 @@ public class Restaurant {
       d.display();
     }
   }
-  
+
   //Checks if another customer should be spawned
   void update()
   {
@@ -53,17 +52,17 @@ public class Restaurant {
     //println("spawn");
     calcSpawn.startTime();
   }
-  
+
   //Checks if the waiter has caused 5 or more customers to leave
   boolean strikeOut()
   {
-    return BJB.getStrikes() >= 5;
+    return BJB.getNumStrikes() >= 5;
   }
 
   //Checks if the time is right for there to be more customers
   boolean shouldSpawn()
   {
-    if (calcSpawn.getElapsed() > 60/((int)(BJB.getPoints()/10)+2))
+    if (calcSpawn.getElapsed() > 60/((int)(BJB.getNumPoints()/10)+2))
     {
       //println(calcSpawn);
       return true;

@@ -44,14 +44,14 @@ class Time
   {
     start = System.nanoTime();
   }
-  
+
   //Pauses the countdown time of the Customer
   void pauseTime()
   {
-   pauseTimeStart = System.nanoTime();
-   pause = true;
+    pauseTimeStart = System.nanoTime();
+    pause = true;
   }
-  
+
   //Ends the pause and resumes time
   void endPause()
   {
@@ -74,8 +74,7 @@ class Time
       endTime();
       elapsed = toSeconds(end-start-pauseTime);
       //println(elapsed);
-    }
-    else if (pause)
+    } else if (pause)
     {
       //println("pause");
       elapsed = toSeconds(pauseTimeStart-start);
@@ -88,43 +87,43 @@ class Time
   {
     return getElapsed() >= target;
   }
-  
+
   //Returns whether or not an interval of 8 seconds has passed since pause was initiated
   boolean endInterval()
   {
     return toSeconds(System.nanoTime()-pauseTimeStart) >= 8;
   }
-  
+
   //Converts nanoTime to seconds
   long toSeconds(long time)
   {
     return time / 1000000000;
   }
-  
+
   //Converts seconds to nanoTime
   long toNano(long time)
   {
     return time * 1000000000;
   }
-  
+
   //Sets the target time (should be in seconds)
   void setGoal(long goalTime)
   {
     target = goalTime;
     //threshold = (goalTime * 7)/10;
   }
-  
+
   /*
   //Returns whether or not elapsed time has surpassed an inputted time
-  boolean atInputTime(long input)
-  {
-    return toSeconds(System.nanoTime()-pauseTimeStart) >= input;
-  }
-  
-  //Returns whether or not elapsed time has surpassed a threshold
-  boolean atThreshold()
-  {
-    return getElapsed() >= threshold;
-  }
-  */
+   boolean atInputTime(long input)
+   {
+   return toSeconds(System.nanoTime()-pauseTimeStart) >= input;
+   }
+   
+   //Returns whether or not elapsed time has surpassed a threshold
+   boolean atThreshold()
+   {
+   return getElapsed() >= threshold;
+   }
+   */
 }

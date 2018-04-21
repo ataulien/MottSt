@@ -1,14 +1,24 @@
-//Class Customer
+
 import java.util.ArrayList;
 
-public class Customer extends Draggable
+public enum CustomerState
 {
+  HIDDEN, // Doesn't seem to be set anywhere (was state -1 before)
+    STANDING_ON_SIDE, 
+    SITTING_ON_TABLE, 
+    LEFT_RESTAURANT_ANGRY,
+}
+
+
+public class Customer extends Draggable implements Comparable<Customer>
+{
+
   //Instance Variables
   private String name;
   private Table table;
   private int VIPNum;
   private int mood;
-  private int state;
+  private CustomerState state;
   int origX;
   int origY;
   PImage[] images; 
@@ -16,25 +26,25 @@ public class Customer extends Draggable
   PImage sitting;
   int rand = (int) (Math.random() * 4);
   Time wait;
-  PFont cFood = createFont("AFont.ttf", 20);
-  
+  PFont fontFood = createFont("AFont.ttf", 20);
+
   //Constructor: populates order with random dishes
   public Customer()
   {
-    super(80,150);
+    super(80, 150);
     name = "BJB";
     VIPNum = (int) (Math.random() * 10) + 1;
-    state = 0;
+    state = CustomerState.STANDING_ON_SIDE;
     mood = 10;
     bx = 75;
     by = 190;
     origX = 75;
     origY = 190;
-    
+
     wait = new Time();
     //wait time is lower for customers of higher priority (lower VIPNum)
     wait.setGoal(getVIPNum() * 20);
-    
+
     images = new PImage[8];
     images[0] = loadImage("Images/Customer1.png");
     images[1] = loadImage("Images/Customer2.png");
@@ -44,7 +54,7 @@ public class Customer extends Draggable
     images[5] = loadImage("Images/Cust2SitLeft.png");
     images[6] = loadImage("Images/Cust3SitLeft.png");
     images[7] = loadImage("Images/Cust4SitLeft.png");
-    
+
     waiting = images[rand];
     sitting = images[rand+4];
   }
@@ -57,11 +67,11 @@ public class Customer extends Draggable
   void display()
   {
     update();
-    if (state == 0) {
+    if (state == CustomerState.STANDING_ON_SIDE) {
       super.display();
       image(waiting, bx, by);
     }
-    if (state == 1) {
+    if (state == CustomerState.SITTING_ON_TABLE) {
       bx = table.x - 50;
       by = table.y-50;
       image(sitting, bx, by);
@@ -69,51 +79,50 @@ public class Customer extends Draggable
     noStroke();
     fill(20, 20, 150, 0);
     rect(bx, by, 80, 150);
-    
+
     fill(0);
-    textFont(cFood);
-    text("MOOD: " + mood,bx,by+10);
+    textFont(fontFood);
+    text("MOOD: " + mood, bx, by+10);
   }
-  
+
   //Checks if the customer has been waiting a certain amount of time. 
   void update()
   {
-    if (wait != null && state != -1)
+    if (wait != null && state != CustomerState.HIDDEN)
     {
-       mood = 10 - (int)(((float)wait.getElapsed()/wait.target) * 10);
-       if (mood <= 0)
-       {
-         state = 4;
-       }
-       if (wait.pause)
-       {
-         if (wait.endInterval() && table.state == 1)
-         {
-           wait.endPause();
-           //println("Table " + table.tableNum + " is ready to order.");
-         }
-         else{
-           if (wait.endInterval() && table.state == 2)
-           {
-             //println("Table " + table.tableNum + " finished eating.");
-             wait.endPause();
-             table.order.state = 0;
-             table.state = 3;
-           }
-         }
-       }
+      mood = 10 - (int)(((float)wait.getElapsed()/wait.target) * 10);
+      if (mood <= 0)
+      {
+        state = CustomerState.LEFT_RESTAURANT_ANGRY;
+      }
+      if (wait.pause)
+      {
+        if (wait.endInterval() && table.state == TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER)
+        {
+          wait.endPause();
+          //println("Table " + table.tableNum + " is ready to order.");
+        } else {
+          if (wait.endInterval() && table.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING)
+          {
+            //println("Table " + table.tableNum + " finished eating.");
+            wait.endPause();
+            table.order.state = OrderState.HIDDEN;
+            table.state = TableState.CUSTOMER_READY_TO_PAY;
+          }
+        }
+      }
     }
   }
-  
+
   //If the customer not on a table, return to original x and y coordinates
   void checkState()
   {
-    if (state == 0)
+    if (state == CustomerState.STANDING_ON_SIDE)
     {
       if (locked) 
       {
-        bx = mouseX-xOffset; 
-        by = mouseY-yOffset;
+        bx = mouseScaledX-xOffset; 
+        by = mouseScaledY-yOffset;
       } else
       {
         bx = origX; 
@@ -138,7 +147,7 @@ public class Customer extends Draggable
     }
     return 0;
   }
-  
+
   //Mutators
 
   //sets the table for the customer
@@ -148,13 +157,13 @@ public class Customer extends Draggable
   }
 
   //sets the state of the customer
-  public void setState(int i)
+  public void setState(CustomerState state)
   {
-    state = i;
+    this.state = state;
   }
 
   //Accessor
-  
+
   //returns table number
   public Table getTable()
   {
