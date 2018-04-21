@@ -1,4 +1,10 @@
-//Class Order
+
+public enum OrderState
+{
+  HIDDEN, 
+  ON_TABLE_OR_KITCHEN,
+}
+
 public class Order
 {
   //Instance Variables
@@ -8,7 +14,7 @@ public class Order
   Time t;
   int x;
   int y;
-  int state;
+  OrderState state;
   PImage[] imgs;
   PImage image;
   int rand = (int) (Math.random() * 12);
@@ -42,7 +48,7 @@ public class Order
   //Displays the order if the state is 1 (on table or on kitchen), otherwise no
   void display()
   {
-    if (state == 1)
+    if (state == OrderState.ON_TABLE_OR_KITCHEN)
     {
       image(image, table.x+30, table.y-10);
       return;

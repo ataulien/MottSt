@@ -225,7 +225,7 @@ public class Waiter
         {
           //println("served order of table " + t.tableNum);
           finishedOrders[0] = null;
-          t.order.state = 1;
+          t.order.state = OrderState.ON_TABLE_OR_KITCHEN;
           t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
           t.c.wait.pauseTime();
         }
@@ -236,7 +236,7 @@ public class Waiter
         {
           //println("served order of table " + t.tableNum);
           finishedOrders[1] = null;
-          t.order.state = 1;
+          t.order.state = OrderState.ON_TABLE_OR_KITCHEN;
           t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
           t.c.wait.pauseTime();
         }

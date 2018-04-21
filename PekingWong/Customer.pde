@@ -106,7 +106,7 @@ public class Customer extends Draggable
           {
             //println("Table " + table.tableNum + " finished eating.");
             wait.endPause();
-            table.order.state = 0;
+            table.order.state = OrderState.HIDDEN;
             table.state = TableState.CUSTOMER_READY_TO_PAY;
           }
         }

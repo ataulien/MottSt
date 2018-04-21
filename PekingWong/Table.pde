@@ -1,9 +1,9 @@
 
 public enum TableState
 {
-  EMPTY,
-  CUSTOMER_READING_MENU_OR_READY_TO_ORDER,
-  CUSTOMER_WAITING_FOR_FOOD_OR_EATING,
+  EMPTY, 
+  CUSTOMER_READING_MENU_OR_READY_TO_ORDER, 
+  CUSTOMER_WAITING_FOR_FOOD_OR_EATING, 
   CUSTOMER_READY_TO_PAY,
 }
 
@@ -43,7 +43,7 @@ class Table
     textSize(25);
     textFont(cFood);
     text("" + tableNum, x +60, y + 40);
-    if (order != null && order.state == 1)
+    if (order != null && order.state == OrderState.ON_TABLE_OR_KITCHEN)
     {
       order.display();
     }
