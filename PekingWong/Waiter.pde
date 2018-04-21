@@ -309,17 +309,18 @@ public class Waiter
     } else
     {
       //The points increase the higher the VIP number of the customer
-      points += c.getMood() + (int)((1.0/c.getVIPNum())*100);
+      points += calculatePointsFromCustomer(c);
     }
-    for (int i = 0; i < customers.size(); i++) 
-    {
-      if (customers.get(i).equals(c))
-      {
-        customers.remove(i);
-      }
-    }
+    
+    customers.remove(c);
   }
 
+  private int calculatePointsFromCustomer(Customer c) {
+    // Smaller VIP-num, less bonus?
+    double vipPart = 1.0 / c.getVIPNum() * 100.0;
+    
+    return c.getMood() + (int)(vipPart);
+  }
 
   // Accessors
   public ArrayList<Customer> getCustomerList()
