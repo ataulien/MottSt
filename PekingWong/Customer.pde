@@ -1,13 +1,13 @@
 //Class Customer
 import java.util.ArrayList;
 
-  public enum CustomerState
-  {
-    HIDDEN,  // Doesn't seem to be set anywhere (was state -1 before)
-    STANDING_ON_SIDE,
-    SITTING_ON_TABLE,
+public enum CustomerState
+{
+  HIDDEN, // Doesn't seem to be set anywhere (was state -1 before)
+    STANDING_ON_SIDE, 
+    SITTING_ON_TABLE, 
     LEFT_RESTAURANT_ANGRY,
-  }
+}
 
 
 public class Customer extends Draggable
@@ -27,11 +27,11 @@ public class Customer extends Draggable
   int rand = (int) (Math.random() * 4);
   Time wait;
   PFont cFood = createFont("AFont.ttf", 20);
-  
+
   //Constructor: populates order with random dishes
   public Customer()
   {
-    super(80,150);
+    super(80, 150);
     name = "BJB";
     VIPNum = (int) (Math.random() * 10) + 1;
     state = CustomerState.STANDING_ON_SIDE;
@@ -40,11 +40,11 @@ public class Customer extends Draggable
     by = 190;
     origX = 75;
     origY = 190;
-    
+
     wait = new Time();
     //wait time is lower for customers of higher priority (lower VIPNum)
     wait.setGoal(getVIPNum() * 20);
-    
+
     images = new PImage[8];
     images[0] = loadImage("Images/Customer1.png");
     images[1] = loadImage("Images/Customer2.png");
@@ -54,7 +54,7 @@ public class Customer extends Draggable
     images[5] = loadImage("Images/Cust2SitLeft.png");
     images[6] = loadImage("Images/Cust3SitLeft.png");
     images[7] = loadImage("Images/Cust4SitLeft.png");
-    
+
     waiting = images[rand];
     sitting = images[rand+4];
   }
@@ -79,42 +79,41 @@ public class Customer extends Draggable
     noStroke();
     fill(20, 20, 150, 0);
     rect(bx, by, 80, 150);
-    
+
     fill(0);
     textFont(cFood);
-    text("MOOD: " + mood,bx,by+10);
+    text("MOOD: " + mood, bx, by+10);
   }
-  
+
   //Checks if the customer has been waiting a certain amount of time. 
   void update()
   {
     if (wait != null && state != CustomerState.HIDDEN)
     {
-       mood = 10 - (int)(((float)wait.getElapsed()/wait.target) * 10);
-       if (mood <= 0)
-       {
-         state = CustomerState.LEFT_RESTAURANT_ANGRY;
-       }
-       if (wait.pause)
-       {
-         if (wait.endInterval() && table.state == 1)
-         {
-           wait.endPause();
-           //println("Table " + table.tableNum + " is ready to order.");
-         }
-         else{
-           if (wait.endInterval() && table.state == 2)
-           {
-             //println("Table " + table.tableNum + " finished eating.");
-             wait.endPause();
-             table.order.state = 0;
-             table.state = 3;
-           }
-         }
-       }
+      mood = 10 - (int)(((float)wait.getElapsed()/wait.target) * 10);
+      if (mood <= 0)
+      {
+        state = CustomerState.LEFT_RESTAURANT_ANGRY;
+      }
+      if (wait.pause)
+      {
+        if (wait.endInterval() && table.state == 1)
+        {
+          wait.endPause();
+          //println("Table " + table.tableNum + " is ready to order.");
+        } else {
+          if (wait.endInterval() && table.state == 2)
+          {
+            //println("Table " + table.tableNum + " finished eating.");
+            wait.endPause();
+            table.order.state = 0;
+            table.state = 3;
+          }
+        }
+      }
     }
   }
-  
+
   //If the customer not on a table, return to original x and y coordinates
   void checkState()
   {
@@ -148,7 +147,7 @@ public class Customer extends Draggable
     }
     return 0;
   }
-  
+
   //Mutators
 
   //sets the table for the customer
@@ -164,7 +163,7 @@ public class Customer extends Draggable
   }
 
   //Accessor
-  
+
   //returns table number
   public Table getTable()
   {

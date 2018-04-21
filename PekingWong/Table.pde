@@ -49,20 +49,20 @@ class Table
       return false;
     }
   }
-  
+
   //Checks if the inputted X and Y coordinate are within the table (doesn't set min Y boundary
   boolean inside(float currX, float currY)
   {
     return currX >= x && currX <= x + 128 && currY <= y+120; //&& currY >= y ;
   }
-  
+
   //Mutators
   //Sets the table# of the customer
   public void setTable(int num) 
   {
     tableNum = num;
   }
-  
+
   //sets the customer seated at the table
   void setCust(Customer in)
   {
@@ -70,20 +70,20 @@ class Table
     //wait time is lower for customers of higher priority (lower VIPNum)
     c.wait.startTime();
   }
-  
+
   //sets the order of the table
   void setOrder(Order o)
   {
     order = o;
   }
-  
+
   //Accessors
   //returns order placed by table
   public Order getOrder()
   {
     return order;
   }
-  
+
   //returns customer seated at table
   public Customer getCust()
   {

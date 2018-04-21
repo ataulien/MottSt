@@ -26,7 +26,7 @@ public class Restaurant {
   }
 
   //Display Functions
-  
+
   //Displays the kitchen and all the customers on the serveList
   void display()
   {
@@ -36,7 +36,7 @@ public class Restaurant {
       d.display();
     }
   }
-  
+
   //Checks if another customer should be spawned
   void update()
   {
@@ -53,7 +53,7 @@ public class Restaurant {
     //println("spawn");
     calcSpawn.startTime();
   }
-  
+
   //Checks if the waiter has caused 5 or more customers to leave
   boolean strikeOut()
   {

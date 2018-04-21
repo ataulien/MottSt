@@ -20,18 +20,18 @@ class IViewInterface
 
   public void disconnect() throws IViewException {
     int result = dll.iV_Disconnect();
-    
+
     throwOnErrorCode(result);
   }
 
   public IViewNative.SampleData getSample() throws IViewException {
-    
+
     final IViewNative.SampleData sampleData = new IViewNative.SampleData();
-    
+
     int result = dll.iV_GetSample(sampleData); 
-    
+
     throwOnErrorCode(result);
-    
+
     return sampleData;
   }
 

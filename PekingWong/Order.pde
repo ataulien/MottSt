@@ -12,7 +12,7 @@ public class Order
   PImage[] imgs;
   PImage image;
   int rand = (int) (Math.random() * 12);
-  
+
   //Constructs Order 
   Order(Table tab)
   {
@@ -34,9 +34,9 @@ public class Order
     imgs[9] = loadImage("Images/foodstuffs/10.png");
     imgs[10] = loadImage("Images/foodstuffs/11.png");
     imgs[11] = loadImage("Images/foodstuffs/12.png");
-    
+
     image = imgs[rand];
-    image.resize(50,50);
+    image.resize(50, 50);
   }
 
   //Displays the order if the state is 1 (on table or on kitchen), otherwise no
@@ -46,20 +46,18 @@ public class Order
     {
       image(image, table.x+30, table.y-10);
       return;
+    } else {
+      fill(20, 20, 150, 0);
+      ellipse(775, 205, 50, 50);
+      image(image, 750, 180);
     }
-    else{
-      fill(20, 20, 150,0);
-      ellipse(775,205, 50,50);
-      image(image,750, 180);
-    }
-    
   }
 
   //Checks if the mouse if over the order
   boolean overOrder() {
     if (mouseX >= 750 && mouseX <= 800 && 
       mouseY >= 180 && mouseY <= 230) {
-        println("over");
+      println("over");
       return true;
     } else {
       return false;
@@ -67,7 +65,7 @@ public class Order
   }
 
   //Mechanics
-  
+
   //returns table number and name of dish
   public String toString()
   {

@@ -71,8 +71,8 @@ public class Waiter
     fill(0);
     textSize(20);
     textFont(cFood);
-    text("POINTS: " + points,155,100);
-    text("STRIKES: " + strikes + "/5",155,150);
+    text("POINTS: " + points, 155, 100);
+    text("STRIKES: " + strikes + "/5", 155, 150);
   }
 
   /*------
@@ -113,7 +113,7 @@ public class Waiter
   void move()
   {
     if (state == 1) {
-      goTo(k.x+250,k.y);
+      goTo(k.x+250, k.y);
     } else if (state == 2) {
       goTo(k.x-15, k.y);
     } else if (state == 3) {
@@ -171,7 +171,8 @@ public class Waiter
       if (finishedOrders[0] == null) {
         finishedOrders[0] = k.currOrder;
         k.currOrder = null;
-      } if (finishedOrders[1] == null) {
+      } 
+      if (finishedOrders[1] == null) {
         finishedOrders[1] = k.currOrder;
         k.currOrder = null;
       }
@@ -188,7 +189,7 @@ public class Waiter
         }
         while (!l.isEmpty())
         {
-           k.addLastToPending(l.pop());
+          k.addLastToPending(l.pop());
         }
         k.state = 1;
       }
@@ -264,8 +265,8 @@ public class Waiter
   //removes the customer c from customers, changes the points
   public void removeCustomer(Customer c) 
   {
-    if (c.state == CustomerState.LEFT_RESTAURANT_ANGRY) {}
-    else
+    if (c.state == CustomerState.LEFT_RESTAURANT_ANGRY) {
+    } else
     {
       //The points increase the higher the VIP number of the customer
       points += c.getMood() + (int)((1.0/c.getVIPNum())*100);
