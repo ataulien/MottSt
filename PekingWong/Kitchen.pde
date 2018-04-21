@@ -4,55 +4,63 @@ import java.util.*;
 public class Kitchen {
 
   //Instance Vars
-  private ArrayDeque<Order> pendingFoodList; //this is a deque
-  private ALQueue<Order> finishedFoodList; //this is a queue
-  private Order[] stovetops;
+  private ArrayDeque<Order> pendingFoodList = new ArrayDeque<Order>(); 
+  private ALQueue<Order> finishedFoodList = new ALQueue<Order>(); 
+  private Order[] stovetops = new Order[3];;
   Order currentOrder;
-  int x;
-  int y;
-  PImage[] images;
+  int x = 510;
+  int y = 180;
+  int sizeX = 300;
+  int sizeY = 50;
+  PImage[] images = new PImage[2];
 
   //default constructor
   public Kitchen() 
   {
-    images = new PImage[2];
     images[0] = loadImage("Images/luckycat1.gif");
     images[1] = loadImage("Images/luckycat2.gif");
-    pendingFoodList = new ArrayDeque<Order>();
-    finishedFoodList = new ALQueue<Order>();
-    stovetops = new Order[3];
-    x = 510;
-    y = 180;
   }
 
   //Displays the Kitchen and the current order on the counter
   void display()
   {
+    displayKitchenImage();
+    updateCurrentlyShownOrder();
+    displayCurrentlyShownOrder();
+
+    makeFood();
+  }
+
+  void displayKitchenImage() {
     noStroke();
     //fill(0);
     fill(20, 20, 150, 0);
     rect(500, 200, 300, 50);
     image(images[0], x, y);
+  }
+
+  void updateCurrentlyShownOrder() {
     if (!finishedFoodList.isEmpty())
     {
       if (currentOrder == null) {
         currentOrder = finishedFoodList.dequeue();
       }
     }
+  }
+
+  void displayCurrentlyShownOrder() {
     if (currentOrder != null) {
       if (currentOrder.table.sittingCustomer != null)
         currentOrder.display();
       else
-        currentOrder = null;
+        currentOrder = null; // What does this do? Getting rid of an invalid order?
     }
-    makeFood();
   }
 
   //Checks if the mouse clicked over the kitchen
   boolean isMouseOverKitchen() {
-    if (mouseX >= x && mouseX <= x+300 && 
-      mouseY >= y && mouseY <= y+50) {
-      //println("kitch");
+    if (mouseX >= x && mouseX <= x+sizeX && 
+      mouseY >= y && mouseY <= y+sizeY) {
       return true;
     } else {
       return false;
