@@ -151,13 +151,21 @@ public class Waiter
   //Moves to the specified coordinates
   void move()
   {
-    if (state == WaiterState.MOVING_TO_PICK_UP_ORDER) {
+    switch(state)
+    {
+    case WaiterState.MOVING_TO_PICK_UP_ORDER:
       goTo(kitchen.x+250, kitchen.y);
-    } else if (state == WaiterState.MOVING_TO_PLACE_ORDER) {
+      break;
+
+    case WaiterState.MOVING_TO_PLACE_ORDER:
       goTo(kitchen.x-15, kitchen.y);
-    } else if (state == WaiterState.MOVING_TO_TABLE) {
+      break;
+
+    case state == WaiterState.MOVING_TO_TABLE:
       goTo(currentTable.x+105, currentTable.y-15);
+      break;
     }
+
     delay(10);
   }
 
@@ -197,8 +205,9 @@ public class Waiter
    ------*/
   void performAct()
   {
-    if (state == WaiterState.MOVING_TO_PICK_UP_ORDER)
+    switch(state)
     {
+    case WaiterState.MOVING_TO_PICK_UP_ORDER:
       if (kitchen.currentOrder.getTable().c == null)
       {
         //println("The customer has already left...");
@@ -214,8 +223,9 @@ public class Waiter
         finishedOrders[1] = kitchen.currentOrder;
         kitchen.currentOrder = null;
       }
-    } else if (state == WaiterState.MOVING_TO_PLACE_ORDER)
-    {
+      break;
+
+    case WaiterState.MOVING_TO_PLACE_ORDER:
       if (orders.size() > 0)
       {
         //Utilizes stack in order to maintain order
@@ -231,10 +241,14 @@ public class Waiter
         }
         kitchen.state = 1;
       }
-    } else if (state == WaiterState.MOVING_TO_TABLE)
-    {
+      break;
+
+    case state == WaiterState.MOVING_TO_TABLE:
       detAct(currentTable);
+      break;
     }
+
+
     state = WaiterState.IDLE;
   }
 
