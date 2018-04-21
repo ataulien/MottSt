@@ -153,15 +153,15 @@ public class Waiter
   {
     switch(state)
     {
-    case WaiterState.MOVING_TO_PICK_UP_ORDER:
+    case MOVING_TO_PICK_UP_ORDER:
       goTo(kitchen.x+250, kitchen.y);
       break;
 
-    case WaiterState.MOVING_TO_PLACE_ORDER:
+    case MOVING_TO_PLACE_ORDER:
       goTo(kitchen.x-15, kitchen.y);
       break;
 
-    case state == WaiterState.MOVING_TO_TABLE:
+    case MOVING_TO_TABLE:
       goTo(currentTable.x+105, currentTable.y-15);
       break;
     }
@@ -207,7 +207,7 @@ public class Waiter
   {
     switch(state)
     {
-    case WaiterState.MOVING_TO_PICK_UP_ORDER:
+    case MOVING_TO_PICK_UP_ORDER:
       if (kitchen.currentOrder.getTable().c == null)
       {
         //println("The customer has already left...");
@@ -225,7 +225,7 @@ public class Waiter
       }
       break;
 
-    case WaiterState.MOVING_TO_PLACE_ORDER:
+    case MOVING_TO_PLACE_ORDER:
       if (orders.size() > 0)
       {
         //Utilizes stack in order to maintain order
@@ -243,8 +243,8 @@ public class Waiter
       }
       break;
 
-    case state == WaiterState.MOVING_TO_TABLE:
-      detAct(currentTable);
+    case MOVING_TO_TABLE:
+      determineActionFromTable(currentTable);
       break;
     }
 
@@ -259,18 +259,19 @@ public class Waiter
    * t.state == 2: The customers are waiting to be served. 
    * t.state == 3: The customers are done eating and waiting for their bill. 
    ------*/
-  void detAct(Table t)
-  {
-    //Customers are ready to order
-    if (t.state == TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER && !t.c.wait.pause)
+  void determineActionFromTable(Table t)
+  {    
+    switch(t.state)
     {
-      //println("took order of table " + t.tableNum);
-      orders.add(t.getOrder());
-      t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
-    }
-    //Customers are ready to be served
-    else if (t.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING)
-    {
+    case CUSTOMER_READING_MENU_OR_READY_TO_ORDER:
+      if (!t.c.wait.pause) {
+        //println("took order of table " + t.tableNum);
+        orders.add(t.getOrder());
+        t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
+      }
+      break;
+
+    case CUSTOMER_WAITING_FOR_FOOD_OR_EATING:
       if (finishedOrders[0] != null)
       {
         if (finishedOrders[0].getTable().tableNum == t.tableNum)
@@ -293,15 +294,18 @@ public class Waiter
           t.c.wait.pauseTime();
         }
       }
-    }
-    //Customers are done eating
-    else if (t.state == TableState.CUSTOMER_READY_TO_PAY && !t.c.wait.pause)
-    {
-      //println("finished serving table " + t.tableNum);
-      removeCustomer(t.c);
-      t.c = null;
-      t.order = null;
-      t.state = TableState.EMPTY;
+      break;
+
+    case CUSTOMER_READY_TO_PAY:
+      if (!t.c.wait.pause)
+      {
+        //println("finished serving table " + t.tableNum);
+        removeCustomer(t.c);
+        t.c = null;
+        t.order = null;
+        t.state = TableState.EMPTY;
+      }
+      break;
     }
   }
 
