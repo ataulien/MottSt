@@ -40,7 +40,7 @@ void draw()
     k.display();
     checkD();
     if (ling.isMoving)
-      ling.move();
+      ling.moveToStateTarget();
     ling.display();
   } else { 
     background(endimg);

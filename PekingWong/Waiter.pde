@@ -82,15 +82,6 @@ public class Waiter
     text("STRIKES: " + strikes + "/5", 155, 150);
   }
 
-  /*------
-   * Updates the state of the waiter. Invoked when the mouse is clicked. 
-   * If the mouse has clicked on the Order at the Kitchen, state = 1.
-   *                                 Kitchen and NOT an Order, state = 2.
-   *                                 a table, state = 3.
-   * state == 1: The waiter is moving to pick up an order from the Kitchen. 
-   * state == 2:                      to place an order at the Kitchen. 
-   * state == 3:                      to a table. 
-   -----*/
   void onMouseClicked()
   {
     if (kitchen.isMouseOverKitchen())
@@ -149,7 +140,7 @@ public class Waiter
   }
 
   //Moves to the specified coordinates
-  void move()
+  void moveToStateTarget()
   {
     switch(state)
     {
@@ -189,21 +180,18 @@ public class Waiter
       } else if (position.y > targetY) {
         position.y-=8;
       } else {
-
         isMoving = false;
-        performAct();
+        onReachedTargetPosition();
       }
     }
     display();
   }
 
-  //Mechanics Functions
+  void onReachedTargetPosition() {
+    performAction();
+  }
 
-  /*------
-   * Performs an action based on the state of the waiter. 
-   * States and what they represent are delineated above, before the "update" method. 
-   ------*/
-  void performAct()
+  void performAction()
   {
     switch(state)
     {
@@ -244,7 +232,7 @@ public class Waiter
       break;
 
     case MOVING_TO_TABLE:
-      determineActionFromTable(currentTable);
+      performActionOnTable(currentTable);
       break;
     }
 
@@ -252,14 +240,10 @@ public class Waiter
     state = WaiterState.IDLE;
   }
 
-  /*------
-   * Specifically determines the act to be performed if the waiter is dealing with tables. 
-   * Table states and corresponding actions: 
-   * t.state == 1: The customers are ready to place an order. 
-   * t.state == 2: The customers are waiting to be served. 
-   * t.state == 3: The customers are done eating and waiting for their bill. 
-   ------*/
-  void determineActionFromTable(Table t)
+  /**
+   * Performs the next action depending on the given tables state
+   */
+  void performActionOnTable(Table t)
   {    
     switch(t.state)
     {
