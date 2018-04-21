@@ -222,10 +222,12 @@ public class Waiter
           l.push(orders.remove(i));
           //println("placed order at kitchen");
         }
-        while (!l.isEmpty())
-        {
-          kitchen.addLastToPending(l.pop());
+        
+        for(Order o : orders) {
+          kitchen.addLastToPending(o);
         }
+        
+        orders.clear();
         kitchen.state = 1;
       }
       break;
