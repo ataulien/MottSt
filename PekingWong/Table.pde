@@ -50,7 +50,7 @@ class Table
   }
 
   //Checks if the mouse if over the table
-  boolean overTable() {
+  boolean isMouseOverTable() {
     if (mouseX >= x && mouseX <= x+128 && 
       mouseY >= y && mouseY <= y+100) {
       return true;

@@ -33,6 +33,8 @@ void draw()
   //ellipse(775,205, 50,50);
   if (!pekingWong.strikeOut())
   {
+    ling.frameUpdate();
+    
     console.display();
     pekingWong.update();
     k.display();
@@ -76,7 +78,7 @@ void checkD()
 void mouseClicked() 
 {
   ling.waiterMoves = true;
-  ling.update();
+  ling.onMouseClicked();
 }
 
 //When the mouse is pressed

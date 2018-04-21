@@ -10,7 +10,7 @@ public class Restaurant {
   ArrayList<Customer> serveList;
   Waiter BJB;
 
-  //overloaded constructor
+  // overloaded constructor
   public Restaurant(Waiter w) 
   {
     waitList = new ALHeap();

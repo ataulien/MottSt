@@ -2,37 +2,38 @@ import java.util.ArrayList;
 
 public enum WaiterState
 {
-  IDLE,
-  MOVING_TO_PICK_UP_ORDER,
-  MOVING_TO_PLACE_ORDER,
-  MOVING_TO_TABLE,
+  IDLE, 
+    MOVING_TO_PICK_UP_ORDER, 
+    MOVING_TO_PLACE_ORDER, 
+    MOVING_TO_TABLE,
 }
 
 public class Waiter 
 {
   //instance vars
   private ArrayList<Customer> customers = new ArrayList<Customer>();
-  private ArrayList<Table> tables = new ArrayList<Table>();;
+  private ArrayList<Table> tables = new ArrayList<Table>();
+  ;
   private ArrayList<Order> orders = new ArrayList<Order>();
   private Order[] finishedOrders = new Order[2];
   PVector position = new PVector();
-  
+
   private Table currentTable;
-  
+
   Kitchen kitchen;
-  
+
   boolean waiterMoves;
   WaiterState state;
   PImage imageWaiterNoFood;
   PFont fontScore = createFont("AFont.ttf", 20);
-  
+
   private int strikes;
   private int points;
 
   public Waiter(Kitchen kitchen) 
   {
     this.kitchen = kitchen;
-    
+
     //creates six tables
     tables.add(new Table(1, 400, 400));
     tables.add(new Table(2, 656, 400));
@@ -43,7 +44,7 @@ public class Waiter
 
     position.x = 300;
     position.y = 200;
-    
+
     waiterMoves = false;
     state = WaiterState.IDLE;
     imageWaiterNoFood = loadImage("Images/WaiterRight.png");
@@ -65,19 +66,7 @@ public class Waiter
 
   private void drawCustomers() {
     for (Customer c : customers) {
-      if (c.state == CustomerState.LEFT_RESTAURANT_ANGRY)
-      {
-        Table t = c.getTable();
-
-        removeCustomer(t.c);
-        strikes ++; // Game logic inside rendering-method, great!
-        t.c = null;
-
-        t.state = TableState.EMPTY;
-      } else
-      {
-        c.display();
-      }
+      c.display();
     }
   }
 
@@ -102,28 +91,60 @@ public class Waiter
    * state == 2:                      to place an order at the Kitchen. 
    * state == 3:                      to a table. 
    -----*/
-  void update()
+  void onMouseClicked()
   {
     if (kitchen.isMouseOverKitchen())
     {
-      if (kitchen.currentOrder != null && kitchen.currentOrder.isMouseOverOrder())
-      {
-        state = WaiterState.MOVING_TO_PICK_UP_ORDER;
-        return;
-      }
-      state = WaiterState.MOVING_TO_PLACE_ORDER;
+      onClickedOnKitchen();
     } else {
       for (Table t : tables) {
-        if (t.overTable()) {
-          if (t.state == TableState.EMPTY) {
-            return;
-          } else {
-            state = WaiterState.MOVING_TO_TABLE;
-            currentTable = t;
-          }
+        if (t.isMouseOverTable()) {
+          onClickedOnTable(t);
           break;
         }
       }
+    }
+  }
+
+  private void onClickedOnKitchen() {
+    if (kitchen.currentOrder != null && kitchen.currentOrder.isMouseOverOrder()) {
+      state = WaiterState.MOVING_TO_PICK_UP_ORDER;
+    } else {
+      state = WaiterState.MOVING_TO_PLACE_ORDER;
+    }
+  }
+
+  private void onClickedOnTable(Table t) {
+    if (t.state != TableState.EMPTY) {
+      state = WaiterState.MOVING_TO_TABLE;
+      currentTable = t;
+    }
+  }
+
+  /**
+   * Called every mainloop-cycle
+   */
+  public void frameUpdate() {
+    checkForStrikesAndRemoveCustomers();
+  }
+
+  private void checkForStrikesAndRemoveCustomers() {
+    ArrayList<Customer> toRemove = new ArrayList<Customer>();
+
+    for (Customer c : customers) {
+      if (c.state == CustomerState.LEFT_RESTAURANT_ANGRY) {
+        toRemove.add(c);
+      }
+    }
+
+    for (Customer c : toRemove) {
+      Table t = c.getTable();
+
+      removeCustomer(t.c);
+      strikes ++;
+      t.c = null;
+
+      t.state = TableState.EMPTY;
     }
   }
 

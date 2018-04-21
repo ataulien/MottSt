@@ -1,4 +1,4 @@
-//Class Customer
+
 import java.util.ArrayList;
 
 public enum CustomerState
