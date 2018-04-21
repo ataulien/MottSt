@@ -16,9 +16,19 @@ float mouseScaledY = 0;
 
 float displayScale = 1.5f;
 
+IViewInterface iview;
+
 //Sets up the screen 
 void setup()
 {
+  /*iview = new IViewInterface(sketchPath("") + "Data");
+  
+  try {
+    iview.connect("123", 123, "123", 123);
+  } catch(IViewInterface.IViewException e) {
+    print(e);
+  }*/
+  
   size(1280, 720, P3D);
   surface.setResizable(true);
 
