@@ -56,8 +56,8 @@ public class Kitchen {
 
   //Checks if the mouse clicked over the kitchen
   boolean isMouseOverKitchen() {
-    if (mouseX >= x && mouseX <= x + sizeX &&
-      mouseY >= y && mouseY <= y + sizeY) {
+    if (mouseScaledX >= x && mouseScaledX <= x + sizeX &&
+      mouseScaledY >= y && mouseScaledY <= y + sizeY) {
       return true;
     } else {
       return false;

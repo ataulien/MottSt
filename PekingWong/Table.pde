@@ -61,8 +61,8 @@ class Table
 
   //Checks if the mouse if over the table
   boolean isMouseOverTable() {
-    if (mouseX >= x && mouseX <= x+128 && 
-      mouseY >= y && mouseY <= y+100) {
+    if (mouseScaledX >= x && mouseScaledX <= x+128 && 
+      mouseScaledY >= y && mouseScaledY <= y+100) {
       return true;
     } else {
       return false;

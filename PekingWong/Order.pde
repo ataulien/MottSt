@@ -61,8 +61,8 @@ public class Order
 
   //Checks if the mouse if over the order
   boolean isMouseOverOrder() {
-    if (mouseX >= 750 && mouseX <= 800 && 
-      mouseY >= 180 && mouseY <= 230) {
+    if (mouseScaledX >= 750 && mouseScaledX <= 800 && 
+      mouseScaledY >= 180 && mouseScaledY <= 230) {
       println("over");
       return true;
     } else {

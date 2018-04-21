@@ -121,8 +121,8 @@ public class Customer extends Draggable implements Comparable<Customer>
     {
       if (locked) 
       {
-        bx = mouseX-xOffset; 
-        by = mouseY-yOffset;
+        bx = mouseScaledX-xOffset; 
+        by = mouseScaledY-yOffset;
       } else
       {
         bx = origX; 
