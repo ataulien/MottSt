@@ -6,7 +6,8 @@ public class Kitchen {
   //Instance Vars
   private ArrayDeque<Order> pendingFoodList = new ArrayDeque<Order>(); 
   private ALQueue<Order> finishedFoodList = new ALQueue<Order>(); 
-  private Order[] stovetops = new Order[3];;
+  private Order[] stovetops = new Order[3];
+  ;
   Order currentOrder;
   int x = 510;
   int y = 180;
@@ -94,33 +95,24 @@ public class Kitchen {
   //removes items in pendingFoodList and cooks them on open stovetops
   public void makeFood() 
   {
-    if (!pendingFoodList.isEmpty())
-    {
+    putPendingOrdersOnStoveIfPossible();
+    takeOutFinisedOrders();
+  }
+
+  private void putPendingOrdersOnStoveIfPossible() {
+    while(!pendingFoodList.isEmpty() && hasStoveSpace()) {
       Order o = pendingFoodList.removeFirst();
-      if (o != null && hasStoveSpace())
-      {
-        while (o != null && hasStoveSpace())
-        {
-          //println("placed on stove");
-          putOnStove(o);
-          if (!pendingFoodList.isEmpty() && hasStoveSpace())
-          {
-            o = pendingFoodList.removeFirst();
-          }
-        }
-      } else
-      {
-        pendingFoodList.addFirst(o);
-        o = null;
-      }
+      
+      putOnStove(o);
     }
-    for (int i = 0; i < 3; i ++)
-    {
+  }
+
+  private void takeOutFinisedOrders() {
+    for (int i = 0; i < 3; i ++) {
       Order ord = stovetops[i];
-      if (ord != null)
-      {
-        if (ord.t.atGoal())
-        {
+      
+      if (ord != null) {
+        if (ord.t.atGoal()) {
           enqueueFinished(ord);
           stovetops[i] = null;
         }
