@@ -22,7 +22,7 @@ public class Waiter
 
   Kitchen kitchen;
 
-  boolean waiterMoves;
+  boolean isMoving;
   WaiterState state;
   PImage imageWaiterNoFood;
   PFont fontScore = createFont("AFont.ttf", 20);
@@ -45,7 +45,7 @@ public class Waiter
     position.x = 300;
     position.y = 200;
 
-    waiterMoves = false;
+    isMoving = false;
     state = WaiterState.IDLE;
     imageWaiterNoFood = loadImage("Images/WaiterRight.png");
   }
@@ -182,7 +182,7 @@ public class Waiter
         position.y-=8;
       } else {
 
-        waiterMoves = false;
+        isMoving = false;
         performAct();
       }
     }

@@ -39,7 +39,7 @@ void draw()
     pekingWong.update();
     k.display();
     checkD();
-    if (ling.waiterMoves)
+    if (ling.isMoving)
       ling.move();
     ling.display();
   } else { 
@@ -77,7 +77,7 @@ void checkD()
 //When mouse-clicked, update the state of the waiter based on the object clicked
 void mouseClicked() 
 {
-  ling.waiterMoves = true;
+  ling.isMoving = true;
   ling.onMouseClicked();
 }
 
@@ -107,7 +107,7 @@ void mouseDragged()
 //Checks if the mouse releases the customer onto a table
 void mouseReleased() 
 {
-  ling.waiterMoves = false;
+  ling.isMoving = false;
   if (d != null)
   {
     d.locked = false;
