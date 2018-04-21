@@ -54,7 +54,7 @@ void checkD()
   if (d != null) 
   {
     d.display();
-    if (d.state == 4) 
+    if (d.state == CustomerState.LEFT_RESTAURANT_ANGRY) 
     {
       ling.points -= 5;
       ling.strikes++;
@@ -112,7 +112,7 @@ void mouseReleased()
     for (Table t : ling.getTables()) {
       if (t.inside(d.bx, d.by)) {
         if (t.getCust() == null) {
-          d.setState(1);
+          d.setState(CustomerState.SITTING_ON_TABLE);
           t.setCust(d);
           t.state = 1;
           t.setOrder(new Order(t));

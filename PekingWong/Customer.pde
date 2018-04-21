@@ -1,14 +1,24 @@
 //Class Customer
 import java.util.ArrayList;
 
+  public enum CustomerState
+  {
+    HIDDEN,  // Doesn't seem to be set anywhere (was state -1 before)
+    STANDING_ON_SIDE,
+    SITTING_ON_TABLE,
+    LEFT_RESTAURANT_ANGRY,
+  }
+
+
 public class Customer extends Draggable
 {
+
   //Instance Variables
   private String name;
   private Table table;
   private int VIPNum;
   private int mood;
-  private int state;
+  private CustomerState state;
   int origX;
   int origY;
   PImage[] images; 
@@ -24,7 +34,7 @@ public class Customer extends Draggable
     super(80,150);
     name = "BJB";
     VIPNum = (int) (Math.random() * 10) + 1;
-    state = 0;
+    state = CustomerState.STANDING_ON_SIDE;
     mood = 10;
     bx = 75;
     by = 190;
@@ -57,11 +67,11 @@ public class Customer extends Draggable
   void display()
   {
     update();
-    if (state == 0) {
+    if (state == CustomerState.STANDING_ON_SIDE) {
       super.display();
       image(waiting, bx, by);
     }
-    if (state == 1) {
+    if (state == CustomerState.SITTING_ON_TABLE) {
       bx = table.x - 50;
       by = table.y-50;
       image(sitting, bx, by);
@@ -78,12 +88,12 @@ public class Customer extends Draggable
   //Checks if the customer has been waiting a certain amount of time. 
   void update()
   {
-    if (wait != null && state != -1)
+    if (wait != null && state != CustomerState.HIDDEN)
     {
        mood = 10 - (int)(((float)wait.getElapsed()/wait.target) * 10);
        if (mood <= 0)
        {
-         state = 4;
+         state = CustomerState.LEFT_RESTAURANT_ANGRY;
        }
        if (wait.pause)
        {
@@ -108,7 +118,7 @@ public class Customer extends Draggable
   //If the customer not on a table, return to original x and y coordinates
   void checkState()
   {
-    if (state == 0)
+    if (state == CustomerState.STANDING_ON_SIDE)
     {
       if (locked) 
       {
@@ -148,9 +158,9 @@ public class Customer extends Draggable
   }
 
   //sets the state of the customer
-  public void setState(int i)
+  public void setState(CustomerState state)
   {
-    state = i;
+    this.state = state;
   }
 
   //Accessor

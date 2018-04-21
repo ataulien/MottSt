@@ -54,7 +54,7 @@ public class Waiter
     }
     for (int i = customers.size()-1; i >= 0; i --) {
       Customer c = customers.get(i);
-      if (c.state == 4)
+      if (c.state == CustomerState.LEFT_RESTAURANT_ANGRY)
       {
         Table t = c.getTable();
         //println("The customer at table " + t.tableNum + " has left...");
@@ -264,7 +264,7 @@ public class Waiter
   //removes the customer c from customers, changes the points
   public void removeCustomer(Customer c) 
   {
-    if (c.state == 4) {}
+    if (c.state == CustomerState.LEFT_RESTAURANT_ANGRY) {}
     else
     {
       //The points increase the higher the VIP number of the customer
