@@ -1,5 +1,13 @@
 import java.util.ArrayList;
 
+public enum WaiterState
+{
+  IDLE,
+  MOVING_TO_PICK_UP_ORDER,
+  MOVING_TO_PLACE_ORDER,
+  MOVING_TO_TABLE,
+}
+
 public class Waiter 
 {
   //instance vars
@@ -14,7 +22,7 @@ public class Waiter
   Kitchen kitchen;
   
   boolean waiterMoves;
-  int state;
+  WaiterState state;
   PImage imageWaiterNoFood;
   PFont fontScore = createFont("AFont.ttf", 20);
   
@@ -37,7 +45,7 @@ public class Waiter
     position.y = 200;
     
     waiterMoves = false;
-    state = 0;
+    state = WaiterState.IDLE;
     imageWaiterNoFood = loadImage("Images/WaiterRight.png");
   }
 
@@ -100,17 +108,17 @@ public class Waiter
     {
       if (kitchen.currentOrder != null && kitchen.currentOrder.isMouseOverOrder())
       {
-        state = 1;
+        state = WaiterState.MOVING_TO_PICK_UP_ORDER;
         return;
       }
-      state = 2;
+      state = WaiterState.MOVING_TO_PLACE_ORDER;
     } else {
       for (Table t : tables) {
         if (t.overTable()) {
           if (t.state == TableState.EMPTY) {
             return;
           } else {
-            state = 3;
+            state = WaiterState.MOVING_TO_TABLE;
             currentTable = t;
           }
           break;
@@ -122,11 +130,11 @@ public class Waiter
   //Moves to the specified coordinates
   void move()
   {
-    if (state == 1) {
+    if (state == WaiterState.MOVING_TO_PICK_UP_ORDER) {
       goTo(kitchen.x+250, kitchen.y);
-    } else if (state == 2) {
+    } else if (state == WaiterState.MOVING_TO_PLACE_ORDER) {
       goTo(kitchen.x-15, kitchen.y);
-    } else if (state == 3) {
+    } else if (state == WaiterState.MOVING_TO_TABLE) {
       goTo(currentTable.x+105, currentTable.y-15);
     }
     delay(10);
@@ -168,7 +176,7 @@ public class Waiter
    ------*/
   void performAct()
   {
-    if (state == 1)
+    if (state == WaiterState.MOVING_TO_PICK_UP_ORDER)
     {
       if (kitchen.currentOrder.getTable().c == null)
       {
@@ -185,7 +193,7 @@ public class Waiter
         finishedOrders[1] = kitchen.currentOrder;
         kitchen.currentOrder = null;
       }
-    } else if (state == 2)
+    } else if (state == WaiterState.MOVING_TO_PLACE_ORDER)
     {
       if (orders.size() > 0)
       {
@@ -202,11 +210,11 @@ public class Waiter
         }
         kitchen.state = 1;
       }
-    } else if (state == 3)
+    } else if (state == WaiterState.MOVING_TO_TABLE)
     {
       detAct(currentTable);
     }
-    state = 0;
+    state = WaiterState.IDLE;
   }
 
   /*------
