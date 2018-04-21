@@ -184,7 +184,6 @@ public class Waiter
         onReachedTargetPosition();
       }
     }
-    display();
   }
 
   void onReachedTargetPosition() {
