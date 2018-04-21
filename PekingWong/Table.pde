@@ -18,7 +18,7 @@ class Table
   int x;
   int y;
   PImage visual;
-  PFont cFood = createFont("AFont.ttf", 20);
+  PFont fontFood = createFont("AFont.ttf", 20);
 
   //New table with no customer, but a number assignment and (x,y)
   Table(int num, int setX, int setY)
@@ -48,7 +48,7 @@ class Table
   private void displayTableNummer() {
     fill(255);
     textSize(25);
-    textFont(cFood);
+    textFont(fontFood);
     text("" + tableNum, x +60, y + 40);
   }
 

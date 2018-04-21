@@ -26,7 +26,7 @@ public class Customer extends Draggable implements Comparable<Customer>
   PImage sitting;
   int rand = (int) (Math.random() * 4);
   Time wait;
-  PFont cFood = createFont("AFont.ttf", 20);
+  PFont fontFood = createFont("AFont.ttf", 20);
 
   //Constructor: populates order with random dishes
   public Customer()
@@ -81,7 +81,7 @@ public class Customer extends Draggable implements Comparable<Customer>
     rect(bx, by, 80, 150);
 
     fill(0);
-    textFont(cFood);
+    textFont(fontFood);
     text("MOOD: " + mood, bx, by+10);
   }
 

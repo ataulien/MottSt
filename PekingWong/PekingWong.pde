@@ -9,7 +9,7 @@ Kitchen kitchen;
 Time waitTime;
 PImage bgimg;
 PImage endimg;
-PFont cFood;
+PFont fontFood;
 
 float mouseScaledX = 0;
 float mouseScaledY = 0;
@@ -29,7 +29,7 @@ void setup()
   ling = new Waiter(kitchen);
   waitTime = new Time();
   pekingWong = new Restaurant(ling);
-  cFood = createFont("AFont.ttf", 20);
+  fontFood = createFont("AFont.ttf", 20);
   waitTime.startTime();
   console = new Console(ling);
 }
@@ -99,7 +99,7 @@ void drawRestaurant() {
 void drawEndscreen() {
   image(endimg, 1, 1);
   textSize(65);
-  textFont(cFood);
+  textFont(fontFood);
   text("" + ling.getNumPoints(), 500, 475);
 }
 
