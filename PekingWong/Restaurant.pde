@@ -57,13 +57,13 @@ public class Restaurant {
   //Checks if the waiter has caused 5 or more customers to leave
   boolean strikeOut()
   {
-    return BJB.getStrikes() >= 5;
+    return BJB.getNumStrikes() >= 5;
   }
 
   //Checks if the time is right for there to be more customers
   boolean shouldSpawn()
   {
-    if (calcSpawn.getElapsed() > 60/((int)(BJB.getPoints()/10)+2))
+    if (calcSpawn.getElapsed() > 60/((int)(BJB.getNumPoints()/10)+2))
     {
       //println(calcSpawn);
       return true;

@@ -7,7 +7,7 @@ public class Kitchen {
   private ArrayDeque<Order> pendingFoodList; //this is a deque
   private ALQueue<Order> finishedFoodList; //this is a queue
   private Order[] stovetops;
-  Order currOrder;
+  Order currentOrder;
   int x;
   int y;
   PImage[] images;
@@ -36,21 +36,21 @@ public class Kitchen {
     image(images[0], x, y);
     if (!finishedFoodList.isEmpty())
     {
-      if (currOrder == null) {
-        currOrder = finishedFoodList.dequeue();
+      if (currentOrder == null) {
+        currentOrder = finishedFoodList.dequeue();
       }
     }
-    if (currOrder != null) {
-      if (currOrder.table.c != null)
-        currOrder.display();
+    if (currentOrder != null) {
+      if (currentOrder.table.c != null)
+        currentOrder.display();
       else
-        currOrder = null;
+        currentOrder = null;
     }
     makeFood();
   }
 
   //Checks if the mouse clicked over the kitchen
-  boolean overKitchen() {
+  boolean isMouseOverKitchen() {
     if (mouseX >= x && mouseX <= x+300 && 
       mouseY >= y && mouseY <= y+50) {
       //println("kitch");

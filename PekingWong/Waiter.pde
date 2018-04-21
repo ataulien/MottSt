@@ -1,30 +1,30 @@
 import java.util.ArrayList;
 
-//Class Waiter
 public class Waiter 
 {
   //instance vars
-  private ArrayList<Customer> customers;
-  private Table currTable;
-  private Kitchen k;
-  private ArrayList<Table> tables;
-  private ArrayList<Order> orders;
-  private Order[] finishedOrders;
-  float x;
-  float y;
-  int ind;
+  private ArrayList<Customer> customers = new ArrayList<Customer>();
+  private ArrayList<Table> tables = new ArrayList<Table>();;
+  private ArrayList<Order> orders = new ArrayList<Order>();
+  private Order[] finishedOrders = new Order[2];
+  PVector position = new PVector();
+  
+  private Table currentTable;
+  
+  Kitchen kitchen;
+  
   boolean waiterMoves;
   int state;
+  PImage imageWaiterNoFood;
+  PFont fontScore = createFont("AFont.ttf", 20);
+  
   private int strikes;
   private int points;
-  PImage waiterNoFood;
-  PFont cFood = createFont("AFont.ttf", 20);
 
-  //create a waiter
-  public Waiter(Kitchen kitch) 
+  public Waiter(Kitchen kitchen) 
   {
-    customers = new ArrayList<Customer>();
-    tables = new ArrayList<Table>();
+    this.kitchen = kitchen;
+    
     //creates six tables
     tables.add(new Table(1, 400, 400));
     tables.add(new Table(2, 656, 400));
@@ -33,44 +33,54 @@ public class Waiter
     tables.add(new Table(5, 656, 600));
     tables.add(new Table(6, 912, 600));
 
-    orders = new ArrayList<Order>(); 
-    finishedOrders = new Order[2];
-    k = kitch;
-
-    x = 300;
-    y = 200;
+    position.x = 300;
+    position.y = 200;
+    
     waiterMoves = false;
     state = 0;
-    waiterNoFood = loadImage("Images/WaiterRight.png");
+    imageWaiterNoFood = loadImage("Images/WaiterRight.png");
   }
 
-  //Displaying Functions
-
-  //Displays the customers, the tables, and the waiter her/himself
   void display()
   {
-    for (int i = 0; i < 6; i++) {
-      tables.get(i).display();
+    drawTables();
+    drawCustomers();
+    drawWaiter();
+    drawScore();
+  }
+
+  private void drawTables() {
+    for (Table t : tables) {
+      t.display();
     }
-    for (int i = customers.size()-1; i >= 0; i --) {
-      Customer c = customers.get(i);
+  }
+
+  private void drawCustomers() {
+    for (Customer c : customers) {
       if (c.state == CustomerState.LEFT_RESTAURANT_ANGRY)
       {
         Table t = c.getTable();
-        //println("The customer at table " + t.tableNum + " has left...");
+
         removeCustomer(t.c);
-        strikes ++;
+        strikes ++; // Game logic inside rendering-method, great!
         t.c = null;
+
         t.state = TableState.EMPTY;
       } else
       {
         c.display();
       }
     }
-    image(waiterNoFood, x, y);
+  }
+
+  private void drawWaiter() {
+    image(imageWaiterNoFood, position.x, position.y);
+  }
+
+  private void drawScore() {
     fill(0);
     textSize(20);
-    textFont(cFood);
+    textFont(fontScore);
     text("POINTS: " + points, 155, 100);
     text("STRIKES: " + strikes + "/5", 155, 150);
   }
@@ -86,9 +96,9 @@ public class Waiter
    -----*/
   void update()
   {
-    if (k.overKitchen())
+    if (kitchen.isMouseOverKitchen())
     {
-      if (k.currOrder != null && k.currOrder.overOrder())
+      if (kitchen.currentOrder != null && kitchen.currentOrder.isMouseOverOrder())
       {
         state = 1;
         return;
@@ -101,7 +111,7 @@ public class Waiter
             return;
           } else {
             state = 3;
-            currTable = t;
+            currentTable = t;
           }
           break;
         }
@@ -109,39 +119,38 @@ public class Waiter
     }
   }
 
-  //Moves to the specified coordinates by calling the helper goTo(x,y) function.
+  //Moves to the specified coordinates
   void move()
   {
     if (state == 1) {
-      goTo(k.x+250, k.y);
+      goTo(kitchen.x+250, kitchen.y);
     } else if (state == 2) {
-      goTo(k.x-15, k.y);
+      goTo(kitchen.x-15, kitchen.y);
     } else if (state == 3) {
-      goTo(currTable.x+105, currTable.y-15);
+      goTo(currentTable.x+105, currentTable.y-15);
     }
-    ind ++;
     delay(10);
   }
 
   //Goes to the target X and Y coordinates by incrementing by 10 each time the function is invoked if the waiter is not yet at those coordinates.
   void goTo(int targetX, int targetY) {
-    if (x < targetX) {
-      if (x + 8 > targetX) {
-        x = targetX;
+    if (position.x < targetX) {
+      if (position.x + 8 > targetX) {
+        position.x = targetX;
         return;
       }
-      x+=8;
-    } else if (x > targetX) {
-      x-=8;
+      position.x+=8;
+    } else if (position.x > targetX) {
+      position.x-=8;
     } else {
-      if (y < targetY) {
-        if (y + 8 > targetY) {
-          y = targetY;
+      if (position.y < targetY) {
+        if (position.y + 8 > targetY) {
+          position.y = targetY;
           return;
         }
-        y+=8;
-      } else if (y > targetY) {
-        y-=8;
+        position.y+=8;
+      } else if (position.y > targetY) {
+        position.y-=8;
       } else {
 
         waiterMoves = false;
@@ -161,20 +170,20 @@ public class Waiter
   {
     if (state == 1)
     {
-      if (k.currOrder.getTable().c == null)
+      if (kitchen.currentOrder.getTable().c == null)
       {
         //println("The customer has already left...");
-        k.currOrder.getTable().order = null;
-        k.currOrder = null;
+        kitchen.currentOrder.getTable().order = null;
+        kitchen.currentOrder = null;
         return;
       }
       if (finishedOrders[0] == null) {
-        finishedOrders[0] = k.currOrder;
-        k.currOrder = null;
+        finishedOrders[0] = kitchen.currentOrder;
+        kitchen.currentOrder = null;
       } 
       if (finishedOrders[1] == null) {
-        finishedOrders[1] = k.currOrder;
-        k.currOrder = null;
+        finishedOrders[1] = kitchen.currentOrder;
+        kitchen.currentOrder = null;
       }
     } else if (state == 2)
     {
@@ -189,13 +198,13 @@ public class Waiter
         }
         while (!l.isEmpty())
         {
-          k.addLastToPending(l.pop());
+          kitchen.addLastToPending(l.pop());
         }
-        k.state = 1;
+        kitchen.state = 1;
       }
     } else if (state == 3)
     {
-      detAct(currTable);
+      detAct(currentTable);
     }
     state = 0;
   }
@@ -281,28 +290,23 @@ public class Waiter
   }
 
 
-  //Accessors
-
-  //returns customer list
-  public ArrayList<Customer> getCustomers()
+  // Accessors
+  public ArrayList<Customer> getCustomerList()
   {
     return customers;
   }
 
-  //returns list of tables
-  public ArrayList<Table> getTables()
+  public ArrayList<Table> getTableList()
   {
     return tables;
   }
 
-  //returns current number of points
-  public int getPoints()
+  public int getNumPoints()
   {
     return points;
   }
 
-  //returns the current amount of strikes
-  public int getStrikes()
+  public int getNumStrikes()
   {
     return strikes;
   }

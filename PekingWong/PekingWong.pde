@@ -44,7 +44,7 @@ void draw()
     background(endimg);
     textSize(65);
     textFont(cFood);
-    text("" + ling.getPoints(), 500, 475);
+    text("" + ling.getNumPoints(), 500, 475);
   }
 }
 
@@ -109,7 +109,7 @@ void mouseReleased()
   if (d != null)
   {
     d.locked = false;
-    for (Table t : ling.getTables()) {
+    for (Table t : ling.getTableList()) {
       if (t.inside(d.bx, d.by)) {
         if (t.getCust() == null) {
           d.setState(CustomerState.SITTING_ON_TABLE);

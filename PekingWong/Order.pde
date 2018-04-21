@@ -60,7 +60,7 @@ public class Order
   }
 
   //Checks if the mouse if over the order
-  boolean overOrder() {
+  boolean isMouseOverOrder() {
     if (mouseX >= 750 && mouseX <= 800 && 
       mouseY >= 180 && mouseY <= 230) {
       println("over");
