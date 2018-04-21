@@ -51,13 +51,13 @@ class Console
         s += " No customer.";
       } else if (t.state == TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER)
       {
-        if (!t.c.wait.pause)
+        if (!t.sittingCustomer.wait.pause)
           s += " Ready to order.";
         else
           s += " Reading menu...";
       } else if (t.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING)
       {
-        if (!t.c.wait.pause)
+        if (!t.sittingCustomer.wait.pause)
           s += " Waiting for food."; 
         else
           s += " Eating food...";

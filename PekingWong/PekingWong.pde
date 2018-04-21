@@ -2,10 +2,10 @@
 
 //Globals
 Console console;
-Customer d;
+Customer currentlyWaitingCustomer;
 Waiter ling;
 Restaurant pekingWong;
-Kitchen k;
+Kitchen kitchen;
 Time waitTime;
 PImage bgimg;
 PImage endimg;
@@ -17,8 +17,8 @@ void setup()
   bgimg = loadImage("Images/RestaurantFloorV3.jpg");
   endimg = loadImage("Images/endscreen.jpg");
   size(1280, 720);
-  k = new Kitchen();
-  ling = new Waiter(k);
+  kitchen = new Kitchen();
+  ling = new Waiter(kitchen);
   waitTime = new Time();
   pekingWong = new Restaurant(ling);
   cFood = createFont("AFont.ttf", 20);
@@ -36,12 +36,18 @@ void draw()
     ling.frameUpdate();
 
     console.display();
+    
     pekingWong.update();
-    k.display();
-    checkD();
+    
+    kitchen.display();
+    
+    checkCurrentlyWaitingCustomer();
+    
     if (ling.isMoving)
       ling.moveToStateTarget();
+      
     ling.display();
+    
   } else { 
     background(endimg);
     textSize(65);
@@ -51,20 +57,18 @@ void draw()
 }
 
 //Checks the status of the current waiting customer
-void checkD()
+void checkCurrentlyWaitingCustomer()
 {
-  if (d != null) 
+  if (currentlyWaitingCustomer != null) 
   {
-    d.display();
-    if (d.state == CustomerState.LEFT_RESTAURANT_ANGRY) 
+    currentlyWaitingCustomer.display();
+    if (currentlyWaitingCustomer.state == CustomerState.LEFT_RESTAURANT_ANGRY) 
     {
       ling.points -= 5;
       ling.strikes++;
-      d = null;
+      currentlyWaitingCustomer = null;
     }
-  }
-  if (d == null)
-  {
+  } else  {
     if (!pekingWong.waitList.isEmpty()) {
       Customer mostImportant = (Customer)Collections.min(pekingWong.waitList);
 
@@ -72,7 +76,7 @@ void checkD()
       pekingWong.waitList.remove(mostImportant);
       mostImportant.wait.startTime();
       
-      d = mostImportant;
+      currentlyWaitingCustomer = mostImportant;
     }
   }
 }
@@ -87,23 +91,23 @@ void mouseClicked()
 //When the mouse is pressed
 void mousePressed()
 {
-  if (d != null)
+  if (currentlyWaitingCustomer != null)
   {
-    if (d.overBox) { 
-      d.locked = true;
+    if (currentlyWaitingCustomer.overBox) { 
+      currentlyWaitingCustomer.locked = true;
     } else {
-      d.locked = false;
+      currentlyWaitingCustomer.locked = false;
     }
-    d.xOffset = mouseX-d.bx; 
-    d.yOffset = mouseY-d.by;
+    currentlyWaitingCustomer.xOffset = mouseX - currentlyWaitingCustomer.bx; 
+    currentlyWaitingCustomer.yOffset = mouseY - currentlyWaitingCustomer.by;
   }
 }
 
 //Utilized for the dragging mechanism of the customer
 void mouseDragged() 
 {
-  if (d != null) {
-    d.checkState();
+  if (currentlyWaitingCustomer != null) {
+    currentlyWaitingCustomer.checkState();
   }
 }
 
@@ -111,24 +115,29 @@ void mouseDragged()
 void mouseReleased() 
 {
   ling.isMoving = false;
-  if (d != null)
+  if (currentlyWaitingCustomer != null)
   {
-    d.locked = false;
+    currentlyWaitingCustomer.locked = false;
     for (Table t : ling.getTableList()) {
-      if (t.inside(d.bx, d.by)) {
-        if (t.getCust() == null) {
-          d.setState(CustomerState.SITTING_ON_TABLE);
-          t.setCust(d);
+      if (t.inside(currentlyWaitingCustomer.bx, currentlyWaitingCustomer.by)) {
+        if (t.getSittingCustomer() == null) {
+          
+          currentlyWaitingCustomer.setState(CustomerState.SITTING_ON_TABLE);
+          
+          t.setSittingCustomer(currentlyWaitingCustomer);
           t.state = TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER;
           t.setOrder(new Order(t));
-          d.setTable(t);
-          ling.addCustomer(d);
-          d = null;
+          
+          currentlyWaitingCustomer.setTable(t);
+          
+          ling.addCustomer(currentlyWaitingCustomer);
+          
+          currentlyWaitingCustomer = null;
           return;
         }
       }
     }
-    d.bx = d.origX;
-    d.by = d.origY;
+    currentlyWaitingCustomer.bx = currentlyWaitingCustomer.origX;
+    currentlyWaitingCustomer.by = currentlyWaitingCustomer.origY;
   }
 }

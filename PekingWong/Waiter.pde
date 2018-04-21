@@ -131,9 +131,9 @@ public class Waiter
     for (Customer c : toRemove) {
       Table t = c.getTable();
 
-      removeCustomer(t.c);
+      removeCustomer(t.sittingCustomer);
       strikes ++;
-      t.c = null;
+      t.sittingCustomer = null;
 
       t.state = TableState.EMPTY;
     }
@@ -195,7 +195,7 @@ public class Waiter
     switch(state)
     {
     case MOVING_TO_PICK_UP_ORDER:
-      if (kitchen.currentOrder.getTable().c == null)
+      if (kitchen.currentOrder.getTable().sittingCustomer == null)
       {
         //println("The customer has already left...");
         kitchen.currentOrder.getTable().order = null;
@@ -241,7 +241,7 @@ public class Waiter
     switch(t.state)
     {
     case CUSTOMER_READING_MENU_OR_READY_TO_ORDER:
-      if (!t.c.wait.pause) {
+      if (!t.sittingCustomer.wait.pause) {
         //println("took order of table " + t.tableNum);
         orders.add(t.getOrder());
         t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
@@ -257,7 +257,7 @@ public class Waiter
           finishedOrders[0] = null;
           t.order.state = OrderState.ON_TABLE_OR_KITCHEN;
           t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
-          t.c.wait.pauseTime();
+          t.sittingCustomer.wait.pauseTime();
         }
       }
       if (finishedOrders[1] != null)
@@ -268,17 +268,17 @@ public class Waiter
           finishedOrders[1] = null;
           t.order.state = OrderState.ON_TABLE_OR_KITCHEN;
           t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
-          t.c.wait.pauseTime();
+          t.sittingCustomer.wait.pauseTime();
         }
       }
       break;
 
     case CUSTOMER_READY_TO_PAY:
-      if (!t.c.wait.pause)
+      if (!t.sittingCustomer.wait.pause)
       {
         //println("finished serving table " + t.tableNum);
-        removeCustomer(t.c);
-        t.c = null;
+        removeCustomer(t.sittingCustomer);
+        t.sittingCustomer = null;
         t.order = null;
         t.state = TableState.EMPTY;
       }

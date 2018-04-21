@@ -2,15 +2,15 @@
 public enum TableState
 {
   EMPTY, 
-  CUSTOMER_READING_MENU_OR_READY_TO_ORDER, 
-  CUSTOMER_WAITING_FOR_FOOD_OR_EATING, 
-  CUSTOMER_READY_TO_PAY,
+    CUSTOMER_READING_MENU_OR_READY_TO_ORDER, 
+    CUSTOMER_WAITING_FOR_FOOD_OR_EATING, 
+    CUSTOMER_READY_TO_PAY,
 }
 
 class Table
 {
   //Instance Variables
-  Customer c; 
+  Customer sittingCustomer; 
   Order order;
   int tableNum;
   TableState state;
@@ -24,7 +24,7 @@ class Table
   Table(int num, int setX, int setY)
   {
     tableNum = num;
-    c = null;
+    sittingCustomer = null;
     x = setX;
     y = setY; 
     order = null;
@@ -34,15 +34,25 @@ class Table
 
   //Display Functions
 
-  //Updates the mood of the customer at the table, and then displays. 
   void display() 
   {
-    fill(255);
-    //rect(x, y, 50, 50, 7);
+    displayTableImage();
+    displayTableNummer();
+    displayOrderIfVisible();
+  }
+  
+  private void displayTableImage() {
     image(visual, x, y);
+  }
+  
+  private void displayTableNummer() {
+    fill(255);
     textSize(25);
     textFont(cFood);
     text("" + tableNum, x +60, y + 40);
+  }
+
+  private void displayOrderIfVisible() {
     if (order != null && order.state == OrderState.ON_TABLE_OR_KITCHEN)
     {
       order.display();
@@ -73,11 +83,11 @@ class Table
   }
 
   //sets the customer seated at the table
-  void setCust(Customer in)
+  void setSittingCustomer(Customer in)
   {
-    c = in;
+    sittingCustomer = in;
     //wait time is lower for customers of higher priority (lower VIPNum)
-    c.wait.startTime();
+    sittingCustomer.wait.startTime();
   }
 
   //sets the order of the table
@@ -94,8 +104,8 @@ class Table
   }
 
   //returns customer seated at table
-  public Customer getCust()
+  public Customer getSittingCustomer()
   {
-    return c;
+    return sittingCustomer;
   }
 }

@@ -41,7 +41,7 @@ public class Kitchen {
       }
     }
     if (currentOrder != null) {
-      if (currentOrder.table.c != null)
+      if (currentOrder.table.sittingCustomer != null)
         currentOrder.display();
       else
         currentOrder = null;
