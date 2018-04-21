@@ -1,6 +1,6 @@
 import java.util.*;
 
-//Class Kitchen
+
 public class Kitchen {
 
   //Instance Vars
@@ -11,7 +11,6 @@ public class Kitchen {
   int x;
   int y;
   PImage[] images;
-  int state;
 
   //default constructor
   public Kitchen() 

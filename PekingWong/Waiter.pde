@@ -220,7 +220,6 @@ public class Waiter
         }
         
         orders.clear();
-        kitchen.state = 1;
       }
       break;
 
