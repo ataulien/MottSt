@@ -46,22 +46,22 @@ class Console
     {
       //Based on the state, would display different messages. 
       String s = "Table #" + t.tableNum + ":";
-      if (t.state == 0)
+      if (t.state == TableState.EMPTY)
       {
         s += " No customer.";
-      } else if (t.state == 1)
+      } else if (t.state == TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER)
       {
         if (!t.c.wait.pause)
           s += " Ready to order.";
         else
           s += " Reading menu...";
-      } else if (t.state == 2)
+      } else if (t.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING)
       {
         if (!t.c.wait.pause)
           s += " Waiting for food."; 
         else
           s += " Eating food...";
-      } else if (t.state == 3)
+      } else if (t.state == TableState.CUSTOMER_READY_TO_PAY)
       {
         s += " Ready to pay.";
       }

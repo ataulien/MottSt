@@ -1,11 +1,19 @@
-//Class Table
+
+public enum TableState
+{
+  EMPTY,
+  CUSTOMER_READING_MENU_OR_READY_TO_ORDER,
+  CUSTOMER_WAITING_FOR_FOOD_OR_EATING,
+  CUSTOMER_READY_TO_PAY,
+}
+
 class Table
 {
   //Instance Variables
   Customer c; 
   Order order;
   int tableNum;
-  int state;
+  TableState state;
   int prevState;
   int x;
   int y;
@@ -20,6 +28,7 @@ class Table
     x = setX;
     y = setY; 
     order = null;
+    state = TableState.EMPTY;
     visual = loadImage("Images/table2v2.png");
   }
 

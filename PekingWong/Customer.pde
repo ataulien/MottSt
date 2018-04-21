@@ -97,17 +97,17 @@ public class Customer extends Draggable
       }
       if (wait.pause)
       {
-        if (wait.endInterval() && table.state == 1)
+        if (wait.endInterval() && table.state == TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER)
         {
           wait.endPause();
           //println("Table " + table.tableNum + " is ready to order.");
         } else {
-          if (wait.endInterval() && table.state == 2)
+          if (wait.endInterval() && table.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING)
           {
             //println("Table " + table.tableNum + " finished eating.");
             wait.endPause();
             table.order.state = 0;
-            table.state = 3;
+            table.state = TableState.CUSTOMER_READY_TO_PAY;
           }
         }
       }

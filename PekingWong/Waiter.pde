@@ -61,7 +61,7 @@ public class Waiter
         removeCustomer(t.c);
         strikes ++;
         t.c = null;
-        t.state = 0;
+        t.state = TableState.EMPTY;
       } else
       {
         c.display();
@@ -97,7 +97,7 @@ public class Waiter
     } else {
       for (Table t : tables) {
         if (t.overTable()) {
-          if (t.state == 0) {
+          if (t.state == TableState.EMPTY) {
             return;
           } else {
             state = 3;
@@ -210,14 +210,14 @@ public class Waiter
   void detAct(Table t)
   {
     //Customers are ready to order
-    if (t.state == 1 && !t.c.wait.pause)
+    if (t.state == TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER && !t.c.wait.pause)
     {
       //println("took order of table " + t.tableNum);
       orders.add(t.getOrder());
-      t.state = 2;
+      t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
     }
     //Customers are ready to be served
-    else if (t.state == 2)
+    else if (t.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING)
     {
       if (finishedOrders[0] != null)
       {
@@ -226,7 +226,7 @@ public class Waiter
           //println("served order of table " + t.tableNum);
           finishedOrders[0] = null;
           t.order.state = 1;
-          t.state = 2;
+          t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
           t.c.wait.pauseTime();
         }
       }
@@ -237,19 +237,19 @@ public class Waiter
           //println("served order of table " + t.tableNum);
           finishedOrders[1] = null;
           t.order.state = 1;
-          t.state = 2;
+          t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
           t.c.wait.pauseTime();
         }
       }
     }
     //Customers are done eating
-    else if (t.state == 3 && !t.c.wait.pause)
+    else if (t.state == TableState.CUSTOMER_READY_TO_PAY && !t.c.wait.pause)
     {
       //println("finished serving table " + t.tableNum);
       removeCustomer(t.c);
       t.c = null;
       t.order = null;
-      t.state = 0;
+      t.state = TableState.EMPTY;
     }
   }
 

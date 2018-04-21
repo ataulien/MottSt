@@ -114,7 +114,7 @@ void mouseReleased()
         if (t.getCust() == null) {
           d.setState(CustomerState.SITTING_ON_TABLE);
           t.setCust(d);
-          t.state = 1;
+          t.state = TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER;
           t.setOrder(new Order(t));
           d.setTable(t);
           ling.addCustomer(d);
