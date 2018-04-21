@@ -34,7 +34,7 @@ void draw()
   if (!pekingWong.strikeOut())
   {
     ling.frameUpdate();
-    
+
     console.display();
     pekingWong.update();
     k.display();
@@ -65,11 +65,14 @@ void checkD()
   }
   if (d == null)
   {
-    if (pekingWong.waitList.peekMin() != null)
-    {
+    if (!pekingWong.waitList.isEmpty()) {
+      Customer mostImportant = (Customer)Collections.min(pekingWong.waitList);
+
       //println("new cust");
-      d = pekingWong.waitList.removeMin();
-      d.wait.startTime();
+      pekingWong.waitList.remove(mostImportant);
+      mostImportant.wait.startTime();
+      
+      d = mostImportant;
     }
   }
 }

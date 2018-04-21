@@ -6,14 +6,13 @@ public class Restaurant {
   //instance vars
   private Kitchen kitchen;
   private Time calcSpawn;
-  ALHeap waitList;
+  ArrayList<Customer> waitList = new ArrayList<Customer>();
   ArrayList<Customer> serveList;
   Waiter BJB;
 
   // overloaded constructor
   public Restaurant(Waiter w) 
   {
-    waitList = new ALHeap();
     for (int i = 0; i < 5; i++)
     {
       waitList.add(new Customer());

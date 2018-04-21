@@ -10,7 +10,7 @@ public enum CustomerState
 }
 
 
-public class Customer extends Draggable
+public class Customer extends Draggable implements Comparable<Customer>
 {
 
   //Instance Variables
