@@ -29,6 +29,7 @@ void setup()
     print(e);
   }*/
   
+  //fullScreen();
   size(1280, 720, P3D);
   surface.setResizable(true);
 
@@ -58,7 +59,7 @@ void draw()
   displayScale = min(displayScaleX, displayScaleY);
 
   // Calculate blank space to both sides of the window
-  float spaceX = width - (1280.0 * displayScale);
+  float spaceX = width - (1280.0f * displayScale);
   float spaceY = height - (720.0f * displayScale);
 
   // We want the screen centered, so shift for half the empty space
