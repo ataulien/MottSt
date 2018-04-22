@@ -136,6 +136,11 @@ public class Waiter
       t.sittingCustomer = null;
 
       t.state = TableState.EMPTY;
+      for(int i = 0; i<finishedOrders.length ; i++)
+        if(finishedOrders[i] != null && finishedOrders[i].equals(t.order))
+          finishedOrders[i] = null;  
+
+      t.order = null;
     }
   }
 
