@@ -2,7 +2,7 @@
 
 //Globals
 Console console;
-Customer currentlyWaitingCustomer;
+Customer currentlyWaitingCustomer; 
 Waiter ling;
 Restaurant pekingWong;
 Kitchen kitchen;
@@ -13,10 +13,14 @@ PFont fontFood;
 
 float mouseScaledX = 0;
 float mouseScaledY = 0;
+int[] waitPosx = {150, 115, 80, 45, 10}; 
+int waitPosy = 190; 
 
 float displayScale = 1.5f;
 
 IViewInterface iview;
+
+boolean waiting = true;
 
 //Sets up the screen 
 void setup()
@@ -29,7 +33,6 @@ void setup()
     print(e);
   }*/
   
-  //fullScreen();
   size(1280, 720, P3D);
   surface.setResizable(true);
 
@@ -43,6 +46,7 @@ void setup()
   fontFood = createFont("AFont.ttf", 20);
   waitTime.startTime();
   console = new Console(ling);
+  //  println(currentlyWaitingCustomer); //ist  hier noch leer!!!!
 }
 
 //Calls the display functions of the globals, and updates them if necessary
@@ -59,7 +63,7 @@ void draw()
   displayScale = min(displayScaleX, displayScaleY);
 
   // Calculate blank space to both sides of the window
-  float spaceX = width - (1280.0f * displayScale);
+  float spaceX = width - (1280.0 * displayScale);
   float spaceY = height - (720.0f * displayScale);
 
   // We want the screen centered, so shift for half the empty space
@@ -74,7 +78,7 @@ void draw()
 
   // Scale game-drawing
   scale(displayScale);
-
+  
   drawGame();
 
   popMatrix();
@@ -94,11 +98,11 @@ void drawRestaurant() {
   ling.frameUpdate();
 
   console.display();
-
+  
   pekingWong.update();
 
   kitchen.display();
-
+  
   checkCurrentlyWaitingCustomer();
 
   if (ling.isMoving)
@@ -119,23 +123,34 @@ void checkCurrentlyWaitingCustomer()
 {
   if (currentlyWaitingCustomer != null) 
   {
-    currentlyWaitingCustomer.display();
+    currentlyWaitingCustomer.display();  
     if (currentlyWaitingCustomer.state == CustomerState.LEFT_RESTAURANT_ANGRY) 
     {
       ling.points -= 5;
       ling.strikes++;
       currentlyWaitingCustomer = null;
     }
+    
+    if (!pekingWong.waitList.isEmpty()){   
+      int indexCustomer;
+      for (Customer WaitingCustomer : pekingWong.waitList)
+      {
+        WaitingCustomer.state = CustomerState.WAITING;
+        indexCustomer = pekingWong.waitList.indexOf(WaitingCustomer);
+        WaitingCustomer.setPosition(waitPosx[indexCustomer], waitPosy);
+        WaitingCustomer.display();
+      }
+    }
   } else {
     if (!pekingWong.waitList.isEmpty()) {
-      Customer mostImportant = (Customer)Collections.min(pekingWong.waitList);
-
-      //println("new cust");
+    //Customer mostImportant = (Customer)Collections.min(pekingWong.waitList);
+      Customer mostImportant = pekingWong.waitList.get(0);
       pekingWong.waitList.remove(mostImportant);
       mostImportant.wait.startTime();
 
-      currentlyWaitingCustomer = mostImportant;
-    }
+      currentlyWaitingCustomer = mostImportant; 
+      currentlyWaitingCustomer.state = CustomerState.STANDING_ON_SIDE;
+  }
   }
 }
 
