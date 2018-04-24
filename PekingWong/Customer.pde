@@ -7,6 +7,7 @@ public enum CustomerState
     STANDING_ON_SIDE, 
     SITTING_ON_TABLE, 
     LEFT_RESTAURANT_ANGRY,
+    WAITING,                     
 }
 
 
@@ -21,6 +22,8 @@ public class Customer extends Draggable implements Comparable<Customer>
   private CustomerState state;
   int origX;
   int origY;
+  int waitx;  
+  int waity;  
   PImage[] images; 
   PImage waiting;
   PImage sitting;
@@ -36,10 +39,10 @@ public class Customer extends Draggable implements Comparable<Customer>
     VIPNum = (int) (Math.random() * 10) + 1;
     state = CustomerState.STANDING_ON_SIDE;
     mood = 10;
-    bx = 75;
-    by = 190;
-    origX = 75;
-    origY = 190;
+    bx = 190;
+    by = 210;
+    origX = 190;
+    origY = 210;
 
     wait = new Time();
     //wait time is lower for customers of higher priority (lower VIPNum)
@@ -76,14 +79,27 @@ public class Customer extends Draggable implements Comparable<Customer>
       by = table.y-50;
       image(sitting, bx, by);
     }
-    noStroke();
-    fill(20, 20, 150, 0);
-    rect(bx, by, 80, 150);
-
-    fill(0);
-    textFont(fontFood);
-    text("MOOD: " + mood, bx, by+10);
+    if (state == CustomerState.WAITING) {
+      image(waiting, waitx, waity);
+      
+      //displays mood for WaitingCostumer
+      noStroke();
+      fill(20, 20, 150, 0);
+      rect(waitx, waity, 80, 150);
+      fill(0);
+      textFont(fontFood);
+      text("MOOD: " + mood, waitx, waity+10);
+    }
+    
+   if (state == CustomerState.STANDING_ON_SIDE || state == CustomerState.SITTING_ON_TABLE ) {
+      noStroke();
+      fill(20, 20, 150, 0);
+      rect(bx, by, 80, 150);
+      fill(0);
+      textFont(fontFood);
+      text("MOOD: " + mood, bx, by+10);
   }
+}
 
   //Checks if the customer has been waiting a certain amount of time. 
   void update()
@@ -186,5 +202,11 @@ public class Customer extends Draggable implements Comparable<Customer>
   public String getName()
   {
     return name;
+  }
+  
+  public void setPosition(int posx, int posy) 
+  { 
+    waitx = posx;
+    waity = posy;
   }
 }
