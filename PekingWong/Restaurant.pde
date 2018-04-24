@@ -13,7 +13,7 @@ public class Restaurant {
   // overloaded constructor
   public Restaurant(Waiter w) 
   {
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 5 ; i++)
     {
       waitList.add(new Customer());
     }
@@ -32,7 +32,8 @@ public class Restaurant {
     kitchen.display();
     for (Customer d : serveList)
     {
-      d.display();
+     d.display(); //wofür?
+
     }
   }
 
@@ -62,9 +63,8 @@ public class Restaurant {
   //Checks if the time is right for there to be more customers
   boolean shouldSpawn()
   {
-    if (calcSpawn.getElapsed() > 60/((int)(BJB.getNumPoints()/10)+2))
-    {
-      //println(calcSpawn);
+    if (calcSpawn.getElapsed() > 60/((int)(BJB.getNumPoints()/10)+2) && waitList.size() < 4) // vorher: calcSpawn.getElapsed() > 60/((int)(BJB.getNumPoints()/10)+2)
+    { 
       return true;
     }
     return false;
