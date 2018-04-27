@@ -249,6 +249,7 @@ public class Waiter
         //println("took order of table " + t.tableNum);
         orders.add(t.getOrder());
         t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
+        t.sittingCustomer.state = CustomerState.SITTING_ON_TABLE;
       }
       break;
 

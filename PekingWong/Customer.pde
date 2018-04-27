@@ -7,7 +7,10 @@ public enum CustomerState
     STANDING_ON_SIDE, 
     SITTING_ON_TABLE, 
     LEFT_RESTAURANT_ANGRY,
-    WAITING,                     
+    WAITING,
+    READING_MENU,
+    READY_TO_ORDER,
+    READY_TO_PAY,
 }
 
 
@@ -23,11 +26,13 @@ public class Customer extends Draggable implements Comparable<Customer>
   int origX;
   int origY;
   int waitx;  
-  int waity;  
-  PImage[] images; 
+  int waity;   
   PImage waiting;
   PImage sitting;
-  int rand = (int) (Math.random() * 4);
+  PImage attention;
+  PImage reading;
+  PImage paying;
+  int rand = (int) random(1,5);
   Time wait;
   PFont fontFood = createFont("AFont.ttf", 20);
 
@@ -48,18 +53,12 @@ public class Customer extends Draggable implements Comparable<Customer>
     //wait time is lower for customers of higher priority (lower VIPNum)
     wait.setGoal(getVIPNum() * 20);
 
-    images = new PImage[8];
-    images[0] = loadImage("Images/Customer1.png");
-    images[1] = loadImage("Images/Customer2.png");
-    images[2] = loadImage("Images/Customer3.png");
-    images[3] = loadImage("Images/Customer4.png");
-    images[4] = loadImage("Images/Cust1SitLeft.png");
-    images[5] = loadImage("Images/Cust2SitLeft.png");
-    images[6] = loadImage("Images/Cust3SitLeft.png");
-    images[7] = loadImage("Images/Cust4SitLeft.png");
 
-    waiting = images[rand];
-    sitting = images[rand+4];
+    waiting = loadImage("Images/Customers/Customer" + rand + "_stand.png");
+    sitting = loadImage("Images/Customers/Customer" + rand + "_idle.png");
+    attention = loadImage("Images/Customers/Customer" + rand + "_attention.png"); 
+    reading = loadImage("Images/Customers/Customer" + rand + "_read.png");
+    paying = loadImage("Images/Customers/Customer" + rand + "_pay.png");
   }
 
   /********
@@ -79,6 +78,21 @@ public class Customer extends Draggable implements Comparable<Customer>
       by = table.y-50;
       image(sitting, bx, by);
     }
+    if(state == CustomerState.READY_TO_PAY){
+      bx = table.x - 50;
+      by = table.y - 50;
+      image(paying, bx, by);
+    }
+    if(state == CustomerState.READY_TO_ORDER){
+      bx = table.x - 50;
+      by = table.y - 50;
+      image(attention, bx, by);
+    }
+    if(state == CustomerState.READING_MENU){
+      bx = table.x - 50;
+      by = table.y - 50;
+      image(reading, bx, by);
+    }
     if (state == CustomerState.WAITING) {
       image(waiting, waitx, waity);
       
@@ -91,7 +105,8 @@ public class Customer extends Draggable implements Comparable<Customer>
       text("MOOD: " + mood, waitx, waity+10);
     }
     
-   if (state == CustomerState.STANDING_ON_SIDE || state == CustomerState.SITTING_ON_TABLE ) {
+   if (state == CustomerState.STANDING_ON_SIDE || state == CustomerState.SITTING_ON_TABLE || state == CustomerState.READY_TO_PAY
+       || state == CustomerState.READING_MENU || state == CustomerState.READY_TO_ORDER) {
       noStroke();
       fill(20, 20, 150, 0);
       rect(bx, by, 80, 150);
@@ -113,9 +128,14 @@ public class Customer extends Draggable implements Comparable<Customer>
       }
       if (wait.pause)
       {
+        if (!wait.endInterval() && table.state == TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER)
+        {
+          state = CustomerState.READING_MENU;
+        }
         if (wait.endInterval() && table.state == TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER)
         {
           wait.endPause();
+          state = CustomerState.READY_TO_ORDER;
           //println("Table " + table.tableNum + " is ready to order.");
         } else {
           if (wait.endInterval() && table.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING)
@@ -124,6 +144,7 @@ public class Customer extends Draggable implements Comparable<Customer>
             wait.endPause();
             table.order.state = OrderState.HIDDEN;
             table.state = TableState.CUSTOMER_READY_TO_PAY;
+            state = CustomerState.READY_TO_PAY;
           }
         }
       }
