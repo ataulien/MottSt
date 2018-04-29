@@ -58,7 +58,7 @@ class Console
       } else if (t.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING)
       {
         if (!t.sittingCustomer.wait.pause)
-          s += " Waiting for food."; 
+          s += " Waiting for food.";
         else
           s += " Eating food...";
       } else if (t.state == TableState.CUSTOMER_READY_TO_PAY)

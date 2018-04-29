@@ -13,7 +13,6 @@ public enum CustomerState
     READY_TO_PAY,
 }
 
-
 public class Customer extends Draggable implements Comparable<Customer>
 {
 
@@ -52,7 +51,6 @@ public class Customer extends Draggable implements Comparable<Customer>
     wait = new Time();
     //wait time is lower for customers of higher priority (lower VIPNum)
     wait.setGoal(getVIPNum() * 20);
-
 
     waiting = loadImage("Images/Customers/Customer" + rand + "_stand.png");
     sitting = loadImage("Images/Customers/Customer" + rand + "_idle.png");
@@ -137,6 +135,7 @@ public class Customer extends Draggable implements Comparable<Customer>
           wait.endPause();
           state = CustomerState.READY_TO_ORDER;
           //println("Table " + table.tableNum + " is ready to order.");
+          cHungry.play();
         } else {
           if (wait.endInterval() && table.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING)
           {

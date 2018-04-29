@@ -1,5 +1,7 @@
 //Driver
 
+import processing.sound.*;
+
 //Globals
 Console console;
 Customer currentlyWaitingCustomer; 
@@ -9,6 +11,8 @@ Kitchen kitchen;
 Time waitTime;
 PImage bgimg;
 PImage endimg;
+SoundFile bgSample;
+SoundFile cHungry;
 PFont fontFood;
 
 float mouseScaledX = 0;
@@ -45,6 +49,12 @@ void setup()
   waitTime.startTime();
   console = new Console(ling);
   //  println(currentlyWaitingCustomer); //ist  hier noch leer!!!!
+  
+  bgSample = new SoundFile(this, "sound/bg-sample.mp3");
+  bgSample.loop();
+  bgSample.amp(0.5);
+  
+  cHungry = new SoundFile(this, "sound/Alice_hungry.mp3");
 }
 
 //Calls the display functions of the globals, and updates them if necessary
