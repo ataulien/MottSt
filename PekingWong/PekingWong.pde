@@ -11,8 +11,16 @@ Kitchen kitchen;
 Time waitTime;
 PImage bgimg;
 PImage endimg;
+//Soundfiles
 SoundFile bgSample;
+SoundFile cWaiting;
+SoundFile cOrdering;
 SoundFile cHungry;
+SoundFile cReceipt;
+SoundFile serveFood;
+SoundFile takeDishes;
+SoundFile placeOrder;
+SoundFile ordered;
 PFont fontFood;
 
 float mouseScaledX = 0;
@@ -50,11 +58,18 @@ void setup()
   console = new Console(ling);
   //  println(currentlyWaitingCustomer); //ist  hier noch leer!!!!
   
-  bgSample = new SoundFile(this, "sound/bg-sample.mp3");
-  bgSample.loop();
-  bgSample.amp(0.5);
-  
+  cWaiting = new SoundFile(this, "sound/Alice_waiting.mp3");
+  cOrdering = new SoundFile(this, "sound/Alice_ordering.mp3");
   cHungry = new SoundFile(this, "sound/Alice_hungry.mp3");
+  cReceipt = new SoundFile(this, "sound/Alice_receipt.mp3");
+  serveFood = new SoundFile(this, "sound/Serving_food.mp3");
+  takeDishes = new SoundFile(this, "sound/Take_dishes.mp3");
+  placeOrder = new SoundFile(this, "sound/Place_an_order.mp3");
+  ordered = new SoundFile(this, "sound/Ling_ordered.mp3");
+  bgSample = new SoundFile(this, "sound/bg-sample.mp3");
+  
+  bgSample.loop();
+  bgSample.amp(0.2);
 }
 
 //Calls the display functions of the globals, and updates them if necessary

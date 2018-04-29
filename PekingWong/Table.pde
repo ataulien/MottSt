@@ -100,6 +100,8 @@ class Table
   //returns order placed by table
   public Order getOrder()
   {
+    ordered.play();
+    ordered.amp(0.2);
     return order;
   }
 

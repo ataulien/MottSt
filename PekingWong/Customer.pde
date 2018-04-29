@@ -135,7 +135,6 @@ public class Customer extends Draggable implements Comparable<Customer>
           wait.endPause();
           state = CustomerState.READY_TO_ORDER;
           //println("Table " + table.tableNum + " is ready to order.");
-          cHungry.play();
         } else {
           if (wait.endInterval() && table.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING)
           {
