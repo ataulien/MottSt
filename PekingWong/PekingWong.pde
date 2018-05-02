@@ -3,7 +3,6 @@
 import processing.sound.*;
 
 //Globals
-Console console;
 Customer currentlyWaitingCustomer; 
 Waiter ling;
 Restaurant pekingWong;
@@ -55,7 +54,7 @@ void setup()
   pekingWong = new Restaurant(ling);
   fontFood = createFont("AFont.ttf", 20);
   waitTime.startTime();
-  console = new Console(ling);
+  
   //  println(currentlyWaitingCustomer); //ist  hier noch leer!!!!
   
   cWaiting = new SoundFile(this, "sound/Alice_waiting.mp3");
@@ -119,8 +118,6 @@ void drawGame() {
 
 void drawRestaurant() {
   ling.frameUpdate();
-
-  console.display();
   
   pekingWong.update();
 

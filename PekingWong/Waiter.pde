@@ -25,10 +25,18 @@ public class Waiter
   boolean isMoving;
   WaiterState state;
   PImage imageWaiterNoFood;
+  PImage imageWaiterOneFood;
+  PImage imageWaiterTwoFood;
   PFont fontScore = createFont("AFont.ttf", 20);
 
   private int strikes;
   private int points;
+  
+  private int orderNumberTextSize = 16;
+  private float orderNumberYOffset = 25f;
+  
+  private float orderNumberXOffsetRight = 50f;
+  private float orderNumberXOffsetLeft = 20f;
 
   public Waiter(Kitchen kitchen) 
   {
@@ -47,7 +55,9 @@ public class Waiter
 
     isMoving = false;
     state = WaiterState.IDLE;
-    imageWaiterNoFood = loadImage("Images/WaiterRight.png");
+    imageWaiterNoFood = loadImage("Images/WaiterNoFood.png");
+    imageWaiterOneFood = loadImage("Images/WaiterRight.png");
+    imageWaiterTwoFood = loadImage("Images/WaiterUp.png");
   }
 
   void display()
@@ -71,7 +81,33 @@ public class Waiter
   }
 
   private void drawWaiter() {
-    image(imageWaiterNoFood, position.x, position.y);
+    pushStyle();
+    textSize(orderNumberTextSize);
+    
+    if(getNumDishes() == 0)
+      image(imageWaiterNoFood, position.x, position.y);
+    else if(getNumDishes() == 1)
+    {
+      image(imageWaiterOneFood, position.x, position.y);
+      Order finishedOrder;
+      
+      if(finishedOrders[0] == null)
+        finishedOrder = finishedOrders[1];
+      else
+        finishedOrder = finishedOrders[0];
+    
+      text(finishedOrder.table.tableNum, position.x + orderNumberXOffsetRight, position.y + orderNumberYOffset);
+    }
+    else
+    {
+      image(imageWaiterTwoFood, position.x, position.y);
+      
+      text(finishedOrders[0].table.tableNum, position.x + orderNumberXOffsetRight, position.y + orderNumberYOffset);
+      text(finishedOrders[1].table.tableNum, position.x - orderNumberXOffsetLeft, position.y + orderNumberYOffset);
+    }
+      
+      
+    popStyle();
   }
 
   private void drawScore() {
@@ -339,5 +375,17 @@ public class Waiter
   public int getNumStrikes()
   {
     return strikes;
+  }
+  
+  public int getNumDishes()
+  {  
+    int dishes = 0;
+    if(finishedOrders[0] != null)
+      dishes++;
+    
+    if(finishedOrders[1] != null)
+      dishes++;
+      
+    return dishes;
   }
 }
