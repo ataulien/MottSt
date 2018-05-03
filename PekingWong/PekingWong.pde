@@ -6,6 +6,7 @@ Waiter ling;
 Restaurant pekingWong;
 Kitchen kitchen;
 Time waitTime;
+Gaze gaze;
 PImage bgimg;
 PImage endimg;
 //Soundfiles
@@ -46,6 +47,9 @@ void setup()
   bgimg = loadImage("Images/RestaurantFloorV3.jpg");
   endimg = loadImage("Images/endscreen.jpg");
 
+  gaze = new Gaze();
+  gaze.backgroundImage = bgimg;
+  
   kitchen = new Kitchen();
   ling = new Waiter(kitchen);
   waitTime = new Time();
@@ -127,6 +131,8 @@ void drawRestaurant() {
     ling.moveToStateTarget();
 
   ling.display();
+  
+  gaze.display();
 }
 
 void drawEndscreen() {
