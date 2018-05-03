@@ -24,13 +24,10 @@ public class Customer extends Draggable implements Comparable<Customer>
   private CustomerState state;
   int origX;
   int origY;
-  int waitx;  
-  int waity;   
-  PImage waiting;
-  PImage sitting;
-  PImage attention;
-  PImage reading;
-  PImage paying;
+  float waitx;  
+  float waity;   
+  PImage waiting, sitting, attention, reading, paying;
+  PImage heart1, heart2, heart3, heart4, heart5, heart6;
   int rand = (int) random(1,5);
   Time wait;
   PFont fontFood = createFont("AFont.ttf", 20);
@@ -57,6 +54,13 @@ public class Customer extends Draggable implements Comparable<Customer>
     attention = loadImage("Images/Customers/Customer" + rand + "_attention.png"); 
     reading = loadImage("Images/Customers/Customer" + rand + "_read.png");
     paying = loadImage("Images/Customers/Customer" + rand + "_pay.png");
+    
+    heart1 = loadImage("Images/Mood_Hearts/heartState1.png");
+    heart2 = loadImage("Images/Mood_Hearts/heartState2.png");
+    heart3 = loadImage("Images/Mood_Hearts/heartState3.png");
+    heart4 = loadImage("Images/Mood_Hearts/heartState4.png");
+    heart5 = loadImage("Images/Mood_Hearts/heartState5.png");
+    heart6 = loadImage("Images/Mood_Hearts/heartState6.png");
   }
 
   /********
@@ -93,24 +97,11 @@ public class Customer extends Draggable implements Comparable<Customer>
     }
     if (state == CustomerState.WAITING) {
       image(waiting, waitx, waity);
-      
-      //displays mood for WaitingCostumer
-      noStroke();
-      fill(20, 20, 150, 0);
-      rect(waitx, waity, 80, 150);
-      fill(0);
-      textFont(fontFood);
-      text("MOOD: " + mood, waitx, waity+10);
-    }
-    
+      displayMood(waitx,waity);
+    } 
    if (state == CustomerState.STANDING_ON_SIDE || state == CustomerState.SITTING_ON_TABLE || state == CustomerState.READY_TO_PAY
        || state == CustomerState.READING_MENU || state == CustomerState.READY_TO_ORDER) {
-      noStroke();
-      fill(20, 20, 150, 0);
-      rect(bx, by, 80, 150);
-      fill(0);
-      textFont(fontFood);
-      text("MOOD: " + mood, bx, by+10);
+       displayMood(bx,by);
   }
 }
 
@@ -165,6 +156,22 @@ public class Customer extends Draggable implements Comparable<Customer>
       }
     }
   }
+  
+  void displayMood(float posx, float posy){
+  
+      if(mood == 10){ 
+        image(heart1, posx+15, posy-30); }
+      if(mood == 9 || mood == 8){ 
+        image(heart2, posx+15, posy-30); }
+      if(mood == 7 || mood == 6){ 
+        image(heart3, posx+15, posy-30); }
+      if(mood == 5 || mood == 4){ 
+        image(heart4, posx+15, posy-30); }
+      if(mood == 3 || mood == 2){ 
+        image(heart5, posx+15, posy-30); }
+      if(mood == 1){ 
+        image(heart6, posx+10, posy-30); } 
+    }
 
   //two customers are equal if they are sitting at the same table
   public boolean equals(Customer c)
@@ -223,7 +230,7 @@ public class Customer extends Draggable implements Comparable<Customer>
     return name;
   }
   
-  public void setPosition(int posx, int posy) 
+  public void setPosition(float posx, float posy) 
   { 
     waitx = posx;
     waity = posy;
