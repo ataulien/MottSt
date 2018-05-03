@@ -1,7 +1,5 @@
 //Driver
 
-import processing.sound.*;
-
 //Globals
 Customer currentlyWaitingCustomer; 
 Waiter ling;
