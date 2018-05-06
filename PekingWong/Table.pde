@@ -101,7 +101,8 @@ class Table
   public Order getOrder()
   {
     ordered.play();
-    ordered.amp(0.2);
+    ordered.amp(speechVol);
+    ordered.pan(tableNum);
     return order;
   }
 

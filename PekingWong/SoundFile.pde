@@ -29,9 +29,21 @@ public class SoundFile
     }
   }
 
-  public void pan(float v) {
+  public void pan(int tableNum) {
     if (enable) {
-      realFile.pan(v);
+      switch (tableNum) {
+        case 1: case 4:
+          realFile.pan(panL);
+          break;
+        case 2: case 5:
+          realFile.pan(panM);
+          break;
+        case 3: case 6:
+          realFile.pan(panR);
+          break;
+        default:
+          break;
+      }
     }
   }
 }

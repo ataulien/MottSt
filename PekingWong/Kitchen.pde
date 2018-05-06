@@ -123,14 +123,14 @@ public class Kitchen {
   //adds order (e.g. small foods) to the front of pendingFoodList
   public void addFirstToPending(Order order) {
     placeOrder.play();
-    placeOrder.amp(0.2);
+    placeOrder.amp(speechVol);
     pendingFoodList.addFirst(order);
   }
 
   //adds order (e.g. large foods) to the end of pendingFoodList
   public void addLastToPending(Order order) {
     placeOrder.play();
-    placeOrder.amp(0.2);
+    placeOrder.amp(speechVol);
     pendingFoodList.addLast(order);
   }
 

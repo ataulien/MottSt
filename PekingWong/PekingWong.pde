@@ -10,7 +10,6 @@ Gaze gaze;
 PImage bgimg;
 PImage endimg;
 //Soundfiles
-SoundFile bgSample;
 SoundFile cWaiting;
 SoundFile cOrdering;
 SoundFile cHungry;
@@ -19,6 +18,7 @@ SoundFile serveFood;
 SoundFile takeDishes;
 SoundFile placeOrder;
 SoundFile ordered;
+SoundFile bgSample;
 PFont fontFood;
 
 float mouseScaledX = 0;
@@ -27,6 +27,11 @@ int[] waitPosx = {150, 115, 80, 45, 10};
 int waitPosy = 190; 
 
 float displayScale = 1.5f;
+float bgVol = 0.2f;
+float speechVol = 0.5f;
+float panL = -1.0f;
+float panM = 0.0f;
+float panR = 1.0f;
 
 IViewInterface iview;
 
@@ -59,18 +64,18 @@ void setup()
   
   //  println(currentlyWaitingCustomer); //ist  hier noch leer!!!!
   
-  cWaiting = new SoundFile(this, "sound/Alice_waiting.mp3");
-  cOrdering = new SoundFile(this, "sound/Alice_ordering.mp3");
-  cHungry = new SoundFile(this, "sound/Alice_hungry.mp3");
-  cReceipt = new SoundFile(this, "sound/Alice_receipt.mp3");
-  serveFood = new SoundFile(this, "sound/Serving_food.mp3");
-  takeDishes = new SoundFile(this, "sound/Take_dishes.mp3");
-  placeOrder = new SoundFile(this, "sound/Place_an_order.mp3");
-  ordered = new SoundFile(this, "sound/Ling_ordered.mp3");
-  bgSample = new SoundFile(this, "sound/bg-sample.mp3");
+  bgSample = new SoundFile(this, "sound/mono/bg-sample.mp3");
+  cWaiting = new SoundFile(this, "sound/mono/Alice_waiting.mp3");
+  cOrdering = new SoundFile(this, "sound/mono/Alice_ordering.mp3");
+  cHungry = new SoundFile(this, "sound/mono/Alice_hungry.mp3");
+  cReceipt = new SoundFile(this, "sound/mono/Alice_receipt.mp3");
+  serveFood = new SoundFile(this, "sound/mono/Serving_food.mp3");
+  takeDishes = new SoundFile(this, "sound/mono/Take_dishes.mp3");
+  placeOrder = new SoundFile(this, "sound/mono/Place_an_order.mp3");
+  ordered = new SoundFile(this, "sound/mono/Ling_ordered.mp3");
   
   bgSample.loop();
-  bgSample.amp(0.2);
+  bgSample.amp(bgVol);
 }
 
 //Calls the display functions of the globals, and updates them if necessary
