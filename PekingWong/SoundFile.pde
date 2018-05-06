@@ -16,6 +16,12 @@ public class SoundFile
       realFile.play();
     }
   }
+  
+  //public void stop() {
+  //  if (enable) {
+  //    realFile.stop();
+  //  }
+  //}
 
   public void loop() {
     if (enable) {

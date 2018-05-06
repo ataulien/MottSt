@@ -1,4 +1,3 @@
-
 /*****************************************************
  * interface Queue
  * Includes only methods listed in AP subset of Java

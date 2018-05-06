@@ -5,7 +5,9 @@ public enum CustomerState
 {
   HIDDEN, // Doesn't seem to be set anywhere (was state -1 before)
     STANDING_ON_SIDE, 
+    STANDING_ON_SIDE_ANGRY, 
     SITTING_ON_TABLE, 
+    SITTING_ON_TABLE_HUNGRY, 
     LEFT_RESTAURANT_ANGRY,
     WAITING,
     READING_MENU,
@@ -75,7 +77,16 @@ public class Customer extends Draggable implements Comparable<Customer>
       super.display();
       image(waiting, bx, by);
     }
+    if (state == CustomerState.STANDING_ON_SIDE_ANGRY) {
+      super.display();
+      image(waiting, bx, by);
+    }
     if (state == CustomerState.SITTING_ON_TABLE) {
+      bx = table.x - 50;
+      by = table.y-50;
+      image(sitting, bx, by);
+    }
+    if (state == CustomerState.SITTING_ON_TABLE_HUNGRY) {
       bx = table.x - 50;
       by = table.y-50;
       image(sitting, bx, by);
@@ -99,9 +110,8 @@ public class Customer extends Draggable implements Comparable<Customer>
       image(waiting, waitx, waity);
       displayMood(waitx,waity);
     } 
-   if (state == CustomerState.STANDING_ON_SIDE || state == CustomerState.SITTING_ON_TABLE || state == CustomerState.READY_TO_PAY
-       || state == CustomerState.READING_MENU || state == CustomerState.READY_TO_ORDER) {
-       displayMood(bx,by);
+    if (state == CustomerState.STANDING_ON_SIDE || state == CustomerState.STANDING_ON_SIDE_ANGRY || state == CustomerState.SITTING_ON_TABLE || state == CustomerState.SITTING_ON_TABLE_HUNGRY || state == CustomerState.READY_TO_PAY || state == CustomerState.READING_MENU || state == CustomerState.READY_TO_ORDER) {
+      displayMood(bx,by);
   }
 }
 
@@ -126,6 +136,9 @@ public class Customer extends Draggable implements Comparable<Customer>
           wait.endPause();
           state = CustomerState.READY_TO_ORDER;
           //println("Table " + table.tableNum + " is ready to order.");
+          cOrdering.play();
+          cOrdering.amp(speechVol);
+          cOrdering.pan(table.tableNum);
         } else {
           if (wait.endInterval() && table.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING)
           {
@@ -134,6 +147,9 @@ public class Customer extends Draggable implements Comparable<Customer>
             table.order.state = OrderState.HIDDEN;
             table.state = TableState.CUSTOMER_READY_TO_PAY;
             state = CustomerState.READY_TO_PAY;
+            cReceipt.play();
+            cReceipt.amp(speechVol);
+            cReceipt.pan(table.tableNum);
           }
         }
       }
@@ -143,7 +159,7 @@ public class Customer extends Draggable implements Comparable<Customer>
   //If the customer not on a table, return to original x and y coordinates
   void checkState()
   {
-    if (state == CustomerState.STANDING_ON_SIDE)
+    if (state == CustomerState.STANDING_ON_SIDE || state == CustomerState.STANDING_ON_SIDE_ANGRY)
     {
       if (locked) 
       {
@@ -159,19 +175,32 @@ public class Customer extends Draggable implements Comparable<Customer>
   
   void displayMood(float posx, float posy){
   
-      if(mood == 10){ 
-        image(heart1, posx+15, posy-30); }
-      if(mood == 9 || mood == 8){ 
-        image(heart2, posx+15, posy-30); }
-      if(mood == 7 || mood == 6){ 
-        image(heart3, posx+15, posy-30); }
-      if(mood == 5 || mood == 4){ 
-        image(heart4, posx+15, posy-30); }
-      if(mood == 3 || mood == 2){ 
-        image(heart5, posx+15, posy-30); }
-      if(mood == 1){ 
-        image(heart6, posx+10, posy-30); } 
-    }
+    if(mood == 10){ 
+      image(heart1, posx+15, posy-30); }
+    if(mood == 9 || mood == 8){ 
+      image(heart2, posx+15, posy-30); }
+    if(mood == 7 || mood == 6){ 
+      image(heart3, posx+15, posy-30); }
+    if(mood == 5 || mood == 4){ 
+      if (state == CustomerState.SITTING_ON_TABLE) {
+        cHungry.play();
+        cHungry.amp(speechVol);
+        cHungry.pan(table.tableNum);
+        state = CustomerState.SITTING_ON_TABLE_HUNGRY;
+      } 
+      image(heart4, posx+15, posy-30); }
+    if(mood == 3 || mood == 2){
+      if (state == CustomerState.STANDING_ON_SIDE) {
+        int tableNum = 1;
+        cWaiting.play();
+        cWaiting.amp(speechVol);
+        cWaiting.pan(tableNum);
+        state = CustomerState.STANDING_ON_SIDE_ANGRY;
+      }
+      image(heart5, posx+15, posy-30); }
+    if(mood == 1){ 
+      image(heart6, posx+10, posy-30); } 
+  }
 
   //two customers are equal if they are sitting at the same table
   public boolean equals(Customer c)

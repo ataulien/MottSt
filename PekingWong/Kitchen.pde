@@ -40,6 +40,8 @@ public class Kitchen {
   void updateCurrentlyShownOrder() {
     if (!finishedFoodList.isEmpty()) {
       if (currentOrder == null) {
+        finishedFood.play();
+        finishedFood.amp(speechVol);
         currentOrder = finishedFoodList.dequeue();
       }
     }

@@ -14,8 +14,7 @@ SoundFile cWaiting;
 SoundFile cOrdering;
 SoundFile cHungry;
 SoundFile cReceipt;
-SoundFile serveFood;
-SoundFile takeDishes;
+SoundFile finishedFood;
 SoundFile placeOrder;
 SoundFile ordered;
 SoundFile bgSample;
@@ -24,7 +23,7 @@ PFont fontFood;
 float mouseScaledX = 0;
 float mouseScaledY = 0;
 int[] waitPosx = {150, 115, 80, 45, 10}; 
-int waitPosy = 190; 
+int waitPosy = 190;
 
 float displayScale = 1.5f;
 float bgVol = 0.2f;
@@ -69,8 +68,7 @@ void setup()
   cOrdering = new SoundFile(this, "sound/mono/Alice_ordering.mp3");
   cHungry = new SoundFile(this, "sound/mono/Alice_hungry.mp3");
   cReceipt = new SoundFile(this, "sound/mono/Alice_receipt.mp3");
-  serveFood = new SoundFile(this, "sound/mono/Serving_food.mp3");
-  takeDishes = new SoundFile(this, "sound/mono/Take_dishes.mp3");
+  finishedFood = new SoundFile(this, "sound/mono/Finished_Food.mp3");
   placeOrder = new SoundFile(this, "sound/mono/Place_an_order.mp3");
   ordered = new SoundFile(this, "sound/mono/Ling_ordered.mp3");
   
@@ -179,7 +177,7 @@ void checkCurrentlyWaitingCustomer()
 
       currentlyWaitingCustomer = mostImportant; 
       currentlyWaitingCustomer.state = CustomerState.STANDING_ON_SIDE;
-  }
+    }
   }
 }
 
