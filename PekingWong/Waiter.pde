@@ -33,10 +33,10 @@ public class Waiter
   private int points;
   
   private int orderNumberTextSize = 16;
-  private float orderNumberYOffset = 25f;
+  private float orderNumberYOffset = 40f;
   
   private float orderNumberXOffsetRight = 50f;
-  private float orderNumberXOffsetLeft = 20f;
+  private float orderNumberXOffsetLeft = -15f;
 
   public Waiter(Kitchen kitchen) 
   {
@@ -56,8 +56,8 @@ public class Waiter
     isMoving = false;
     state = WaiterState.IDLE;
     imageWaiterNoFood = loadImage("Images/WaiterNoFood.png");
-    imageWaiterOneFood = loadImage("Images/WaiterRight.png");
-    imageWaiterTwoFood = loadImage("Images/WaiterUp.png");
+    imageWaiterOneFood = loadImage("Images/WaiterOneFood.png");
+    imageWaiterTwoFood = loadImage("Images/WaiterTwoFood.png");
   }
 
   void display()
