@@ -160,17 +160,25 @@ void checkCurrentlyWaitingCustomer()
     
     if (!pekingWong.waitList.isEmpty()){   
       int indexCustomer;
+      ArrayList<Customer> toRemove = new ArrayList<Customer>();
       for (Customer WaitingCustomer : pekingWong.waitList)
       {
-        WaitingCustomer.state = CustomerState.WAITING;
+        if (WaitingCustomer.state == CustomerState.LEFT_RESTAURANT_ANGRY){
+        toRemove.add(WaitingCustomer);
+        }
         indexCustomer = pekingWong.waitList.indexOf(WaitingCustomer);
         WaitingCustomer.setPosition(waitPosx[indexCustomer], waitPosy);
         WaitingCustomer.display();
       }
+      for (Customer CustomerToRemove : toRemove)
+      {
+       pekingWong.waitList.remove(CustomerToRemove);
+       ling.points -= 5;
+       ling.strikes++;
+      }
     }
   } else {
     if (!pekingWong.waitList.isEmpty()) {
-    //Customer mostImportant = (Customer)Collections.min(pekingWong.waitList);
       Customer mostImportant = pekingWong.waitList.get(0);
       pekingWong.waitList.remove(mostImportant);
       mostImportant.wait.startTime();

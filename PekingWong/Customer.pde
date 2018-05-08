@@ -1,267 +1,251 @@
+//Driver
 
-import java.util.ArrayList;
+//Globals
+Customer currentlyWaitingCustomer; 
+Waiter ling;
+Restaurant pekingWong;
+Kitchen kitchen;
+Time waitTime;
+Gaze gaze;
+PImage bgimg;
+PImage endimg;
+//Soundfiles
+SoundFile cWaiting;
+SoundFile cOrdering;
+SoundFile cHungry;
+SoundFile cReceipt;
+SoundFile finishedFood;
+SoundFile placeOrder;
+SoundFile ordered;
+SoundFile bgSample;
+PFont fontFood;
 
-public enum CustomerState
+float mouseScaledX = 0;
+float mouseScaledY = 0;
+int[] waitPosx = {150, 115, 80, 45, 10}; 
+int waitPosy = 190;
+
+float displayScale = 1.5f;
+float bgVol = 0.2f;
+float speechVol = 0.5f;
+float panL = -1.0f;
+float panM = 0.0f;
+float panR = 1.0f;
+
+IViewInterface iview;
+
+//Sets up the screen 
+void setup()
 {
-  HIDDEN, // Doesn't seem to be set anywhere (was state -1 before)
-    STANDING_ON_SIDE, 
-    STANDING_ON_SIDE_ANGRY, 
-    SITTING_ON_TABLE, 
-    SITTING_ON_TABLE_HUNGRY, 
-    LEFT_RESTAURANT_ANGRY,
-    WAITING,
-    READING_MENU,
-    READY_TO_ORDER,
-    READY_TO_PAY,
+  /*iview = new IViewInterface(sketchPath("") + "Data");
+  
+  try {
+    iview.connect("123", 123, "123", 123);
+  } catch(IViewInterface.IViewException e) {
+    print(e);
+  }*/
+  
+  size(1280, 720, P3D);
+  surface.setResizable(true);
+
+  bgimg = loadImage("Images/RestaurantFloorV3.jpg");
+  endimg = loadImage("Images/endscreen.jpg");
+
+  gaze = new Gaze();
+  gaze.backgroundImage = bgimg;
+  
+  kitchen = new Kitchen();
+  ling = new Waiter(kitchen);
+  waitTime = new Time();
+  pekingWong = new Restaurant(ling);
+  fontFood = createFont("AFont.ttf", 20);
+  waitTime.startTime();
+  
+  //  println(currentlyWaitingCustomer); //ist  hier noch leer!!!!
+  
+  bgSample = new SoundFile(this, "sound/mono/bg-sample.mp3");
+  cWaiting = new SoundFile(this, "sound/mono/Alice_waiting.mp3");
+  cOrdering = new SoundFile(this, "sound/mono/Alice_ordering.mp3");
+  cHungry = new SoundFile(this, "sound/mono/Alice_hungry.mp3");
+  cReceipt = new SoundFile(this, "sound/mono/Alice_receipt.mp3");
+  finishedFood = new SoundFile(this, "sound/mono/Finished_Food.mp3");
+  placeOrder = new SoundFile(this, "sound/mono/Place_an_order.mp3");
+  ordered = new SoundFile(this, "sound/mono/Ling_ordered.mp3");
+  
+  bgSample.loop();
+  bgSample.amp(bgVol);
 }
 
-public class Customer extends Draggable implements Comparable<Customer>
+//Calls the display functions of the globals, and updates them if necessary
+void draw()
 {
+  background(0);
 
-  //Instance Variables
-  private String name;
-  private Table table;
-  private int VIPNum;
-  private int mood;
-  private CustomerState state;
-  int origX;
-  int origY;
-  float waitx;  
-  float waity;   
-  PImage waiting, sitting, attention, reading, paying;
-  PImage heart1, heart2, heart3, heart4, heart5, heart6;
-  int rand = (int) random(1,5);
-  Time wait;
-  PFont fontFood = createFont("AFont.ttf", 20);
+  pushMatrix(); 
 
-  //Constructor: populates order with random dishes
-  public Customer()
+  float displayScaleX = width / 1280.0f;
+  float displayScaleY = height / 720.0f;
+
+  // Keep the aspect ratio
+  displayScale = min(displayScaleX, displayScaleY);
+
+  // Calculate blank space to both sides of the window
+  float spaceX = width - (1280.0f * displayScale);
+  float spaceY = height - (720.0f * displayScale);
+
+  // We want the screen centered, so shift for half the empty space
+  float offsetX = spaceX / 2;
+  float offsetY = spaceY / 2;
+
+  translate(offsetX, offsetY);
+
+  // Scale mouse coords back to the size the game expects
+  mouseScaledX = (mouseX - offsetX) / displayScale;
+  mouseScaledY = (mouseY - offsetY) / displayScale;
+
+  // Scale game-drawing
+  scale(displayScale);
+  
+  drawGame();
+
+  popMatrix();
+}
+
+void drawGame() {
+  image(bgimg, 1, 1);
+
+  if (!pekingWong.strikeOut()) {
+    drawRestaurant();
+  } else {
+    drawEndscreen();
+  }
+}
+
+void drawRestaurant() {
+  ling.frameUpdate();
+  
+  pekingWong.update();
+
+  kitchen.display();
+  
+  checkCurrentlyWaitingCustomer();
+
+  if (ling.isMoving)
+    ling.moveToStateTarget();
+
+  ling.display();
+  
+  gaze.display();
+}
+
+void drawEndscreen() {
+  image(endimg, 1, 1);
+  textSize(65);
+  textFont(fontFood);
+  text("" + ling.getNumPoints(), 500, 475);
+}
+
+//Checks the status of the current waiting customer
+void checkCurrentlyWaitingCustomer()
+{
+  if (currentlyWaitingCustomer != null) 
   {
-    super(80, 150);
-    name = "BJB";
-    VIPNum = (int) (Math.random() * 10) + 1;
-    state = CustomerState.STANDING_ON_SIDE;
-    mood = 10;
-    bx = 190;
-    by = 210;
-    origX = 190;
-    origY = 210;
-
-    wait = new Time();
-    //wait time is lower for customers of higher priority (lower VIPNum)
-    wait.setGoal(getVIPNum() * 20);
-
-    waiting = loadImage("Images/Customers/Customer" + rand + "_stand.png");
-    sitting = loadImage("Images/Customers/Customer" + rand + "_idle.png");
-    attention = loadImage("Images/Customers/Customer" + rand + "_attention.png"); 
-    reading = loadImage("Images/Customers/Customer" + rand + "_read.png");
-    paying = loadImage("Images/Customers/Customer" + rand + "_pay.png");
+    currentlyWaitingCustomer.display();  
+    if (currentlyWaitingCustomer.state == CustomerState.LEFT_RESTAURANT_ANGRY) 
+    {
+      ling.points -= 5;
+      ling.strikes++;
+      currentlyWaitingCustomer = null;
+    }
     
-    heart1 = loadImage("Images/Mood_Hearts/heartState1.png");
-    heart2 = loadImage("Images/Mood_Hearts/heartState2.png");
-    heart3 = loadImage("Images/Mood_Hearts/heartState3.png");
-    heart4 = loadImage("Images/Mood_Hearts/heartState4.png");
-    heart5 = loadImage("Images/Mood_Hearts/heartState5.png");
-    heart6 = loadImage("Images/Mood_Hearts/heartState6.png");
-  }
+    if (!pekingWong.waitList.isEmpty()){   
+      int indexCustomer;
+      ArrayList<Customer> toRemove = new ArrayList<Customer>();
+      for (Customer WaitingCustomer : pekingWong.waitList)
+      {
+        if (WaitingCustomer.state == CustomerState.LEFT_RESTAURANT_ANGRY){
+        toRemove.add(WaitingCustomer);
+        }
+        indexCustomer = pekingWong.waitList.indexOf(WaitingCustomer);
+        WaitingCustomer.setPosition(waitPosx[indexCustomer], waitPosy);
+        WaitingCustomer.display();
+      }
+      for (Customer CustomerToRemove : toRemove)
+      {
+       pekingWong.waitList.remove(CustomerToRemove);
+       ling.points -= 5;
+       ling.strikes++;
+      }
+    }
+  } else {
+    if (!pekingWong.waitList.isEmpty()) {
+      Customer mostImportant = pekingWong.waitList.get(0);
+      pekingWong.waitList.remove(mostImportant);
+      mostImportant.wait.startTime();
 
-  /********
-   * Displays the customer based on her/his state
-   * state = 0: waiting for table
-   * state = 1: on the table
-   ********/
-  void display()
-  {
-    update();
-    if (state == CustomerState.STANDING_ON_SIDE) {
-      super.display();
-      image(waiting, bx, by);
+      currentlyWaitingCustomer = mostImportant; 
+      currentlyWaitingCustomer.state = CustomerState.STANDING_ON_SIDE;
     }
-    if (state == CustomerState.STANDING_ON_SIDE_ANGRY) {
-      super.display();
-      image(waiting, bx, by);
-    }
-    if (state == CustomerState.SITTING_ON_TABLE) {
-      bx = table.x - 50;
-      by = table.y-50;
-      image(sitting, bx, by);
-    }
-    if (state == CustomerState.SITTING_ON_TABLE_HUNGRY) {
-      bx = table.x - 50;
-      by = table.y-50;
-      image(sitting, bx, by);
-    }
-    if(state == CustomerState.READY_TO_PAY){
-      bx = table.x - 50;
-      by = table.y - 50;
-      image(paying, bx, by);
-    }
-    if(state == CustomerState.READY_TO_ORDER){
-      bx = table.x - 50;
-      by = table.y - 50;
-      image(attention, bx, by);
-    }
-    if(state == CustomerState.READING_MENU){
-      bx = table.x - 50;
-      by = table.y - 50;
-      image(reading, bx, by);
-    }
-    if (state == CustomerState.WAITING) {
-      image(waiting, waitx, waity);
-      displayMood(waitx,waity);
-    } 
-    if (state == CustomerState.STANDING_ON_SIDE || state == CustomerState.STANDING_ON_SIDE_ANGRY || state == CustomerState.SITTING_ON_TABLE || state == CustomerState.SITTING_ON_TABLE_HUNGRY || state == CustomerState.READY_TO_PAY || state == CustomerState.READING_MENU || state == CustomerState.READY_TO_ORDER) {
-      displayMood(bx,by);
   }
 }
 
-  //Checks if the customer has been waiting a certain amount of time. 
-  void update()
+//When mouse-clicked, update the state of the waiter based on the object clicked
+void mouseClicked() 
+{
+  ling.isMoving = true;
+  ling.onMouseClicked();
+}
+
+//When the mouse is pressed
+void mousePressed()
+{
+  if (currentlyWaitingCustomer != null)
   {
-    if (wait != null && state != CustomerState.HIDDEN)
-    {
-      mood = 10 - (int)(((float)wait.getElapsed()/wait.target) * 10);
-      if (mood <= 0)
-      {
-        state = CustomerState.LEFT_RESTAURANT_ANGRY;
-      }
-      if (wait.pause)
-      {
-        if (!wait.endInterval() && table.state == TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER)
-        {
-          state = CustomerState.READING_MENU;
+    if (currentlyWaitingCustomer.overBox) { 
+      currentlyWaitingCustomer.locked = true;
+    } else {
+      currentlyWaitingCustomer.locked = false;
+    }
+    currentlyWaitingCustomer.xOffset = mouseScaledX - currentlyWaitingCustomer.bx; 
+    currentlyWaitingCustomer.yOffset = mouseScaledY - currentlyWaitingCustomer.by;
+  }
+}
+
+//Utilized for the dragging mechanism of the customer
+void mouseDragged() 
+{
+  if (currentlyWaitingCustomer != null) {
+    currentlyWaitingCustomer.checkState();
+  }
+}
+
+//Checks if the mouse releases the customer onto a table
+void mouseReleased() 
+{
+  ling.isMoving = false;
+  if (currentlyWaitingCustomer != null)
+  {
+    currentlyWaitingCustomer.locked = false;
+    for (Table t : ling.getTableList()) {
+      if (t.inside(currentlyWaitingCustomer.bx, currentlyWaitingCustomer.by)) {
+        if (t.getSittingCustomer() == null) {
+
+          currentlyWaitingCustomer.setState(CustomerState.SITTING_ON_TABLE);
+
+          t.setSittingCustomer(currentlyWaitingCustomer);
+          t.state = TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER;
+          t.setOrder(new Order(t));
+
+          currentlyWaitingCustomer.setTable(t);
+
+          ling.addCustomer(currentlyWaitingCustomer);
+
+          currentlyWaitingCustomer = null;
+          return;
         }
-        if (wait.endInterval() && table.state == TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER)
-        {
-          wait.endPause();
-          state = CustomerState.READY_TO_ORDER;
-          //println("Table " + table.tableNum + " is ready to order.");
-          cOrdering.play();
-          cOrdering.amp(speechVol);
-          cOrdering.pan(table.tableNum);
-        } else {
-          if (wait.endInterval() && table.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING)
-          {
-            //println("Table " + table.tableNum + " finished eating.");
-            wait.endPause();
-            table.order.state = OrderState.HIDDEN;
-            table.state = TableState.CUSTOMER_READY_TO_PAY;
-            state = CustomerState.READY_TO_PAY;
-            cReceipt.play();
-            cReceipt.amp(speechVol);
-            cReceipt.pan(table.tableNum);
-          }
-        }
       }
     }
-  }
-
-  //If the customer not on a table, return to original x and y coordinates
-  void checkState()
-  {
-    if (state == CustomerState.STANDING_ON_SIDE || state == CustomerState.STANDING_ON_SIDE_ANGRY)
-    {
-      if (locked) 
-      {
-        bx = mouseScaledX-xOffset; 
-        by = mouseScaledY-yOffset;
-      } else
-      {
-        bx = origX; 
-        by = origY;
-      }
-    }
-  }
-  
-  void displayMood(float posx, float posy){
-  
-    if(mood == 10){ 
-      image(heart1, posx+15, posy-30); }
-    if(mood == 9 || mood == 8){ 
-      image(heart2, posx+15, posy-30); }
-    if(mood == 7 || mood == 6){ 
-      image(heart3, posx+15, posy-30); }
-    if(mood == 5 || mood == 4){ 
-      if (state == CustomerState.SITTING_ON_TABLE) {
-        cHungry.play();
-        cHungry.amp(speechVol);
-        cHungry.pan(table.tableNum);
-        state = CustomerState.SITTING_ON_TABLE_HUNGRY;
-      } 
-      image(heart4, posx+15, posy-30); }
-    if(mood == 3 || mood == 2){
-      if (state == CustomerState.STANDING_ON_SIDE) {
-        int tableNum = 1;
-        cWaiting.play();
-        cWaiting.amp(speechVol);
-        cWaiting.pan(tableNum);
-        state = CustomerState.STANDING_ON_SIDE_ANGRY;
-      }
-      image(heart5, posx+15, posy-30); }
-    if(mood == 1){ 
-      image(heart6, posx+10, posy-30); } 
-  }
-
-  //two customers are equal if they are sitting at the same table
-  public boolean equals(Customer c)
-  {
-    return this.getTable() == c.getTable();
-  }
-
-  //compares the VIPNums of two customers
-  public int compareTo(Customer other)
-  {
-    if (this.VIPNum < other.VIPNum) {
-      return -1;
-    } else if (this.VIPNum > other.VIPNum) {
-      return 1;
-    }
-    return 0;
-  }
-
-  //Mutators
-
-  //sets the table for the customer
-  public void setTable(Table t)
-  {
-    table = t;
-  }
-
-  //sets the state of the customer
-  public void setState(CustomerState state)
-  {
-    this.state = state;
-  }
-
-  //Accessor
-
-  //returns table number
-  public Table getTable()
-  {
-    return table;
-  }
-
-  //returns VIP number
-  public int getVIPNum() 
-  {
-    return VIPNum;
-  }
-
-  //returns mood
-  public int getMood()
-  {
-    return mood;
-  }
-
-  //returns name
-  public String getName()
-  {
-    return name;
-  }
-  
-  public void setPosition(float posx, float posy) 
-  { 
-    waitx = posx;
-    waity = posy;
+    currentlyWaitingCustomer.bx = currentlyWaitingCustomer.origX;
+    currentlyWaitingCustomer.by = currentlyWaitingCustomer.origY;
   }
 }
