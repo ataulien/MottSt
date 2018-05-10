@@ -43,12 +43,23 @@ public class Waiter
     this.kitchen = kitchen;
 
     //creates six tables
-    tables.add(new Table(1, 400, 400));
-    tables.add(new Table(2, 656, 400));
-    tables.add(new Table(3, 913, 400));
-    tables.add(new Table(4, 400, 600));
-    tables.add(new Table(5, 656, 600));
-    tables.add(new Table(6, 912, 600));
+    if (Level.numTables >= 1)
+        tables.add(new Table(1, 400, 400));
+
+    if (Level.numTables >= 2)
+        tables.add(new Table(2, 656, 400));
+
+    if (Level.numTables >= 3)
+        tables.add(new Table(3, 913, 400));
+
+    if (Level.numTables >= 4)
+        tables.add(new Table(4, 400, 600));
+
+    if (Level.numTables >= 5)
+        tables.add(new Table(5, 656, 600));
+
+    if (Level.numTables >= 6)
+        tables.add(new Table(6, 912, 600));
 
     position.x = 300;
     position.y = 200;

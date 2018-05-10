@@ -9,6 +9,7 @@ Time waitTime;
 Gaze gaze;
 PImage bgimg;
 PImage endimg;
+
 //Soundfiles
 SoundFile cWaiting;
 SoundFile cOrdering;
@@ -54,12 +55,7 @@ void setup()
   gaze = new Gaze();
   gaze.backgroundImage = bgimg;
   
-  kitchen = new Kitchen();
-  ling = new Waiter(kitchen);
-  waitTime = new Time();
-  pekingWong = new Restaurant(ling);
   fontFood = createFont("AFont.ttf", 20);
-  waitTime.startTime();
   
   //  println(currentlyWaitingCustomer); //ist  hier noch leer!!!!
   
@@ -74,6 +70,17 @@ void setup()
   
   bgSample.loop();
   bgSample.amp(bgVol);
+
+  Level.configureLevel(1);
+  setupGameplay();
+}
+
+void setupGameplay() {
+  kitchen = new Kitchen();
+  ling = new Waiter(kitchen);
+  waitTime = new Time();
+  pekingWong = new Restaurant(ling);
+  waitTime.startTime();
 }
 
 //Calls the display functions of the globals, and updates them if necessary
@@ -114,11 +121,43 @@ void draw()
 void drawGame() {
   image(bgimg, 1, 1);
 
-  if (!pekingWong.strikeOut()) {
-    drawRestaurant();
+  if (hasLost()) {
+    drawEndscreenLose();
+  } else if(hasWon()) {
+    drawEndscreenWin();
   } else {
-    drawEndscreen();
+    handlePotentialLevelSwitch();
+    drawRestaurant();
+    drawCurrentLevel(); 
   }
+}
+
+boolean hasLost() {
+  return pekingWong.strikeOut();
+}
+
+boolean hasWon() {
+  return Level.isDone();
+}
+
+void handlePotentialLevelSwitch() {
+  if(isDoneWithLevel()) {
+    Level.nextLevel();
+    setupGameplay();
+  }
+}
+
+boolean isDoneWithLevel() {
+  if(!ling.getCustomerList().isEmpty())
+      return false;
+
+  if(!pekingWong.hasSpawnedAllCustomersInLevel())
+      return false;
+
+  if(!pekingWong.isWaitListEmpty())
+      return false;
+
+  return true;
 }
 
 void drawRestaurant() {
@@ -138,11 +177,24 @@ void drawRestaurant() {
   gaze.display();
 }
 
-void drawEndscreen() {
+void drawCurrentLevel() {
+  textSize(20);
+  textFont(fontFood);
+  text("Level: " + Level.getCurrentLevel(), 5, 25);
+}
+
+void drawEndscreenLose() {
   image(endimg, 1, 1);
   textSize(65);
   textFont(fontFood);
   text("" + ling.getNumPoints(), 500, 475);
+}
+
+void drawEndscreenWin() {
+    image(bgimg, 1, 1);
+    textSize(65);
+    textFont(fontFood);
+    text("You Win!", 100, 475); // Very temporary, please improve.
 }
 
 //Checks the status of the current waiting customer
