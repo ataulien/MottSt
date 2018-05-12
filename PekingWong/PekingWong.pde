@@ -127,8 +127,8 @@ void drawGame() {
     drawEndscreenWin();
   } else {
     handlePotentialLevelSwitch();
+    drawCurrentLevel();
     drawRestaurant();
-    drawCurrentLevel(); 
   }
 }
 
@@ -178,9 +178,12 @@ void drawRestaurant() {
 }
 
 void drawCurrentLevel() {
+  pushStyle();
+  fill(255);
   textSize(20);
   textFont(fontFood);
   text("Level: " + Level.getCurrentLevel(), 5, 25);
+  popStyle();
 }
 
 void drawEndscreenLose() {

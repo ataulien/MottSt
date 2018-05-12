@@ -76,7 +76,7 @@ public class Waiter
     drawTables();
     drawCustomers();
     drawWaiter();
-    drawScore();
+    drawScoreAndStrikes();
   }
 
   private void drawTables() {
@@ -121,12 +121,14 @@ public class Waiter
     popStyle();
   }
 
-  private void drawScore() {
-    fill(0);
+  private void drawScoreAndStrikes() {
+    pushStyle();
+    fill(255);
     textSize(20);
     textFont(fontScore);
-    text("POINTS: " + points, 155, 100);
-    text("STRIKES: " + strikes + "/5", 155, 150);
+    text("POINTS: " + points,5, 75);
+    text("STRIKES: " + strikes + "/5", 5, 125);
+    popStyle();
   }
 
   void onMouseClicked()
