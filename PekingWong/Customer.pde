@@ -137,9 +137,9 @@ public class Customer extends Draggable implements Comparable<Customer>
           wait.endPause();
           state = CustomerState.READY_TO_ORDER;
           //println("Table " + table.tableNum + " is ready to order.");
-          cOrdering.play();
-          cOrdering.amp(speechVol);
-          cOrdering.pan(table.tableNum);
+          wOrdering.play();
+          wOrdering.amp(speechVol);
+          wOrdering.pan(table.tableNum);
         } else {
           if (wait.endInterval() && table.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING)
           {
@@ -148,9 +148,9 @@ public class Customer extends Draggable implements Comparable<Customer>
             table.order.state = OrderState.HIDDEN;
             table.state = TableState.CUSTOMER_READY_TO_PAY;
             state = CustomerState.READY_TO_PAY;
-            cReceipt.play();
-            cReceipt.amp(speechVol);
-            cReceipt.pan(table.tableNum);
+            wReceipt.play();
+            wReceipt.amp(speechVol);
+            wReceipt.pan(table.tableNum);
           }
         }
       }
@@ -184,18 +184,18 @@ public class Customer extends Draggable implements Comparable<Customer>
       image(heart3, posx+15, posy-30); }
     if(mood == 5 || mood == 4){ 
       if (state == CustomerState.SITTING_ON_TABLE) {
-        cHungry.play();
-        cHungry.amp(speechVol);
-        cHungry.pan(table.tableNum);
+        wHungry.play();
+        wHungry.amp(speechVol);
+        wHungry.pan(table.tableNum);
         state = CustomerState.SITTING_ON_TABLE_HUNGRY;
       } 
       image(heart4, posx+15, posy-30); }
     if(mood == 3 || mood == 2){
       if (state == CustomerState.STANDING_ON_SIDE) {
         int tableNum = 1;
-        cWaiting.play();
-        cWaiting.amp(speechVol);
-        cWaiting.pan(tableNum);
+        wWaiting.play();
+        wWaiting.amp(speechVol);
+        wWaiting.pan(tableNum);
         state = CustomerState.STANDING_ON_SIDE_ANGRY;
       }
       image(heart5, posx+15, posy-30); }
