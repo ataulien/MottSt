@@ -10,10 +10,14 @@ Gaze gaze;
 PImage bgimg;
 PImage endimg;
 //Soundfiles
-SoundFile cWaiting;
-SoundFile cOrdering;
-SoundFile cHungry;
-SoundFile cReceipt;
+SoundFile wWaiting;
+SoundFile wOrdering;
+SoundFile wHungry;
+SoundFile wReceipt;
+SoundFile mWaiting;
+SoundFile mOrdering;
+SoundFile mHungry;
+SoundFile mReceipt;
 SoundFile finishedFood;
 SoundFile placeOrder;
 SoundFile ordered;
@@ -64,10 +68,14 @@ void setup()
   //  println(currentlyWaitingCustomer); //ist  hier noch leer!!!!
   
   bgSample = new SoundFile(this, "sound/mono/bg-sample.mp3");
-  cWaiting = new SoundFile(this, "sound/mono/Alice_waiting.mp3");
-  cOrdering = new SoundFile(this, "sound/mono/Alice_ordering.mp3");
-  cHungry = new SoundFile(this, "sound/mono/Alice_hungry.mp3");
-  cReceipt = new SoundFile(this, "sound/mono/Alice_receipt.mp3");
+  wWaiting = new SoundFile(this, "sound/mono/Alice_waiting.mp3");
+  wOrdering = new SoundFile(this, "sound/mono/Alice_ordering.mp3");
+  wHungry = new SoundFile(this, "sound/mono/Alice_hungry.mp3");
+  wReceipt = new SoundFile(this, "sound/mono/Alice_receipt.mp3");
+  mWaiting = new SoundFile(this, "sound/mono/George_waiting.mp3");
+  mOrdering = new SoundFile(this, "sound/mono/George_ordering.mp3");
+  mHungry = new SoundFile(this, "sound/mono/George_hungry.mp3");
+  mReceipt = new SoundFile(this, "sound/mono/George_receipt.mp3");
   finishedFood = new SoundFile(this, "sound/mono/Finished_Food.mp3");
   placeOrder = new SoundFile(this, "sound/mono/Place_an_order.mp3");
   ordered = new SoundFile(this, "sound/mono/Ling_ordered.mp3");
