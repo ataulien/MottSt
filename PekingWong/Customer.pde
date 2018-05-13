@@ -4,20 +4,19 @@ import java.util.ArrayList;
 public enum CustomerState
 {
   HIDDEN, // Doesn't seem to be set anywhere (was state -1 before)
-    STANDING_ON_SIDE, 
-    STANDING_ON_SIDE_ANGRY, 
-    SITTING_ON_TABLE, 
-    SITTING_ON_TABLE_HUNGRY, 
-    LEFT_RESTAURANT_ANGRY,
-    WAITING,
-    READING_MENU,
-    READY_TO_ORDER,
-    READY_TO_PAY,
+  STANDING_ON_SIDE, 
+  STANDING_ON_SIDE_ANGRY, 
+  SITTING_ON_TABLE, 
+  SITTING_ON_TABLE_HUNGRY, 
+  LEFT_RESTAURANT_ANGRY,
+  WAITING,
+  READING_MENU,
+  READY_TO_ORDER,
+  READY_TO_PAY,
 }
 
 public class Customer extends Draggable implements Comparable<Customer>
 {
-
   //Instance Variables
   private String name;
   private Table table;
@@ -33,6 +32,8 @@ public class Customer extends Draggable implements Comparable<Customer>
   int rand = (int) random(1,5);
   Time wait;
   PFont fontFood = createFont("AFont.ttf", 20);
+  
+  SoundFile gWaiting, gOrdering, gHungry, gReceipt;
 
   //Constructor: populates order with random dishes
   public Customer()
@@ -64,6 +65,18 @@ public class Customer extends Draggable implements Comparable<Customer>
     heart4 = loadImage("Images/Mood_Hearts/heartState4.png");
     heart5 = loadImage("Images/Mood_Hearts/heartState5.png");
     heart6 = loadImage("Images/Mood_Hearts/heartState6.png");
+    
+    if (rand == 2 || rand == 3) {
+      gWaiting = fWaiting;
+      gOrdering = fOrdering;
+      gHungry = fHungry;
+      gReceipt = fReceipt;
+    } else if (rand == 1 || rand == 4) {
+      gWaiting = mWaiting;
+      gOrdering = mOrdering;
+      gHungry = mHungry;
+      gReceipt = mReceipt;
+    }
   }
 
   /********
@@ -137,9 +150,9 @@ public class Customer extends Draggable implements Comparable<Customer>
           wait.endPause();
           state = CustomerState.READY_TO_ORDER;
           //println("Table " + table.tableNum + " is ready to order.");
-          wOrdering.play();
-          wOrdering.amp(speechVol);
-          wOrdering.pan(table.tableNum);
+          gOrdering.play();
+          gOrdering.amp(speechVol);
+          gOrdering.pan(table.tableNum);
         } else {
           if (wait.endInterval() && table.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING)
           {
@@ -148,9 +161,9 @@ public class Customer extends Draggable implements Comparable<Customer>
             table.order.state = OrderState.HIDDEN;
             table.state = TableState.CUSTOMER_READY_TO_PAY;
             state = CustomerState.READY_TO_PAY;
-            wReceipt.play();
-            wReceipt.amp(speechVol);
-            wReceipt.pan(table.tableNum);
+            gReceipt.play();
+            gReceipt.amp(speechVol);
+            gReceipt.pan(table.tableNum);
           }
         }
       }
@@ -184,18 +197,18 @@ public class Customer extends Draggable implements Comparable<Customer>
       image(heart3, posx+15, posy-30); }
     if(mood == 5 || mood == 4){ 
       if (state == CustomerState.SITTING_ON_TABLE) {
-        wHungry.play();
-        wHungry.amp(speechVol);
-        wHungry.pan(table.tableNum);
+        gHungry.play();
+        gHungry.amp(speechVol);
+        gHungry.pan(table.tableNum);
         state = CustomerState.SITTING_ON_TABLE_HUNGRY;
       } 
       image(heart4, posx+15, posy-30); }
     if(mood == 3 || mood == 2){
       if (state == CustomerState.STANDING_ON_SIDE) {
         int tableNum = 1;
-        wWaiting.play();
-        wWaiting.amp(speechVol);
-        wWaiting.pan(tableNum);
+        gWaiting.play();
+        gWaiting.amp(speechVol);
+        gWaiting.pan(tableNum);
         state = CustomerState.STANDING_ON_SIDE_ANGRY;
       }
       image(heart5, posx+15, posy-30); }

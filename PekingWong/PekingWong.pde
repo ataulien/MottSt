@@ -11,18 +11,7 @@ PImage bgimg;
 PImage endimg;
 
 //Soundfiles
-SoundFile wWaiting;
-SoundFile wOrdering;
-SoundFile wHungry;
-SoundFile wReceipt;
-SoundFile mWaiting;
-SoundFile mOrdering;
-SoundFile mHungry;
-SoundFile mReceipt;
-SoundFile finishedFood;
-SoundFile placeOrder;
-SoundFile ordered;
-SoundFile bgSample;
+SoundFile fWaiting, fOrdering, fHungry, fReceipt, mWaiting, mOrdering, mHungry, mReceipt, finishedFood, placeOrder, ordered, bgSample;
 PFont fontFood;
 
 float mouseScaledX = 0;
@@ -55,19 +44,11 @@ void setup()
 
   bgimg = loadImage("Images/RestaurantFloorV3.jpg");
   endimg = loadImage("Images/endscreen.jpg");
-
-  gaze = new Gaze();
-  gaze.backgroundImage = bgimg;
   
-  fontFood = createFont("AFont.ttf", 20);
-  
-  //  println(currentlyWaitingCustomer); //ist  hier noch leer!!!!
-  
-  bgSample = new SoundFile(this, "sound/mono/bg-sample.mp3");
-  wWaiting = new SoundFile(this, "sound/mono/Alice_waiting.mp3");
-  wOrdering = new SoundFile(this, "sound/mono/Alice_ordering.mp3");
-  wHungry = new SoundFile(this, "sound/mono/Alice_hungry.mp3");
-  wReceipt = new SoundFile(this, "sound/mono/Alice_receipt.mp3");
+  fWaiting = new SoundFile(this, "sound/mono/Alice_waiting.mp3");
+  fOrdering = new SoundFile(this, "sound/mono/Alice_ordering.mp3");
+  fHungry = new SoundFile(this, "sound/mono/Alice_hungry.mp3");
+  fReceipt = new SoundFile(this, "sound/mono/Alice_receipt.mp3");
   mWaiting = new SoundFile(this, "sound/mono/George_waiting.mp3");
   mOrdering = new SoundFile(this, "sound/mono/George_ordering.mp3");
   mHungry = new SoundFile(this, "sound/mono/George_hungry.mp3");
@@ -75,6 +56,14 @@ void setup()
   finishedFood = new SoundFile(this, "sound/mono/Finished_Food.mp3");
   placeOrder = new SoundFile(this, "sound/mono/Place_an_order.mp3");
   ordered = new SoundFile(this, "sound/mono/Ling_ordered.mp3");
+  bgSample = new SoundFile(this, "sound/mono/bg-sample.mp3");
+
+  gaze = new Gaze();
+  gaze.backgroundImage = bgimg;
+  
+  fontFood = createFont("AFont.ttf", 20);
+  
+  //println(currentlyWaitingCustomer); //ist  hier noch leer!!!!
   
   bgSample.loop();
   bgSample.amp(bgVol);
