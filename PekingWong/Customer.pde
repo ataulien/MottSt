@@ -40,7 +40,7 @@ public class Customer extends Draggable implements Comparable<Customer>
     super(80, 150);
     name = "BJB";
     VIPNum = (int) (Math.random() * 10) + 1;
-    state = CustomerState.STANDING_ON_SIDE;
+    state = CustomerState.WAITING;
     mood = 10;
     bx = 190;
     by = 210;
@@ -48,6 +48,7 @@ public class Customer extends Draggable implements Comparable<Customer>
     origY = 210;
 
     wait = new Time();
+    wait.startTime();
     //wait time is lower for customers of higher priority (lower VIPNum)
     wait.setGoal(getVIPNum() * 20);
 

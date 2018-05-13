@@ -19,7 +19,7 @@ class Gaze
   
   public void display() {
     
-    removeGameObjects();
+    //removeGameObjects();
     
     layer_gazeMask.beginDraw();
     layer_gazeMask.background(255 * brightness, 
