@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 
 public enum CustomerState
@@ -138,6 +137,9 @@ public class Customer extends Draggable implements Comparable<Customer>
       if (mood <= 0)
       {
         state = CustomerState.LEFT_RESTAURANT_ANGRY;
+        fail.play();
+        fail.amp(speechVol);
+        fail.pan(table.tableNum);
       }
       if (wait.pause)
       {

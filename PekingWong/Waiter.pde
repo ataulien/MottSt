@@ -116,8 +116,7 @@ public class Waiter
       text(finishedOrders[0].table.tableNum, position.x + orderNumberXOffsetRight, position.y + orderNumberYOffset);
       text(finishedOrders[1].table.tableNum, position.x - orderNumberXOffsetLeft, position.y + orderNumberYOffset);
     }
-      
-      
+    
     popStyle();
   }
 
@@ -126,7 +125,7 @@ public class Waiter
     fill(255);
     textSize(20);
     textFont(fontScore);
-    text("POINTS: " + points,5, 75);
+    text("POINTS: " + points, 5, 75);
     text("STRIKES: " + strikes + "/5", 5, 125);
     popStyle();
   }
@@ -282,7 +281,6 @@ public class Waiter
       break;
     }
 
-
     state = WaiterState.IDLE;
   }
 
@@ -332,6 +330,9 @@ public class Waiter
       {
         //println("finished serving table " + t.tableNum);
         removeCustomer(t.sittingCustomer);
+        success.play();
+        success.amp(speechVol);
+        success.pan(t.tableNum);
         t.sittingCustomer = null;
         t.order = null;
         t.state = TableState.EMPTY;

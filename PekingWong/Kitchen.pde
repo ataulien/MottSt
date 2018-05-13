@@ -1,6 +1,5 @@
 import java.util.*;
 
-
 public class Kitchen {
 
   private ArrayDeque < Order > pendingFoodList = new ArrayDeque < Order > ();

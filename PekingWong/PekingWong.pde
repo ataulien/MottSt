@@ -11,7 +11,7 @@ PImage bgimg;
 PImage endimg;
 
 //Soundfiles
-SoundFile fWaiting, fOrdering, fHungry, fReceipt, mWaiting, mOrdering, mHungry, mReceipt, finishedFood, placeOrder, ordered, bgSample;
+SoundFile fWaiting, fOrdering, fHungry, fReceipt, mWaiting, mOrdering, mHungry, mReceipt, finishedFood, placeOrder, ordered, success, fail, door, bgSample;
 PFont fontFood;
 
 float mouseScaledX = 0;
@@ -53,9 +53,12 @@ void setup()
   mOrdering = new SoundFile(this, "sound/mono/George_ordering.mp3");
   mHungry = new SoundFile(this, "sound/mono/George_hungry.mp3");
   mReceipt = new SoundFile(this, "sound/mono/George_receipt.mp3");
-  finishedFood = new SoundFile(this, "sound/mono/Finished_Food.mp3");
-  placeOrder = new SoundFile(this, "sound/mono/Place_an_order.mp3");
+  finishedFood = new SoundFile(this, "sound/mono/finished_food.mp3");
+  placeOrder = new SoundFile(this, "sound/mono/place_an_order.mp3");
   ordered = new SoundFile(this, "sound/mono/Ling_ordered.mp3");
+  success = new SoundFile(this, "sound/mono/success.mp3");
+  fail = new SoundFile(this, "sound/mono/fail.mp3");
+  door = new SoundFile(this, "sound/mono/close_door.mp3");
   bgSample = new SoundFile(this, "sound/mono/bg-sample.mp3");
 
   gaze = new Gaze();
@@ -191,10 +194,10 @@ void drawEndscreenLose() {
 }
 
 void drawEndscreenWin() {
-    image(bgimg, 1, 1);
-    textSize(65);
-    textFont(fontFood);
-    text("You Win!", 100, 475); // Very temporary, please improve.
+  image(bgimg, 1, 1);
+  textSize(65);
+  textFont(fontFood);
+  text("You Win!", 100, 475); // Very temporary, please improve.
 }
 
 //Checks the status of the current waiting customer
@@ -212,11 +215,12 @@ void checkCurrentlyWaitingCustomer()
     
     if (!pekingWong.waitList.isEmpty()){   
       int indexCustomer;
+      int tableNum = 1;
       ArrayList<Customer> toRemove = new ArrayList<Customer>();
       for (Customer WaitingCustomer : pekingWong.waitList)
       {
         if (WaitingCustomer.state == CustomerState.LEFT_RESTAURANT_ANGRY){
-        toRemove.add(WaitingCustomer);
+          toRemove.add(WaitingCustomer);
         }
         indexCustomer = pekingWong.waitList.indexOf(WaitingCustomer);
         WaitingCustomer.setPosition(waitPosx[indexCustomer], waitPosy);
@@ -224,9 +228,12 @@ void checkCurrentlyWaitingCustomer()
       }
       for (Customer CustomerToRemove : toRemove)
       {
-       pekingWong.waitList.remove(CustomerToRemove);
-       ling.points -= 5;
-       ling.strikes++;
+        pekingWong.waitList.remove(CustomerToRemove);
+        door.play();
+        door.amp(speechVol);
+        door.pan(tableNum);
+        ling.points -= 5;
+        ling.strikes++;
       }
     }
   } else {
