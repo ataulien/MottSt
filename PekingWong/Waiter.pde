@@ -35,7 +35,7 @@ public class Waiter
   private int orderNumberTextSize = 16;
   private float orderNumberYOffset = 40f;
   
-  private float orderNumberXOffsetRight = 50f;
+  private float orderNumberXOffsetRight = 90f;
   private float orderNumberXOffsetLeft = -15f;
 
   public Waiter(Kitchen kitchen) 
