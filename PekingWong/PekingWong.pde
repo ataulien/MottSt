@@ -174,6 +174,7 @@ void drawRestaurant() {
 
   ling.display();
   
+  gaze.size = Level.gazeMaskSize;
   gaze.display();
 }
 
