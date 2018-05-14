@@ -29,6 +29,7 @@ public class Customer extends Draggable implements Comparable<Customer>
   PImage waiting, sitting, attention, reading, paying;
   PImage heart1, heart2, heart3, heart4, heart5, heart6;
   int rand = (int) random(1,5);
+  int tableNum = 1;
   Time wait;
   PFont fontFood = createFont("AFont.ttf", 20);
   
@@ -139,7 +140,7 @@ public class Customer extends Draggable implements Comparable<Customer>
         state = CustomerState.LEFT_RESTAURANT_ANGRY;
         fail.play();
         fail.amp(speechVol);
-        fail.pan(table.tableNum);
+        fail.pan(tableNum);
       }
       if (wait.pause)
       {
@@ -207,7 +208,6 @@ public class Customer extends Draggable implements Comparable<Customer>
       image(heart4, posx+15, posy-30); }
     if(mood == 3 || mood == 2){
       if (state == CustomerState.STANDING_ON_SIDE) {
-        int tableNum = 1;
         gWaiting.play();
         gWaiting.amp(speechVol);
         gWaiting.pan(tableNum);
