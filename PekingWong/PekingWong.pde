@@ -127,8 +127,8 @@ void drawGame() {
     drawEndscreenWin();
   } else {
     handlePotentialLevelSwitch();
-    drawCurrentLevel();
     drawRestaurant();
+    drawCurrentLevel();
   }
 }
 
@@ -176,6 +176,8 @@ void drawRestaurant() {
   
   gaze.size = Level.gazeMaskSize;
   gaze.display();
+  
+  ling.displayUI();
 }
 
 void drawCurrentLevel() {

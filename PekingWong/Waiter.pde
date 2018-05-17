@@ -76,6 +76,10 @@ public class Waiter
     drawTables();
     drawCustomers();
     drawWaiter();
+  }
+  
+  public void displayUI()
+  {
     drawScoreAndStrikes();
   }
 
