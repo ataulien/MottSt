@@ -125,7 +125,12 @@ void drawGame() {
     drawEndscreenLose();
   } else if(hasWon()) {
     drawEndscreenWin();
-  } else {
+  } else if (isDoneWithLevel() && Level.getCurrentLevel() < 3){
+   drawEndLevel();
+   if (keyPressed && key == ENTER){
+   handlePotentialLevelSwitch();
+   }
+ } else {
     handlePotentialLevelSwitch();
     drawRestaurant();
     drawCurrentLevel();
@@ -200,7 +205,14 @@ void drawEndscreenWin() {
   image(bgimg, 1, 1);
   textSize(65);
   textFont(fontFood);
-  text("You Win!", 100, 475); // Very temporary, please improve.
+  text("You Win! End of game", 100, 475); // Very temporary, please improve.
+}
+
+void drawEndLevel(){                       
+  image(bgimg, 1, 1);
+  textSize(65);
+  textFont(fontFood);
+  text("You have completed the level :) Press Enter to continue", 100, 475);
 }
 
 //Checks the status of the current waiting customer
