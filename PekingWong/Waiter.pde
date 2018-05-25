@@ -6,6 +6,7 @@ public enum WaiterState
     MOVING_TO_PICK_UP_ORDER, 
     MOVING_TO_PLACE_ORDER, 
     MOVING_TO_TABLE,
+    MOVING_TO_DRINK_COFFEE,
 }
 
 public class Waiter 
@@ -21,8 +22,10 @@ public class Waiter
   private Table currentTable;
 
   Kitchen kitchen;
-
+  CoffeeVendingMachine cvm;
+  
   boolean isMoving;
+  boolean isAtCoffeeVendingMachine;
   WaiterState state;
   PImage imageWaiterNoFood;
   PImage imageWaiterOneFood;
@@ -38,10 +41,10 @@ public class Waiter
   private float orderNumberXOffsetRight = 90f;
   private float orderNumberXOffsetLeft = -15f;
 
-  public Waiter(Kitchen kitchen) 
+  public Waiter(Kitchen kitchen, CoffeeVendingMachine cvm) 
   {
     this.kitchen = kitchen;
-
+    this.cvm = cvm;
     //creates six tables
     if (Level.numTables >= 1)
         tables.add(new Table(1, 400, 400));
@@ -65,6 +68,7 @@ public class Waiter
     position.y = 200;
 
     isMoving = false;
+    isAtCoffeeVendingMachine = false;
     state = WaiterState.IDLE;
     imageWaiterNoFood = loadImage("Images/WaiterNoFood.png");
     imageWaiterOneFood = loadImage("Images/WaiterOneFood.png");
@@ -136,14 +140,20 @@ public class Waiter
 
   void onMouseClicked()
   {
-    if (kitchen.isMouseOverKitchen())
-    {
-      onClickedOnKitchen();
-    } else {
-      for (Table t : tables) {
-        if (t.isMouseOverTable()) {
-          onClickedOnTable(t);
-          break;
+    if(!cvm.startedDrinking){
+      if (kitchen.isMouseOverKitchen())
+      {
+        onClickedOnKitchen();
+      } 
+      else if (cvm.isMouseOverCoffeeVendingMachine())
+      {
+        onClickedOnCoffeeVendingMachine();
+      }else {
+        for (Table t : tables) {
+          if (t.isMouseOverTable()) {
+            onClickedOnTable(t);
+            break;
+          }
         }
       }
     }
@@ -155,6 +165,11 @@ public class Waiter
     } else {
       state = WaiterState.MOVING_TO_PLACE_ORDER;
     }
+  }
+  
+  private void onClickedOnCoffeeVendingMachine()
+  {
+    state = WaiterState.MOVING_TO_DRINK_COFFEE;
   }
 
   private void onClickedOnTable(Table t) {
@@ -212,6 +227,10 @@ public class Waiter
     case MOVING_TO_TABLE:
       goTo(currentTable.x+105, currentTable.y-15);
       break;
+      
+    case MOVING_TO_DRINK_COFFEE:
+      goTo((int) cvm.position.x + 30, (int) cvm.position.y + 20);
+      break;
     }
 
     delay(10);
@@ -219,7 +238,26 @@ public class Waiter
 
   //Goes to the target X and Y coordinates by incrementing by 10 each time the function is invoked if the waiter is not yet at those coordinates.
   void goTo(int targetX, int targetY) {
-    if (position.x < targetX) {
+    if(!isAtCoffeeVendingMachine){
+      moveToXPosition(targetX);
+      if(position.x == targetX)
+        moveToYPosition(targetY);
+     }
+     else{
+      moveToYPosition(targetY);
+      if(position.y == targetY)
+        moveToXPosition(targetX);
+     }
+      
+      if(position.x == targetX && position.y == targetY){
+        isMoving = false;
+        onReachedTargetPosition();
+      }
+  }
+  
+  void moveToXPosition(int targetX)
+  {
+  if (position.x < targetX) {
       if (position.x + 8 > targetX) {
         position.x = targetX;
         return;
@@ -227,7 +265,11 @@ public class Waiter
       position.x+=8;
     } else if (position.x > targetX) {
       position.x-=8;
-    } else {
+    }
+  }
+  
+  void moveToYPosition(int targetY)
+  {
       if (position.y < targetY) {
         if (position.y + 8 > targetY) {
           position.y = targetY;
@@ -236,11 +278,7 @@ public class Waiter
         position.y+=8;
       } else if (position.y > targetY) {
         position.y-=8;
-      } else {
-        isMoving = false;
-        onReachedTargetPosition();
       }
-    }
   }
 
   void onReachedTargetPosition() {
@@ -249,6 +287,7 @@ public class Waiter
 
   void performAction()
   {
+    isAtCoffeeVendingMachine = false;
     switch(state)
     {
     case MOVING_TO_PICK_UP_ORDER:
@@ -283,7 +322,15 @@ public class Waiter
     case MOVING_TO_TABLE:
       performActionOnTable(currentTable);
       break;
+      
+      
+    case MOVING_TO_DRINK_COFFEE:
+      isAtCoffeeVendingMachine = true;
+      if(cvm.hasChargesLeft())
+        cvm.drinkCoffee();
+      break;
     }
+    
 
     state = WaiterState.IDLE;
   }

@@ -4,6 +4,7 @@
 Customer currentlyWaitingCustomer; 
 Waiter ling;
 Restaurant pekingWong;
+CoffeeVendingMachine cvm;
 Kitchen kitchen;
 Time waitTime;
 Gaze gaze;
@@ -70,14 +71,16 @@ void setup()
   
   bgSample.loop();
   bgSample.amp(bgVol);
-
+  
   Level.configureLevel(1);
   setupGameplay();
 }
 
 void setupGameplay() {
   kitchen = new Kitchen();
-  ling = new Waiter(kitchen);
+  cvm = new CoffeeVendingMachine();
+  cvm.setCoffeeCharges(3);
+  ling = new Waiter(kitchen, cvm);
   waitTime = new Time();
   pekingWong = new Restaurant(ling);
   waitTime.startTime();
@@ -114,7 +117,7 @@ void draw()
   scale(displayScale);
   
   drawGame();
-
+  
   popMatrix();
 }
 
@@ -171,6 +174,7 @@ void drawRestaurant() {
   pekingWong.update();
 
   kitchen.display();
+  cvm.display();
   
   checkCurrentlyWaitingCustomer();
 
@@ -181,7 +185,7 @@ void drawRestaurant() {
   
   gaze.size = Level.gazeMaskSize;
   gaze.display();
-  
+  cvm.displayUI();
   ling.displayUI();
 }
 
