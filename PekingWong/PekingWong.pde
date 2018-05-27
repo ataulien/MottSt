@@ -215,6 +215,7 @@ void drawEndLevel(){
   image(bgimg, 1, 1);
   textSize(65);
   textFont(fontFood);
+  text("Your Points: " + ling.getNumPoints(), 300, 400);
   text("You have completed the level :) Press Enter to continue", 100, 475);
 }
 
