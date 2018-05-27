@@ -9,6 +9,7 @@ Kitchen kitchen;
 Time waitTime;
 Gaze gaze;
 PImage bgimg;
+PImage bggaze;
 PImage endimg;
 
 //Soundfiles
@@ -42,6 +43,7 @@ void setup()
   surface.setResizable(true);
 
   bgimg = loadImage("Images/RestaurantFloorV3.jpg");
+  bggaze = loadImage("Images/RestaurantFloorGaze.jpg");
   endimg = loadImage("Images/endscreen.jpg");
   
   fWaiting = new SoundFile(this, "sound/mono/Alice_waiting.mp3");
@@ -62,7 +64,7 @@ void setup()
   bgSample = new SoundFile(this, "sound/mono/bg-sample.mp3");
   
   gaze = new Gaze();
-  gaze.backgroundImage = bgimg;
+  gaze.backgroundImage = bggaze;
   
   fontFood = createFont("AFont.ttf", 20);
   
