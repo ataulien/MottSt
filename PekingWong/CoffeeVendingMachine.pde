@@ -72,6 +72,8 @@ class CoffeeVendingMachine
         startedCoffeeEffect = true;
         Level.gazeMaskSize *= gazeSizeScaleFactor;
         effectWait.startTime();
+        lDrinking.play();
+        lDrinking.amp(speechVol);
       }
     }
     else if(!startedDrinking && startedCoffeeEffect)

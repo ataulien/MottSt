@@ -99,9 +99,9 @@ class Table
   //returns order placed by table
   public Order getOrder()
   {
-    ordered.play();
-    ordered.amp(speechVol);
-    ordered.pan(tableNum);
+    lOrdered.play();
+    lOrdered.amp(speechVol);
+    lOrdered.pan(tableNum);
     return order;
   }
 

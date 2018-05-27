@@ -12,7 +12,7 @@ PImage bgimg;
 PImage endimg;
 
 //Soundfiles
-SoundFile fWaiting, fOrdering, fHungry, fReceipt, mWaiting, mOrdering, mHungry, mReceipt, finishedFood, placeOrder, ordered, success, fail, door, bgSample;
+SoundFile fWaiting, fOrdering, fHungry, fReceipt, mWaiting, mOrdering, mHungry, mReceipt, finishedFood, placeOrder, lOrdered, lDrinking, success, fail, door, bgSample;
 PFont fontFood;
 
 float mouseScaledX = 0;
@@ -56,7 +56,8 @@ void setup()
   mReceipt = new SoundFile(this, "sound/mono/George_receipt.mp3");
   finishedFood = new SoundFile(this, "sound/mono/finished_food.mp3");
   placeOrder = new SoundFile(this, "sound/mono/place_an_order.mp3");
-  ordered = new SoundFile(this, "sound/mono/Ling_ordered.mp3");
+  lOrdered = new SoundFile(this, "sound/mono/Ling_ordered.mp3");
+  lDrinking = new SoundFile(this, "sound/mono/Ling_coffee.mp3");
   success = new SoundFile(this, "sound/mono/success.mp3");
   fail = new SoundFile(this, "sound/mono/fail.mp3");
   door = new SoundFile(this, "sound/mono/close_door.mp3");
