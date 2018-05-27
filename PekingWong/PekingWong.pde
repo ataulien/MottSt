@@ -23,9 +23,7 @@ int waitPosy = 190;
 float displayScale = 1.5f;
 float bgVol = 0.2f;
 float speechVol = 0.5f;
-float panL = -1.0f;
-float panM = 0.0f;
-float panR = 1.0f;
+float panL = -1.0f, panM = 0.0f, panR = 1.0f;
 
 IViewInterface iview;
 
@@ -62,7 +60,7 @@ void setup()
   fail = new SoundFile(this, "sound/mono/fail.mp3");
   door = new SoundFile(this, "sound/mono/close_door.mp3");
   bgSample = new SoundFile(this, "sound/mono/bg-sample.mp3");
-
+  
   gaze = new Gaze();
   gaze.backgroundImage = bgimg;
   
@@ -129,12 +127,12 @@ void drawGame() {
     drawEndscreenLose();
   } else if(hasWon()) {
     drawEndscreenWin();
-  } else if (isDoneWithLevel() && Level.getCurrentLevel() < 3){
-   drawEndLevel();
-   if (keyPressed && key == ENTER){
-   handlePotentialLevelSwitch();
-   }
- } else {
+  } else if (isDoneWithLevel() && Level.getCurrentLevel() < 3) {
+    drawEndLevel();
+    if (keyPressed && key == ENTER){
+      handlePotentialLevelSwitch();
+    }
+  } else {
     handlePotentialLevelSwitch();
     drawRestaurant();
     drawCurrentLevel();
