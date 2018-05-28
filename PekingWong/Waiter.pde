@@ -36,10 +36,10 @@ public class Waiter
   private int points;
   
   private int orderNumberTextSize = 16;
-  private float orderNumberYOffset = 40f;
+  private float orderNumberYOffset = 28f;
   
-  private float orderNumberXOffsetRight = 90f;
-  private float orderNumberXOffsetLeft = -15f;
+  private float orderNumberXOffsetRight = 112f;
+  private float orderNumberXOffsetLeft = -20f;
 
   public Waiter(Kitchen kitchen, CoffeeVendingMachine cvm) 
   {
