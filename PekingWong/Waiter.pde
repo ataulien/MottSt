@@ -31,9 +31,11 @@ public class Waiter
   PImage imageWaiterOneFood;
   PImage imageWaiterTwoFood;
   PFont fontScore = createFont("AFont.ttf", 20);
-
+  int customerPoints = 20;
+  
   private int strikes;
   private int points;
+  
   
   private int orderNumberTextSize = 16;
   private float orderNumberYOffset = 28f;
@@ -408,7 +410,7 @@ public class Waiter
     } else
     {
       //The points increase the higher the VIP number of the customer
-      points += calculatePointsFromCustomer(c);
+      points += customerPoints;
     }
     
     customers.remove(c);
