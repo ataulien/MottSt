@@ -80,7 +80,6 @@ void setup()
 void setupGameplay() {
   kitchen = new Kitchen();
   cvm = new CoffeeVendingMachine();
-  cvm.setCoffeeCharges(3);
   ling = new Waiter(kitchen, cvm);
   waitTime = new Time();
   pekingWong = new Restaurant(ling);
@@ -186,7 +185,6 @@ void drawRestaurant() {
   
   gaze.size = Level.gazeMaskSize;
   gaze.display();
-  cvm.displayUI();
   ling.displayUI();
 }
 

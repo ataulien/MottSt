@@ -9,7 +9,6 @@ class CoffeeVendingMachine
   Time drinkWait;
   Time effectWait;
   
-  private int coffeeCharges;
   boolean startedDrinking;
   boolean startedCoffeeEffect;
   float oldGazeMaskSize;
@@ -29,10 +28,10 @@ class CoffeeVendingMachine
     size = new PVector(430 * .2f, 711 * .2f);
     vendingMachineImage = loadImage("Images/CoffeeVendingMachine.png");
     progressBarImages = new PImage[4];
-    progressBarImages[0] = loadImage("Images/Mood_Hearts/heartState6.png");
-    progressBarImages[1] = loadImage("Images/Mood_Hearts/heartState4.png");
-    progressBarImages[2] = loadImage("Images/Mood_Hearts/heartState2.png");
-    progressBarImages[3] = loadImage("Images/Mood_Hearts/heartState1.png");
+    progressBarImages[0] = loadImage("Images/CoffeeVendingMachine0.png");
+    progressBarImages[1] = loadImage("Images/CoffeeVendingMachine1.png");
+    progressBarImages[2] = loadImage("Images/CoffeeVendingMachine2.png");
+    progressBarImages[3] = loadImage("Images/CoffeeVendingMachine3.png");
   }
   
   void display()
@@ -44,18 +43,6 @@ class CoffeeVendingMachine
     update();
   }
   
-  void displayUI()
-  {
-    pushStyle();
-    fill(255);
-    textSize(20);
-    text("COFFEES: " + coffeeCharges, 5, 175);
-    popStyle();
-  }
-  
-  public void setCoffeeCharges(int charges){
-    coffeeCharges = charges;
-  }
   
   public void update()
   {
@@ -63,12 +50,16 @@ class CoffeeVendingMachine
     {
       if(drinkWait.getElapsed() <= drinkTime)
       {
-        image(progressBarImages[(int) drinkWait.getElapsed()], progressBarPosition.x, progressBarPosition.y);
+        pushMatrix();
+        scale(.2f);
+        image(progressBarImages[(int) drinkWait.getElapsed()], position.x * 5, position.y * 5);
+        popMatrix();
       }
       else if(drinkWait.getElapsed() > drinkTime)
       {
         startedDrinking = false;
         drinkWait.endTime();
+
         startedCoffeeEffect = true;
         Level.gazeMaskSize *= gazeSizeScaleFactor;
         effectWait.startTime();
@@ -93,13 +84,8 @@ class CoffeeVendingMachine
     {
       drinkWait.startTime();
       startedDrinking = true;
-      coffeeCharges--;
       oldGazeMaskSize = Level.gazeMaskSize;
     } 
-  }
-  
-  boolean hasChargesLeft(){
-    return coffeeCharges > 0;
   }
   
   boolean isMouseOverCoffeeVendingMachine()

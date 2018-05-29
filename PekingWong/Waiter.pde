@@ -32,6 +32,7 @@ public class Waiter
   PImage imageWaiterTwoFood;
   PFont fontScore = createFont("AFont.ttf", 20);
   int customerPoints = 20;
+  int coffeeEffectUsageCost = 15;
   
   private int strikes;
   private int points;
@@ -328,8 +329,8 @@ public class Waiter
       
     case MOVING_TO_DRINK_COFFEE:
       isAtCoffeeVendingMachine = true;
-      if(cvm.hasChargesLeft())
-        cvm.drinkCoffee();
+      cvm.drinkCoffee();
+      points -= coffeeEffectUsageCost;
       break;
     }
     
@@ -455,4 +456,7 @@ public class Waiter
       
     return dishes;
   }
+  
+  
+  
 }
