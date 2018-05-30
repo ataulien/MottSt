@@ -27,7 +27,7 @@ public class Customer extends Draggable implements Comparable<Customer>
   float waitx;  
   float waity;   
   PImage waiting, sitting, attention, reading, paying;
-  PImage heart1, heart2, heart3, heart4, heart5, heart6;
+  PImage smiley1, smiley2, smiley3, smiley4, smiley5, smiley6;
   int rand = (int) random(1,5);
   int tableNum = 1;
   Time wait;
@@ -59,12 +59,12 @@ public class Customer extends Draggable implements Comparable<Customer>
     reading = loadImage("Images/Customers/Customer" + rand + "_read.png");
     paying = loadImage("Images/Customers/Customer" + rand + "_pay.png");
     
-    heart1 = loadImage("Images/Mood_Hearts/heartState1.png");
-    heart2 = loadImage("Images/Mood_Hearts/heartState2.png");
-    heart3 = loadImage("Images/Mood_Hearts/heartState3.png");
-    heart4 = loadImage("Images/Mood_Hearts/heartState4.png");
-    heart5 = loadImage("Images/Mood_Hearts/heartState5.png");
-    heart6 = loadImage("Images/Mood_Hearts/heartState6.png");
+    smiley1 = loadImage("Images/Smiley/smil1.png");
+    smiley2 = loadImage("Images/Smiley/smil2.png");
+    smiley3 = loadImage("Images/Smiley/smil3.png");
+    smiley4 = loadImage("Images/Smiley/smil4.png");
+    smiley5 = loadImage("Images/Smiley/smil5.png");
+    smiley6 = loadImage("Images/Smiley/smil6.png");
     
     if (rand == 2 || rand == 3) {
       gWaiting = fWaiting;
@@ -193,11 +193,11 @@ public class Customer extends Draggable implements Comparable<Customer>
   void displayMood(float posx, float posy){
   
     if(mood == 10){ 
-      image(heart1, posx+15, posy-30); }
+      image(smiley1, posx+15, posy-30); }
     if(mood == 9 || mood == 8){ 
-      image(heart2, posx+15, posy-30); }
+      image(smiley2, posx+15, posy-30); }
     if(mood == 7 || mood == 6){ 
-      image(heart3, posx+15, posy-30); }
+      image(smiley3, posx+15, posy-30); }
     if(mood == 5 || mood == 4){ 
       if (state == CustomerState.SITTING_ON_TABLE) {
         gHungry.play();
@@ -205,7 +205,7 @@ public class Customer extends Draggable implements Comparable<Customer>
         gHungry.pan(table.tableNum);
         state = CustomerState.SITTING_ON_TABLE_HUNGRY;
       } 
-      image(heart4, posx+15, posy-30); }
+      image(smiley4, posx+15, posy-30); }
     if(mood == 3 || mood == 2){
       if (state == CustomerState.STANDING_ON_SIDE) {
         gWaiting.play();
@@ -213,9 +213,9 @@ public class Customer extends Draggable implements Comparable<Customer>
         gWaiting.pan(tableNum);
         state = CustomerState.STANDING_ON_SIDE_ANGRY;
       }
-      image(heart5, posx+15, posy-30); }
+      image(smiley5, posx+15, posy-30); }
     if(mood == 1){ 
-      image(heart6, posx+10, posy-30); } 
+      image(smiley6, posx+10, posy-30); } 
   }
 
   //two customers are equal if they are sitting at the same table
