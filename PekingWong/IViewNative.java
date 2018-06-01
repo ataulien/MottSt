@@ -73,9 +73,9 @@ interface IViewNative extends Library {
         "gazeX", 
         "gazeY", 
         "pupilDiameter", 
-        "eyePostionX", 
-        "eyePostionY", 
-        "eyePostionZ", 
+        "eyePositionX", 
+        "eyePositionY", 
+        "eyePositionZ", 
         });
     }
 
@@ -86,7 +86,38 @@ interface IViewNative extends Library {
     public double eyePositionY;
     public double eyePositionZ;
   }
+  
+  public static class CalibrationStruct extends Structure {
+    public static class ByReference extends EyeData implements Structure.ByReference {
+    }
 
+    protected List<String> getFieldOrder() {
+      return Arrays.asList(new String[] { 
+        "method", 
+        "visualization", 
+        "displayDevice", 
+        "speed", 
+        "autoAccept", 
+        "foregroundColor", 
+        "backgroundColor", 
+        "targetShape", 
+        "targetSize", 
+        "targetFilename", 
+        });
+    }
+
+      public int method;                
+      public int visualization;          
+      public int displayDevice;        
+      public int speed;              
+      public int autoAccept;              
+      public int foregroundColor;              
+      public int backgroundColor;              
+      public int targetShape;                
+      public int targetSize;                
+      public String targetFilename;
+  }
+  
   public static class SampleData extends Structure {
     public static class ByReference extends SampleData implements Structure.ByReference {
     }
@@ -101,13 +132,16 @@ interface IViewNative extends Library {
         });
     }
 
-    public long timesstamp;
+    public long timestamp;
     public EyeData leftEye;
     public EyeData rightEye;
     public int planeNumber;
   }
 
   public int iV_Connect(String sendIP, int sendPort, String receiveIP, int receivePort);
+  public int iV_SetLogger(int logLevel, String fileName);
+  public int iV_SetupCalibration(CalibrationStruct pCalibrationStruct);
+  public int iV_Calibrate();
   public int iV_Disconnect();
   public int iV_GetSample(SampleData pSampleData);
 }
