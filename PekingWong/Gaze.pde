@@ -67,8 +67,8 @@ class Gaze
     layer.pushMatrix();
     layer.scale(size);
     
-    float x = (mouseScaledX / size) - gazemask.width / 2;
-    float y = (mouseScaledY / size) - gazemask.height / 2;
+    float x = (gazeScaledX / size) - gazemask.width / 2;
+    float y = (gazeScaledY / size) - gazemask.height / 2;
     layer.image(gazemask, x, y);
     layer.popMatrix();
   }

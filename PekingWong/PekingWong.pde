@@ -1,4 +1,4 @@
-//Driver
+//Driver //<>//
 
 //Globals
 Customer currentlyWaitingCustomer; 
@@ -18,6 +18,10 @@ PFont fontFood;
 
 float mouseScaledX = 0;
 float mouseScaledY = 0;
+
+float gazeScaledX = 0;
+float gazeScaledY = 0;
+
 int[] waitPosx = {150, 115, 80, 45, 10}; 
 int waitPosy = 190;
 
@@ -26,26 +30,44 @@ float bgVol = 0.2f;
 float speechVol = 0.5f;
 float panL = -1.0f, panM = 0.0f, panR = 1.0f;
 
+boolean hasEyetracker = false;
+IViewNative.SampleData eyetrackingSample;
+
 IViewInterface iview;
 
 //Sets up the screen 
 void setup()
 {
-  /*iview = new IViewInterface(sketchPath("") + "Data");
+
+  //size(1280, 720, P3D);
+  //surface.setResizable(true);
+  fullScreen(P3D);
   
+  iview = new IViewInterface(sketchPath("") + "Data");
+
   try {
-    iview.connect("123", 123, "123", 123);
-  } catch(IViewInterface.IViewException e) {
+    iview.setLogger(1, "d:/iview.log");
+
+    String iviewLaptopIP = "192.168.188.34";
+    String thisComputerIP = "192.168.188.33";
+
+    iview.connect(iviewLaptopIP, 4444, thisComputerIP, 5555);
+
+    iview.calibrate5Point();
+    updateEyetracker();
+    
+    hasEyetracker = true;
+  } 
+  catch(IViewInterface.IViewException e) {
     print(e);
-  }*/
-  
-  size(1280, 720, P3D);
-  surface.setResizable(true);
+    hasEyetracker = false;
+    
+  }
 
   bgimg = loadImage("Images/RestaurantFloorV3.jpg");
   bggaze = loadImage("Images/RestaurantFloorGaze.jpg");
   endimg = loadImage("Images/endscreen.jpg");
-  
+
   fWaiting = new SoundFile(this, "sound/mono/Alice_waiting.mp3");
   fOrdering = new SoundFile(this, "sound/mono/Alice_ordering.mp3");
   fHungry = new SoundFile(this, "sound/mono/Alice_hungry.mp3");
@@ -62,17 +84,17 @@ void setup()
   fail = new SoundFile(this, "sound/mono/fail.mp3");
   door = new SoundFile(this, "sound/mono/close_door.mp3");
   bgSample = new SoundFile(this, "sound/mono/bg-sample.mp3");
-  
+
   gaze = new Gaze();
   gaze.backgroundImage = bggaze;
-  
+
   fontFood = createFont("AFont.ttf", 20);
-  
+
   //println(currentlyWaitingCustomer); //ist  hier noch leer!!!!
-  
+
   bgSample.loop();
   bgSample.amp(bgVol);
-  
+
   Level.configureLevel(1);
   setupGameplay();
 }
@@ -86,9 +108,34 @@ void setupGameplay() {
   waitTime.startTime();
 }
 
+void updateEyetracker()
+{
+  try {
+    eyetrackingSample = iview.getSample();
+  } 
+  catch(IViewInterface.IViewException e) {
+    //print(e);
+    //hasEyetracker = false;
+  }
+}
+
+int getGazeXRaw()
+{
+  return (int)(eyetrackingSample.leftEye.gazeX * 0.5f + eyetrackingSample.rightEye.gazeX * 0.5f);
+}
+
+int getGazeYRaw()
+{
+  return (int)(eyetrackingSample.leftEye.gazeY * 0.5f + eyetrackingSample.rightEye.gazeY * 0.5f);
+}
+
 //Calls the display functions of the globals, and updates them if necessary
 void draw()
 {
+  if(hasEyetracker) {
+    updateEyetracker();
+  }
+  
   background(0);
 
   pushMatrix(); 
@@ -112,12 +159,23 @@ void draw()
   // Scale mouse coords back to the size the game expects
   mouseScaledX = (mouseX - offsetX) / displayScale;
   mouseScaledY = (mouseY - offsetY) / displayScale;
-
+  
+  if(eyetrackingSample != null)
+  {
+    gazeScaledX = (getGazeXRaw() - offsetX) / displayScale;
+    gazeScaledY = (getGazeYRaw() - offsetY) / displayScale;
+  } 
+  else if(!hasEyetracker())
+  {
+    gazeScaledX = mouseScaledX;
+    gazeScaledY = mouseScaledY;
+  }
+  
   // Scale game-drawing
   scale(displayScale);
-  
+
   drawGame();
-  
+
   popMatrix();
 }
 
@@ -126,11 +184,11 @@ void drawGame() {
 
   if (hasLost()) {
     drawEndscreenLose();
-  } else if(hasWon()) {
+  } else if (hasWon()) {
     drawEndscreenWin();
   } else if (isDoneWithLevel() && Level.getCurrentLevel() < 3) {
     drawEndLevel();
-    if (keyPressed && key == ENTER){
+    if (keyPressed && key == ENTER) {
       handlePotentialLevelSwitch();
     }
   } else {
@@ -149,40 +207,40 @@ boolean hasWon() {
 }
 
 void handlePotentialLevelSwitch() {
-  if(isDoneWithLevel()) {
+  if (isDoneWithLevel()) {
     Level.nextLevel();
     setupGameplay();
   }
 }
 
 boolean isDoneWithLevel() {
-  if(!ling.getCustomerList().isEmpty())
-      return false;
+  if (!ling.getCustomerList().isEmpty())
+    return false;
 
-  if(!pekingWong.hasSpawnedAllCustomersInLevel())
-      return false;
+  if (!pekingWong.hasSpawnedAllCustomersInLevel())
+    return false;
 
-  if(!pekingWong.isWaitListEmpty())
-      return false;
+  if (!pekingWong.isWaitListEmpty())
+    return false;
 
   return true;
 }
 
 void drawRestaurant() {
   ling.frameUpdate();
-  
+
   pekingWong.update();
 
   kitchen.display();
   cvm.display();
-  
+
   checkCurrentlyWaitingCustomer();
 
   if (ling.isMoving)
     ling.moveToStateTarget();
 
   ling.display();
-  
+
   gaze.size = Level.gazeMaskSize;
   gaze.display();
   ling.displayUI();
@@ -211,7 +269,7 @@ void drawEndscreenWin() {
   text("You Win! End of game", 100, 475); // Very temporary, please improve.
 }
 
-void drawEndLevel(){                       
+void drawEndLevel() {                       
   image(bgimg, 1, 1);
   textSize(65);
   textFont(fontFood);
@@ -231,14 +289,14 @@ void checkCurrentlyWaitingCustomer()
       ling.strikes++;
       currentlyWaitingCustomer = null;
     }
-    
-    if (!pekingWong.waitList.isEmpty()){   
+
+    if (!pekingWong.waitList.isEmpty()) {   
       int indexCustomer;
       int tableNum = 1;
       ArrayList<Customer> toRemove = new ArrayList<Customer>();
       for (Customer WaitingCustomer : pekingWong.waitList)
       {
-        if (WaitingCustomer.state == CustomerState.LEFT_RESTAURANT_ANGRY){
+        if (WaitingCustomer.state == CustomerState.LEFT_RESTAURANT_ANGRY) {
           toRemove.add(WaitingCustomer);
         }
         indexCustomer = pekingWong.waitList.indexOf(WaitingCustomer);
