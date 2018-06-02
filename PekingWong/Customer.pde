@@ -14,12 +14,11 @@ public enum CustomerState
   READY_TO_PAY,
 }
 
-public class Customer extends Draggable implements Comparable<Customer>
+public class Customer extends Draggable //implements Comparable<Customer>
 {
   //Instance Variables
   private String name;
   private Table table;
-  private int VIPNum;
   private int mood;
   private CustomerState state;
   int origX;
@@ -40,7 +39,6 @@ public class Customer extends Draggable implements Comparable<Customer>
   {
     super(80, 150);
     name = "BJB";
-    VIPNum = (int) (Math.random() * 10) + 1;
     state = CustomerState.WAITING;
     mood = 10;
     bx = 190;
@@ -50,8 +48,7 @@ public class Customer extends Draggable implements Comparable<Customer>
 
     wait = new Time();
     wait.startTime();
-    //wait time is lower for customers of higher priority (lower VIPNum)
-    wait.setGoal(getVIPNum() * 20);
+    wait.setGoal(100); //wait time
 
     waiting = loadImage("Images/Customers/Customer" + rand + "_stand.png");
     sitting = loadImage("Images/Customers/Customer" + rand + "_idle.png");
@@ -224,19 +221,7 @@ public class Customer extends Draggable implements Comparable<Customer>
     return this.getTable() == c.getTable();
   }
 
-  //compares the VIPNums of two customers
-  public int compareTo(Customer other)
-  {
-    if (this.VIPNum < other.VIPNum) {
-      return -1;
-    } else if (this.VIPNum > other.VIPNum) {
-      return 1;
-    }
-    return 0;
-  }
-
   //Mutators
-
   //sets the table for the customer
   public void setTable(Table t)
   {
@@ -255,12 +240,6 @@ public class Customer extends Draggable implements Comparable<Customer>
   public Table getTable()
   {
     return table;
-  }
-
-  //returns VIP number
-  public int getVIPNum() 
-  {
-    return VIPNum;
   }
 
   //returns mood

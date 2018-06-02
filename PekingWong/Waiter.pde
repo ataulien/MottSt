@@ -137,7 +137,7 @@ public class Waiter
     textSize(20);
     textFont(fontScore);
     text("POINTS: " + points, 5, 75);
-    text("STRIKES: " + strikes + "/5", 5, 125);
+    text("STRIKES: " + strikes, 5, 125);
     popStyle();
   }
 

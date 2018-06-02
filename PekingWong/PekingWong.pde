@@ -191,9 +191,7 @@ void draw()
 void drawGame() {
   image(bgimg, 1, 1);
 
-  if (hasLost()) {
-    drawEndscreenLose();
-  } else if (hasWon()) {
+  if (hasWon()) {
     drawEndscreenWin();
   } else if (isDoneWithLevel() && Level.getCurrentLevel() < 3) {
     drawEndLevel();
@@ -205,10 +203,6 @@ void drawGame() {
     drawRestaurant();
     drawCurrentLevel();
   }
-}
-
-boolean hasLost() {
-  return pekingWong.strikeOut();
 }
 
 boolean hasWon() {
