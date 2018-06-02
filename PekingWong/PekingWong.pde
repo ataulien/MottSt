@@ -165,7 +165,7 @@ void draw()
     gazeScaledX = (getGazeXRaw() - offsetX) / displayScale;
     gazeScaledY = (getGazeYRaw() - offsetY) / displayScale;
   } 
-  else if(!hasEyetracker())
+  else if(!hasEyetracker)
   {
     gazeScaledX = mouseScaledX;
     gazeScaledY = mouseScaledY;
