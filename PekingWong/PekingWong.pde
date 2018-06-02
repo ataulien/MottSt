@@ -43,25 +43,34 @@ void setup()
   //surface.setResizable(true);
   fullScreen(P3D);
   
-  iview = new IViewInterface(sketchPath("") + "Data");
-
   try {
-    iview.setLogger(1, "d:/iview.log");
-
-    String iviewLaptopIP = "192.168.188.34";
-    String thisComputerIP = "192.168.188.33";
-
-    iview.connect(iviewLaptopIP, 4444, thisComputerIP, 5555);
-
-    iview.calibrate5Point();
-    updateEyetracker();
-    
-    hasEyetracker = true;
-  } 
-  catch(IViewInterface.IViewException e) {
-    print(e);
-    hasEyetracker = false;
-    
+    iview = new IViewInterface(sketchPath("") + "Data");
+  
+    try {
+      iview.setLogger(1, "d:/iview.log");
+  
+      String iviewLaptopIP = "192.168.188.34";
+      String thisComputerIP = "192.168.188.33";
+  
+      iview.connect(iviewLaptopIP, 4444, thisComputerIP, 5555);
+  
+      iview.calibrate5Point();
+      updateEyetracker();
+      
+      hasEyetracker = true;
+    } 
+    catch(IViewInterface.IViewException e) {
+      print(e);
+      hasEyetracker = false;
+      
+    }
+  } catch(UnsatisfiedLinkError e)
+  {
+     print("Could not find iViewXAPI.dll, or using 64-bit processing.\n");
+     print("If you are sure the DLL is in place, consider switching to a 32-bit version of processing.\n");
+     print("\n");
+     print("------- Eyetracking will be disabled! -------\n");
+     hasEyetracker = false;
   }
 
   bgimg = loadImage("Images/RestaurantFloorV3.jpg");
