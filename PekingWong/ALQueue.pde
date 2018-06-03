@@ -10,8 +10,6 @@
  * index 0 of ArrayList is front of queue
  ******************************************************/
 
-import java.util.ArrayList;
-
 public class ALQueue<T> implements Queue<T> 
 {
   private ArrayList<T> _queue;

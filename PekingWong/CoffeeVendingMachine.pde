@@ -1,4 +1,3 @@
-
 class CoffeeVendingMachine
 {
   PVector position;

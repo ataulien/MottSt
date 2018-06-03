@@ -1,5 +1,3 @@
-import processing.sound.*;
-
 public class SoundFile
 {
   private boolean enable = true;

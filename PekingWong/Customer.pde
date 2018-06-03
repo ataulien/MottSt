@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public enum CustomerState
 {
   HIDDEN, // Doesn't seem to be set anywhere (was state -1 before)

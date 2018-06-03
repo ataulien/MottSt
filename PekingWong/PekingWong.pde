@@ -1,3 +1,7 @@
+import processing.sound.*; //<>//
+
+import java.util.*;
+
 //Driver //<>//
 
 //Globals
@@ -10,7 +14,7 @@ Time waitTime;
 Time levelStartWait;
 Gaze gaze;
 PImage bgimg;
-PImage[] bggaze;
+PImage bggaze;
 PImage endimg;
 PImage[] lvlIntroImgs;
 
@@ -79,10 +83,7 @@ void setup()
   }
   levelStartWait = new Time();
   bgimg = loadImage("Images/RestaurantFloorV3.jpg");
-  bggaze = new PImage[3];
-  bggaze[0] = loadImage("Images/RestaurantFloorGazeL1.jpg");
-  bggaze[1] = loadImage("Images/RestaurantFloorGazeL2.jpg");
-  bggaze[2] = loadImage("Images/RestaurantFloorGazeL3.jpg");
+  bggaze = loadImage("Images/RestaurantFloorGazeL1.jpg");
   endimg = loadImage("Images/endscreen.jpg");
   lvlIntroImgs = new PImage[3];
   lvlIntroImgs[0] = loadImage("Images/level1.png");
@@ -107,7 +108,7 @@ void setup()
   bgSample = new SoundFile(this, "sound/mono/bg-sample.mp3");
   
   gaze = new Gaze();
-  gaze.backgroundImage = bggaze[0];
+  gaze.backgroundImage = bggaze;
 
   fontFood = createFont("AFont.ttf", 20);
 
@@ -203,9 +204,9 @@ void draw()
 void drawGame() {
   image(bgimg, 1, 1);
 
-    if (hasWon()) {
-      drawEndscreenWin();
-    }
+  if (hasWon()) {
+    drawEndscreenWin();
+  }
   else if(!startedLevel && !levelIntroDone){
     startedLevel = true;
     levelStartWait.startTime();
@@ -238,7 +239,10 @@ boolean hasWon() {
 void handlePotentialLevelSwitch() {
   if (isDoneWithLevel()) {
     Level.nextLevel();
-    gaze.backgroundImage = bggaze[Level.currentLevel - 1];
+    if (Level.currentLevel <= 3) {
+      bggaze = loadImage("Images/RestaurantFloorGazeL" + Level.currentLevel + ".jpg");
+      gaze.backgroundImage = bggaze;
+    }
     setupGameplay();
   }
 }

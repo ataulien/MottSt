@@ -115,15 +115,15 @@ class Time
 
   /*
   //Returns whether or not elapsed time has surpassed an inputted time
-   boolean atInputTime(long input)
-   {
-   return toSeconds(System.nanoTime()-pauseTimeStart) >= input;
-   }
-   
-   //Returns whether or not elapsed time has surpassed a threshold
-   boolean atThreshold()
-   {
-   return getElapsed() >= threshold;
-   }
-   */
+  boolean atInputTime(long input)
+  {
+    return toSeconds(System.nanoTime()-pauseTimeStart) >= input;
+  }
+  
+  //Returns whether or not elapsed time has surpassed a threshold
+  boolean atThreshold()
+  {
+    return getElapsed() >= threshold;
+  }
+  */
 }

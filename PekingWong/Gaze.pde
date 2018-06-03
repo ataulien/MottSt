@@ -12,8 +12,8 @@ class Gaze
   
   public Gaze() {
     gazemask = loadImage("Images/gazemask3.png");
-    layer_gazeMask = createGraphics(1280, 720, P3D);
-    layer_cutObjects = createGraphics(1280, 720, P3D);
+    layer_gazeMask = createGraphics(width, height, P3D);
+    layer_cutObjects = createGraphics(width, height, P3D);
     layer_cutBackground = createGraphics(1280, 720, P3D);
   }
   

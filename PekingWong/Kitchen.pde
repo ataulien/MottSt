@@ -1,5 +1,3 @@
-import java.util.*;
-
 public class Kitchen {
 
   private ArrayDeque < Order > pendingFoodList = new ArrayDeque < Order > ();
@@ -120,13 +118,16 @@ public class Kitchen {
   public ALQueue getFinished() {
     return finishedFoodList;
   }
-
+  
+  /*
+  //NOT USED
   //adds order (e.g. small foods) to the front of pendingFoodList
   public void addFirstToPending(Order order) {
     placeOrder.play();
     placeOrder.amp(speechVol);
     pendingFoodList.addFirst(order);
   }
+  */
 
   //adds order (e.g. large foods) to the end of pendingFoodList
   public void addLastToPending(Order order) {
