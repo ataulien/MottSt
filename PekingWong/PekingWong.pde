@@ -9,7 +9,7 @@ Kitchen kitchen;
 Time waitTime;
 Gaze gaze;
 PImage bgimg;
-PImage bggaze;
+PImage[] bggaze;
 PImage endimg;
 
 //Soundfiles
@@ -74,7 +74,10 @@ void setup()
   }
 
   bgimg = loadImage("Images/RestaurantFloorV3.jpg");
-  bggaze = loadImage("Images/RestaurantFloorGaze.jpg");
+  bggaze = new PImage[3];
+  bggaze[0] = loadImage("Images/RestaurantFloorGazeL1.jpg");
+  bggaze[1] = loadImage("Images/RestaurantFloorGazeL2.jpg");
+  bggaze[2] = loadImage("Images/RestaurantFloorGazeL3.jpg");
   endimg = loadImage("Images/endscreen.jpg");
 
   fWaiting = new SoundFile(this, "sound/mono/Alice_waiting.mp3");
@@ -93,9 +96,9 @@ void setup()
   fail = new SoundFile(this, "sound/mono/fail.mp3");
   door = new SoundFile(this, "sound/mono/close_door.mp3");
   bgSample = new SoundFile(this, "sound/mono/bg-sample.mp3");
-
+  
   gaze = new Gaze();
-  gaze.backgroundImage = bggaze;
+  gaze.backgroundImage = bggaze[0];
 
   fontFood = createFont("AFont.ttf", 20);
 
@@ -140,7 +143,7 @@ int getGazeYRaw()
 
 //Calls the display functions of the globals, and updates them if necessary
 void draw()
-{
+{ 
   if(hasEyetracker) {
     updateEyetracker();
   }
@@ -212,6 +215,7 @@ boolean hasWon() {
 void handlePotentialLevelSwitch() {
   if (isDoneWithLevel()) {
     Level.nextLevel();
+    gaze.backgroundImage = bggaze[Level.currentLevel - 1];
     setupGameplay();
   }
 }

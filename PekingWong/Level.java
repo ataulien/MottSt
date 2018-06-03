@@ -2,16 +2,16 @@ class Level
 {
     public static int numTables = 3;
     public static int numCustomers = 10;
+    public static int currentLevel = 1;
     public static float gazeMaskSize = 1.0f;
     private static boolean isDone = false;
-    private static int currentLevel = 1;
 
     {
         configureLevel(currentLevel);
     }
 
     public static void configureLevel(int num) {
-        switch(num) {
+      switch(num) {
         case 1:
             numTables = 4;
             numCustomers = 20;
@@ -27,13 +27,11 @@ class Level
             numCustomers = 30;
             gazeMaskSize = 0.75f;
             break;
-
         default:
             isDone = true;
             break;
-        }
-
-        currentLevel = num;
+      }
+      currentLevel = num;
     }
 
     public static boolean isDone() {

@@ -4,7 +4,6 @@
  * (Local version, to override built-in Java implementation.)
  ******************************************************/
 
-
 public interface Queue<Quasar> {
 
   //~~~~~~~~~~~~~~~~~~begin AP subset~~~~~~~~~~~~~~~~~~

@@ -43,7 +43,6 @@ class CoffeeVendingMachine
     update();
   }
   
-  
   public void update()
   {
     if(startedDrinking && !startedCoffeeEffect)

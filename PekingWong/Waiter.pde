@@ -334,7 +334,6 @@ public class Waiter
       break;
     }
     
-
     state = WaiterState.IDLE;
   }
 
@@ -456,7 +455,4 @@ public class Waiter
       
     return dishes;
   }
-  
-  
-  
 }
