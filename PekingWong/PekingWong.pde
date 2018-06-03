@@ -7,10 +7,12 @@ Restaurant pekingWong;
 CoffeeVendingMachine cvm;
 Kitchen kitchen;
 Time waitTime;
+Time levelStartWait;
 Gaze gaze;
 PImage bgimg;
 PImage[] bggaze;
 PImage endimg;
+PImage[] lvlIntroImgs;
 
 //Soundfiles
 SoundFile fWaiting, fOrdering, fHungry, fReceipt, mWaiting, mOrdering, mHungry, mReceipt, finishedFood, placeOrder, lOrdered, lDrinking, success, fail, door, bgSample;
@@ -29,12 +31,15 @@ float displayScale = 1.5f;
 float bgVol = 0.2f;
 float speechVol = 0.5f;
 float panL = -1.0f, panM = 0.0f, panR = 1.0f;
+float levelIntroWaitTime = 2;
 
 boolean hasEyetracker = false;
 IViewNative.SampleData eyetrackingSample;
 
 IViewInterface iview;
 
+boolean startedLevel = false;
+boolean levelIntroDone = false;
 //Sets up the screen 
 void setup()
 {
@@ -72,14 +77,18 @@ void setup()
      print("------- Eyetracking will be disabled! -------\n");
      hasEyetracker = false;
   }
-
+  levelStartWait = new Time();
   bgimg = loadImage("Images/RestaurantFloorV3.jpg");
   bggaze = new PImage[3];
   bggaze[0] = loadImage("Images/RestaurantFloorGazeL1.jpg");
   bggaze[1] = loadImage("Images/RestaurantFloorGazeL2.jpg");
   bggaze[2] = loadImage("Images/RestaurantFloorGazeL3.jpg");
   endimg = loadImage("Images/endscreen.jpg");
-
+  lvlIntroImgs = new PImage[3];
+  lvlIntroImgs[0] = loadImage("Images/level1.png");
+  lvlIntroImgs[1] = loadImage("Images/level2.png");
+  lvlIntroImgs[2] = loadImage("Images/level3.png");
+  
   fWaiting = new SoundFile(this, "sound/mono/Alice_waiting.mp3");
   fOrdering = new SoundFile(this, "sound/mono/Alice_ordering.mp3");
   fHungry = new SoundFile(this, "sound/mono/Alice_hungry.mp3");
@@ -194,17 +203,31 @@ void draw()
 void drawGame() {
   image(bgimg, 1, 1);
 
-  if (hasWon()) {
-    drawEndscreenWin();
-  } else if (isDoneWithLevel() && Level.getCurrentLevel() < 3) {
-    drawEndLevel();
-    if (keyPressed && key == ENTER) {
-      handlePotentialLevelSwitch();
+    if (hasWon()) {
+      drawEndscreenWin();
     }
-  } else {
-    handlePotentialLevelSwitch();
-    drawRestaurant();
-    drawCurrentLevel();
+  else if(!startedLevel && !levelIntroDone){
+    startedLevel = true;
+    levelStartWait.startTime();
+  }
+  else if(startedLevel && levelStartWait.getElapsed() < levelIntroWaitTime){
+    drawLevelIntro();
+  } 
+  else if (startedLevel && levelStartWait.getElapsed() >= levelIntroWaitTime && !levelIntroDone) {
+    levelStartWait.endTime();
+    levelIntroDone = true;
+  }
+  else{
+    if (isDoneWithLevel() && Level.getCurrentLevel() < 3) {
+      drawEndLevel();
+      if (keyPressed && key == ENTER) {
+        handlePotentialLevelSwitch();
+      }
+    } else {
+      handlePotentialLevelSwitch();
+      drawRestaurant();
+      drawCurrentLevel();
+    }
   }
 }
 
@@ -282,6 +305,11 @@ void drawEndLevel() {
   textFont(fontFood);
   text("Your Points: " + ling.getNumPoints(), 300, 400);
   text("You have completed the level :) Press Enter to continue", 100, 475);
+}
+
+void drawLevelIntro(){
+  image(bgimg, 1,1);
+  image(lvlIntroImgs[Level.getCurrentLevel() - 1], width/2 - 700,height/2 - 300);
 }
 
 //Checks the status of the current waiting customer
