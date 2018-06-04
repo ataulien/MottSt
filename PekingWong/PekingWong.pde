@@ -219,10 +219,12 @@ void drawGame() {
     levelIntroDone = true;
   }
   else{
-    if (isDoneWithLevel() && Level.getCurrentLevel() < 3) {
+    if (isDoneWithLevel()) {
       drawEndLevel();
       if (keyPressed && key == ENTER) {
         handlePotentialLevelSwitch();
+        startedLevel = false;
+        levelIntroDone = false;
       }
     } else {
       handlePotentialLevelSwitch();
