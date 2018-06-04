@@ -313,9 +313,9 @@ void drawEndLevel() {
 
 void drawLevelIntro(){
   image(bgimg, 1, 1);
-  image(lvlIntroImgs[Level.getCurrentLevel() - 1],
-    displayWidth - (lvlIntroImgs[Level.getCurrentLevel() - 1].width) * displayScale - lvlIntroImgs[Level.getCurrentLevel() - 1].width / 2,
-    displayHeight - (lvlIntroImgs[Level.getCurrentLevel() - 1].height) * displayScale - displayHeight / 2);
+  imageMode(CENTER);
+  image(lvlIntroImgs[Level.getCurrentLevel() - 1], displayWidth/2, displayHeight/2);
+  imageMode(CORNERS);
 }
 
 //Checks the status of the current waiting customer
