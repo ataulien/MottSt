@@ -20,6 +20,7 @@ PImage[] lvlIntroImgs;
 
 //Soundfiles
 SoundFile fWaiting, fOrdering, fHungry, fReceipt, mWaiting, mOrdering, mHungry, mReceipt, finishedFood, placeOrder, lOrdered, lDrinking, success, fail, door, bgSample;
+
 PFont fontFood;
 
 float mouseScaledX = 0;
@@ -27,7 +28,6 @@ float mouseScaledY = 0;
 
 float gazeScaledX = 0;
 float gazeScaledY = 0;
-
 int[] waitPosx = {150, 115, 80, 45, 10}; 
 int waitPosy = 190;
 
@@ -39,15 +39,14 @@ float levelIntroWaitTime = 2;
 
 boolean hasEyetracker = false;
 IViewNative.SampleData eyetrackingSample;
-
 IViewInterface iview;
 
 boolean startedLevel = false;
 boolean levelIntroDone = false;
+
 //Sets up the screen 
 void setup()
 {
-
   //size(1280, 720, P3D);
   //surface.setResizable(true);
   fullScreen(P3D);
@@ -71,10 +70,8 @@ void setup()
     catch(IViewInterface.IViewException e) {
       print(e);
       hasEyetracker = false;
-      
     }
-  } catch(UnsatisfiedLinkError e)
-  {
+  } catch(UnsatisfiedLinkError e) {
      print("Could not find iViewXAPI.dll, or using 64-bit processing.\n");
      print("If you are sure the DLL is in place, consider switching to a 32-bit version of processing.\n");
      print("\n");
@@ -90,22 +87,22 @@ void setup()
   lvlIntroImgs[1] = loadImage("Images/level2.png");
   lvlIntroImgs[2] = loadImage("Images/level3.png");
   
-  fWaiting = new SoundFile(this, "sound/mono/Alice_waiting.mp3");
-  fOrdering = new SoundFile(this, "sound/mono/Alice_ordering.mp3");
-  fHungry = new SoundFile(this, "sound/mono/Alice_hungry.mp3");
-  fReceipt = new SoundFile(this, "sound/mono/Alice_receipt.mp3");
-  mWaiting = new SoundFile(this, "sound/mono/George_waiting.mp3");
-  mOrdering = new SoundFile(this, "sound/mono/George_ordering.mp3");
-  mHungry = new SoundFile(this, "sound/mono/George_hungry.mp3");
-  mReceipt = new SoundFile(this, "sound/mono/George_receipt.mp3");
-  finishedFood = new SoundFile(this, "sound/mono/finished_food.mp3");
-  placeOrder = new SoundFile(this, "sound/mono/place_an_order.mp3");
-  lOrdered = new SoundFile(this, "sound/mono/Ling_ordered.mp3");
-  lDrinking = new SoundFile(this, "sound/mono/Ling_coffee.mp3");
-  success = new SoundFile(this, "sound/mono/success.mp3");
-  fail = new SoundFile(this, "sound/mono/fail.mp3");
-  door = new SoundFile(this, "sound/mono/close_door.mp3");
-  bgSample = new SoundFile(this, "sound/mono/bg-sample.mp3");
+  fWaiting = new SoundFile(this, "sound/Alice_waiting.mp3");
+  fOrdering = new SoundFile(this, "sound/Alice_ordering.mp3");
+  fHungry = new SoundFile(this, "sound/Alice_hungry.mp3");
+  fReceipt = new SoundFile(this, "sound/Alice_receipt.mp3");
+  mWaiting = new SoundFile(this, "sound/George_waiting.mp3");
+  mOrdering = new SoundFile(this, "sound/George_ordering.mp3");
+  mHungry = new SoundFile(this, "sound/George_hungry.mp3");
+  mReceipt = new SoundFile(this, "sound/George_receipt.mp3");
+  finishedFood = new SoundFile(this, "sound/finished_food.mp3");
+  placeOrder = new SoundFile(this, "sound/place_an_order.mp3");
+  lOrdered = new SoundFile(this, "sound/Ling_ordered.mp3");
+  lDrinking = new SoundFile(this, "sound/Ling_coffee.mp3");
+  success = new SoundFile(this, "sound/success.mp3");
+  fail = new SoundFile(this, "sound/fail.mp3");
+  door = new SoundFile(this, "sound/close_door.mp3");
+  bgSample = new SoundFile(this, "sound/bg-sample.mp3");
   
   gaze = new Gaze();
   gaze.backgroundImage = bggaze;
@@ -121,7 +118,8 @@ void setup()
   setupGameplay();
 }
 
-void setupGameplay() {
+void setupGameplay()
+{
   kitchen = new Kitchen();
   cvm = new CoffeeVendingMachine();
   ling = new Waiter(kitchen, cvm);
@@ -154,7 +152,7 @@ int getGazeYRaw()
 //Calls the display functions of the globals, and updates them if necessary
 void draw()
 { 
-  if(hasEyetracker) {
+  if (hasEyetracker) {
     updateEyetracker();
   }
   
@@ -182,13 +180,10 @@ void draw()
   mouseScaledX = (mouseX - offsetX) / displayScale;
   mouseScaledY = (mouseY - offsetY) / displayScale;
   
-  if(eyetrackingSample != null)
-  {
+  if (eyetrackingSample != null) {
     gazeScaledX = (getGazeXRaw() - offsetX) / displayScale;
     gazeScaledY = (getGazeYRaw() - offsetY) / displayScale;
-  } 
-  else if(!hasEyetracker)
-  {
+  }  else if (!hasEyetracker) {
     gazeScaledX = mouseScaledX;
     gazeScaledY = mouseScaledY;
   }
@@ -201,24 +196,24 @@ void draw()
   popMatrix();
 }
 
-void drawGame() {
+void drawGame()
+{
   image(bgimg, 1, 1);
 
   if (hasWon()) {
     drawEndscreenWin();
   }
-  else if(!startedLevel && !levelIntroDone){
+  else if (!startedLevel && !levelIntroDone) {
     startedLevel = true;
     levelStartWait.startTime();
   }
-  else if(startedLevel && levelStartWait.getElapsed() < levelIntroWaitTime){
+  else if (startedLevel && levelStartWait.getElapsed() < levelIntroWaitTime) {
     drawLevelIntro();
   } 
   else if (startedLevel && levelStartWait.getElapsed() >= levelIntroWaitTime && !levelIntroDone) {
     levelStartWait.endTime();
     levelIntroDone = true;
-  }
-  else{
+  } else {
     if (isDoneWithLevel()) {
       drawEndLevel();
       if (keyPressed && key == ENTER) {
@@ -234,11 +229,13 @@ void drawGame() {
   }
 }
 
-boolean hasWon() {
+boolean hasWon()
+{
   return Level.isDone();
 }
 
-void handlePotentialLevelSwitch() {
+void handlePotentialLevelSwitch()
+{
   if (isDoneWithLevel()) {
     Level.nextLevel();
     if (Level.currentLevel <= 3) {
@@ -249,7 +246,8 @@ void handlePotentialLevelSwitch() {
   }
 }
 
-boolean isDoneWithLevel() {
+boolean isDoneWithLevel()
+{
   if (!ling.getCustomerList().isEmpty())
     return false;
 
@@ -262,7 +260,8 @@ boolean isDoneWithLevel() {
   return true;
 }
 
-void drawRestaurant() {
+void drawRestaurant()
+{
   ling.frameUpdate();
 
   pekingWong.update();
@@ -282,7 +281,8 @@ void drawRestaurant() {
   ling.displayUI();
 }
 
-void drawCurrentLevel() {
+void drawCurrentLevel()
+{
   pushStyle();
   fill(255);
   textSize(20);
@@ -291,21 +291,24 @@ void drawCurrentLevel() {
   popStyle();
 }
 
-void drawEndscreenLose() {
+void drawEndscreenLose()
+{
   image(endimg, 1, 1);
   textSize(65);
   textFont(fontFood);
   text("" + ling.getNumPoints(), 500, 475);
 }
 
-void drawEndscreenWin() {
+void drawEndscreenWin()
+{
   image(bgimg, 1, 1);
   textSize(65);
   textFont(fontFood);
   text("You Win! End of game", 100, 475); // Very temporary, please improve.
 }
 
-void drawEndLevel() {                       
+void drawEndLevel()
+{                       
   image(bgimg, 1, 1);
   textSize(65);
   textFont(fontFood);
@@ -313,7 +316,8 @@ void drawEndLevel() {
   text("You have completed the level :) Press Enter to continue", 100, 475);
 }
 
-void drawLevelIntro(){
+void drawLevelIntro()
+{
   image(bgimg, 1, 1);
   image(lvlIntroImgs[Level.getCurrentLevel() - 1], 1, 1);
 }
@@ -321,11 +325,9 @@ void drawLevelIntro(){
 //Checks the status of the current waiting customer
 void checkCurrentlyWaitingCustomer()
 {
-  if (currentlyWaitingCustomer != null) 
-  {
+  if (currentlyWaitingCustomer != null) {
     currentlyWaitingCustomer.display();  
-    if (currentlyWaitingCustomer.state == CustomerState.LEFT_RESTAURANT_ANGRY) 
-    {
+    if (currentlyWaitingCustomer.state == CustomerState.LEFT_RESTAURANT_ANGRY)  {
       ling.points -= 5;
       ling.strikes++;
       currentlyWaitingCustomer = null;
@@ -335,8 +337,7 @@ void checkCurrentlyWaitingCustomer()
       int indexCustomer;
       int tableNum = 1;
       ArrayList<Customer> toRemove = new ArrayList<Customer>();
-      for (Customer WaitingCustomer : pekingWong.waitList)
-      {
+      for (Customer WaitingCustomer : pekingWong.waitList) {
         if (WaitingCustomer.state == CustomerState.LEFT_RESTAURANT_ANGRY) {
           toRemove.add(WaitingCustomer);
         }
@@ -344,12 +345,11 @@ void checkCurrentlyWaitingCustomer()
         WaitingCustomer.setPosition(waitPosx[indexCustomer], waitPosy);
         WaitingCustomer.display();
       }
-      for (Customer CustomerToRemove : toRemove)
-      {
+      for (Customer CustomerToRemove : toRemove) {
         pekingWong.waitList.remove(CustomerToRemove);
-        door.play();
         door.amp(speechVol);
         door.pan(tableNum);
+        door.play();
         ling.points -= 5;
         ling.strikes++;
       }

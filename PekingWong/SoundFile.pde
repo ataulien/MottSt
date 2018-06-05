@@ -3,31 +3,36 @@ public class SoundFile
   private boolean enable = true;
   private processing.sound.SoundFile realFile = null;
 
-  public SoundFile(PApplet parent, String file) {
+  public SoundFile(PApplet parent, String file)
+  {
     if (enable) {
       realFile = new processing.sound.SoundFile(parent, file);
     }
   }
 
-  public void play() {
+  public void play()
+  {
     if (enable) {
       realFile.play();
     }
   }
 
-  public void loop() {
+  public void loop()
+  {
     if (enable) {
       realFile.loop();
     }
   }
 
-  public void amp(float v) {
+  public void amp(float v)
+  {
     if (enable) {
       realFile.amp(v);
     }
   }
 
-  public void pan(int tableNum) {
+  public void pan(int tableNum)
+  {
     if (enable) {
       switch (tableNum) {
         case 1: case 4:

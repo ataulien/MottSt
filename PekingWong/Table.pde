@@ -40,18 +40,21 @@ class Table
     displayOrderIfVisible();
   }
   
-  private void displayTableImage() {
+  private void displayTableImage()
+  {
     image(visual, x, y);
   }
   
-  private void displayTableNummer() {
+  private void displayTableNummer()
+  {
     fill(255);
     textSize(25);
     textFont(fontFood);
-    text("" + tableNum, x +60, y + 40);
+    text("" + tableNum, x + 60, y + 40);
   }
 
-  private void displayOrderIfVisible() {
+  private void displayOrderIfVisible()
+  {
     if (order != null && order.state == OrderState.ON_TABLE_OR_KITCHEN)
     {
       order.display();
@@ -59,9 +62,10 @@ class Table
   }
 
   //Checks if the mouse if over the table
-  boolean isMouseOverTable() {
-    if (mouseScaledX >= x && mouseScaledX <= x+128 && 
-      mouseScaledY >= y && mouseScaledY <= y+100) {
+  boolean isMouseOverTable()
+  {
+    if (mouseScaledX >= x && mouseScaledX <= x + 128 &&
+        mouseScaledY >= y && mouseScaledY <= y + 100) {
       return true;
     } else {
       return false;
@@ -71,10 +75,11 @@ class Table
   //Checks if the inputted X and Y coordinate are within the table (doesn't set min Y boundary
   boolean inside(float currX, float currY)
   {
-    return currX >= x && currX <= x + 128 && currY <= y+120; //&& currY >= y ;
+    return currX >= x && currX <= x + 128 && currY <= y + 120; //&& currY >= y ;
   }
 
   //Mutators
+  
   //Sets the table# of the customer
   public void setTable(int num) 
   {
@@ -96,6 +101,7 @@ class Table
   }
 
   //Accessors
+  
   //returns order placed by table
   public Order getOrder()
   {

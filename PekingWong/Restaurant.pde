@@ -1,6 +1,6 @@
 //class Restaurant
-public class Restaurant {
-
+public class Restaurant
+{
   //instance vars
   private Kitchen kitchen;
   private Time calcSpawn;
@@ -12,8 +12,7 @@ public class Restaurant {
   // overloaded constructor
   public Restaurant(Waiter w) 
   {
-    for (int i = 0; i < 5; i++)
-    {
+    for (int i = 0; i < 5; i++) {
       waitList.add(new Customer());
       numSpawnedCustomers += 1;
     }
@@ -30,18 +29,15 @@ public class Restaurant {
   void display()
   {
     kitchen.display();
-    for (Customer d : serveList)
-    {
-     d.display(); //wofür?
-
+    for (Customer d : serveList) {
+      d.display(); //wofür?
     }
   }
 
   //Checks if another customer should be spawned
   void update()
   {
-    if (shouldSpawn())
-    {
+    if (shouldSpawn()) {
       spawn();
     }
   }
@@ -61,18 +57,19 @@ public class Restaurant {
     if (hasSpawnedAllCustomersInLevel())
       return false;
 
-    if (calcSpawn.getElapsed() > 60/((int)(BJB.getNumPoints()/10)+2) && waitList.size() < 4) // vorher: calcSpawn.getElapsed() > 60/((int)(BJB.getNumPoints()/10)+2)
-    { 
+    if (calcSpawn.getElapsed() > 60 / ((int)(BJB.getNumPoints() / 10) + 2) && waitList.size() < 4) { // vorher: calcSpawn.getElapsed() > 60/((int)(BJB.getNumPoints()/10)+2)
       return true;
     }
     return false;
   }
 
-  boolean hasSpawnedAllCustomersInLevel() {
+  boolean hasSpawnedAllCustomersInLevel()
+  {
     return numSpawnedCustomers >= Level.numCustomers;
   }
 
-  boolean isWaitListEmpty() {
+  boolean isWaitListEmpty()
+  {
     return waitList.isEmpty();
   }
 }

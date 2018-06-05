@@ -31,8 +31,7 @@ public class ALQueue<T> implements Queue<T>
   // means of removing an item from collection 
   public T dequeue() 
   {
-    if (!isEmpty())
-    {
+    if (!isEmpty()) {
       return _queue.remove(0);
     }
     return null;
@@ -42,8 +41,7 @@ public class ALQueue<T> implements Queue<T>
   // means of "peeking" at the front item
   public T peekFront() 
   {
-    if (!isEmpty())
-    {
+    if (!isEmpty()) {
       return _queue.get(0);
     }
     return null;

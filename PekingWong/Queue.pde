@@ -4,8 +4,8 @@
  * (Local version, to override built-in Java implementation.)
  ******************************************************/
 
-public interface Queue<Quasar> {
-
+public interface Queue<Quasar>
+{
   //~~~~~~~~~~~~~~~~~~begin AP subset~~~~~~~~~~~~~~~~~~
   //means of removing an element from collection:
   //Dequeues and returns the first element of the queue.

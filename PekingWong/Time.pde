@@ -2,7 +2,6 @@
 class Time
 {
   //Instance variables
-
   //nanoseconds
   long start;
   long end;
@@ -55,7 +54,7 @@ class Time
   //Ends the pause and resumes time
   void endPause()
   {
-    pauseTime += System.nanoTime()-pauseTimeStart;
+    pauseTime += System.nanoTime() - pauseTimeStart;
     pause = false;
   }
 
@@ -69,15 +68,13 @@ class Time
   long getElapsed()
   {
     elapsed = 0;
-    if (start != 0 && !pause)
-    {
+    if (start != 0 && !pause) {
       endTime();
-      elapsed = toSeconds(end-start-pauseTime);
+      elapsed = toSeconds(end - start - pauseTime);
       //println(elapsed);
-    } else if (pause)
-    {
+    } else if (pause) {
       //println("pause");
-      elapsed = toSeconds(pauseTimeStart-start);
+      elapsed = toSeconds(pauseTimeStart - start);
     }
     return elapsed;
   }
@@ -91,7 +88,7 @@ class Time
   //Returns whether or not an interval of 8 seconds has passed since pause was initiated
   boolean endInterval()
   {
-    return toSeconds(System.nanoTime()-pauseTimeStart) >= 8;
+    return toSeconds(System.nanoTime() - pauseTimeStart) >= 8;
   }
 
   //Converts nanoTime to seconds
@@ -110,7 +107,7 @@ class Time
   void setGoal(long goalTime)
   {
     target = goalTime;
-    //threshold = (goalTime * 7)/10;
+    //threshold = (goalTime * 7) / 10;
   }
 
   /*

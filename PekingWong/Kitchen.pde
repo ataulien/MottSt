@@ -1,5 +1,5 @@
-public class Kitchen {
-
+public class Kitchen
+{
   private ArrayDeque < Order > pendingFoodList = new ArrayDeque < Order > ();
   private ALQueue < Order > finishedFoodList = new ALQueue < Order > ();
   private Order[] stovetops = new Order[3];
@@ -12,13 +12,15 @@ public class Kitchen {
   PImage[] images = new PImage[2];
 
   //default constructor
-  public Kitchen() {
+  public Kitchen()
+  {
     images[0] = loadImage("Images/luckycat1.gif");
     images[1] = loadImage("Images/luckycat2.gif");
   }
 
   //Displays the Kitchen and the current order on the counter
-  void display() {
+  void display()
+  {
     displayKitchenImage();
     updateCurrentlyShownOrder();
     displayCurrentlyShownOrder();
@@ -26,7 +28,8 @@ public class Kitchen {
     makeFood();
   }
 
-  void displayKitchenImage() {
+  void displayKitchenImage()
+  {
     noStroke();
     //fill(0);
     fill(20, 20, 150, 0);
@@ -34,7 +37,8 @@ public class Kitchen {
     image(images[0], x, y);
   }
 
-  void updateCurrentlyShownOrder() {
+  void updateCurrentlyShownOrder()
+  {
     if (!finishedFoodList.isEmpty()) {
       if (currentOrder == null) {
         finishedFood.play();
@@ -44,7 +48,8 @@ public class Kitchen {
     }
   }
 
-  void displayCurrentlyShownOrder() {
+  void displayCurrentlyShownOrder()
+  {
     if (currentOrder != null) {
       if (currentOrder.table.sittingCustomer != null)
         currentOrder.display();
@@ -54,7 +59,8 @@ public class Kitchen {
   }
 
   //Checks if the mouse clicked over the kitchen
-  boolean isMouseOverKitchen() {
+  boolean isMouseOverKitchen()
+  {
     if (mouseScaledX >= x && mouseScaledX <= x + sizeX &&
       mouseScaledY >= y && mouseScaledY <= y + sizeY) {
       return true;
@@ -66,12 +72,14 @@ public class Kitchen {
   //Mechanics
 
   //Checks if there are any openings on the stove
-  public boolean hasStoveSpace() {
+  public boolean hasStoveSpace()
+  {
     return stovetops[0] == null || stovetops[1] == null || stovetops[2] == null;
   }
 
   //Places the food item on the stove to cook :)
-  public void putOnStove(Order o) {
+  public void putOnStove(Order o)
+  {
     if (stovetops[0] == null) {
       stovetops[0] = o;
     } else if (stovetops[1] == null) {
@@ -83,12 +91,14 @@ public class Kitchen {
   }
 
   //removes items in pendingFoodList and cooks them on open stovetops
-  public void makeFood() {
+  public void makeFood()
+  {
     putPendingOrdersOnStoveIfPossible();
     takeOutFinisedOrders();
   }
 
-  private void putPendingOrdersOnStoveIfPossible() {
+  private void putPendingOrdersOnStoveIfPossible()
+  {
     while (!pendingFoodList.isEmpty() && hasStoveSpace()) {
       Order o = pendingFoodList.removeFirst();
 
@@ -96,7 +106,8 @@ public class Kitchen {
     }
   }
 
-  private void takeOutFinisedOrders() {
+  private void takeOutFinisedOrders()
+  {
     for (int i = 0; i < 3; i++) {
       Order ord = stovetops[i];
 
@@ -110,12 +121,14 @@ public class Kitchen {
   }
 
   //returns the pendingFoodList
-  public ArrayDeque getPending() {
+  public ArrayDeque getPending()
+  {
     return pendingFoodList;
   }
 
   //returns the finishedFoodList
-  public ALQueue getFinished() {
+  public ALQueue getFinished()
+  {
     return finishedFoodList;
   }
   
@@ -130,39 +143,46 @@ public class Kitchen {
   */
 
   //adds order (e.g. large foods) to the end of pendingFoodList
-  public void addLastToPending(Order order) {
+  public void addLastToPending(Order order)
+  {
     placeOrder.play();
     placeOrder.amp(speechVol);
     pendingFoodList.addLast(order);
   }
 
   //removes first order from pendingFoodList when it is done
-  public void removeFirstFromPending() {
+  public void removeFirstFromPending()
+  {
     pendingFoodList.removeFirst();
   }
 
   //returns true if pendingFoodList is empty, false otherwise
-  public boolean pendingIsEmpty() {
+  public boolean pendingIsEmpty()
+  {
     return pendingFoodList.isEmpty();
   }
 
   //enqueues order to finishedFoodList when it is done
-  public void enqueueFinished(Order order) {
+  public void enqueueFinished(Order order)
+  {
     finishedFoodList.enqueue(order);
   }
 
   //dequeues first order from finishedFoodList when it is served
-  public Order dequeueFinished() {
+  public Order dequeueFinished()
+  {
     return finishedFoodList.dequeue();
   }
 
   //returns true if finishedFoodList is empty, false otherwise
-  public boolean finishedIsEmpty() {
+  public boolean finishedIsEmpty()
+  {
     return finishedFoodList.isEmpty();
   }
 
   //returns the Stringified version of food lists
-  public String toString() {
+  public String toString()
+  {
     String retStr = "";
     retStr += "pending food: " + pendingFoodList.toString();
     retStr += "\n";

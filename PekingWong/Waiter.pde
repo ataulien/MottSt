@@ -12,11 +12,9 @@ public class Waiter
   //instance vars
   private ArrayList<Customer> customers = new ArrayList<Customer>();
   private ArrayList<Table> tables = new ArrayList<Table>();
-  ;
   private ArrayList<Order> orders = new ArrayList<Order>();
   private Order[] finishedOrders = new Order[2];
   PVector position = new PVector();
-
   private Table currentTable;
 
   Kitchen kitchen;
@@ -34,7 +32,6 @@ public class Waiter
   
   private int strikes;
   private int points;
-  
   
   private int orderNumberTextSize = 16;
   private float orderNumberYOffset = 28f;
@@ -88,48 +85,48 @@ public class Waiter
     drawScoreAndStrikes();
   }
 
-  private void drawTables() {
+  private void drawTables()
+  {
     for (Table t : tables) {
       t.display();
     }
   }
 
-  private void drawCustomers() {
+  private void drawCustomers()
+  {
     for (Customer c : customers) {
       c.display();
     }
   }
 
-  private void drawWaiter() {
+  private void drawWaiter()
+  {
     pushStyle();
     textSize(orderNumberTextSize);
     
-    if(getNumDishes() == 0)
+    if (getNumDishes() == 0)
       image(imageWaiterNoFood, position.x, position.y);
-    else if(getNumDishes() == 1)
-    {
+    else if (getNumDishes() == 1) {
       image(imageWaiterOneFood, position.x, position.y);
       Order finishedOrder;
       
-      if(finishedOrders[0] == null)
+      if (finishedOrders[0] == null)
         finishedOrder = finishedOrders[1];
       else
         finishedOrder = finishedOrders[0];
     
       text(finishedOrder.table.tableNum, position.x + orderNumberXOffsetRight, position.y + orderNumberYOffset);
-    }
-    else
-    {
+    } else {
       image(imageWaiterTwoFood, position.x, position.y);
       
       text(finishedOrders[0].table.tableNum, position.x + orderNumberXOffsetRight, position.y + orderNumberYOffset);
       text(finishedOrders[1].table.tableNum, position.x - orderNumberXOffsetLeft, position.y + orderNumberYOffset);
     }
-    
     popStyle();
   }
 
-  private void drawScoreAndStrikes() {
+  private void drawScoreAndStrikes()
+  {
     pushStyle();
     fill(255);
     textSize(20);
@@ -141,15 +138,12 @@ public class Waiter
 
   void onMouseClicked()
   {
-    if(!cvm.startedDrinking){
-      if (kitchen.isMouseOverKitchen())
-      {
+    if (!cvm.startedDrinking) {
+      if (kitchen.isMouseOverKitchen()) {
         onClickedOnKitchen();
-      } 
-      else if (cvm.isMouseOverCoffeeVendingMachine())
-      {
+      } else if (cvm.isMouseOverCoffeeVendingMachine()) {
         onClickedOnCoffeeVendingMachine();
-      }else {
+      } else {
         for (Table t : tables) {
           if (t.isMouseOverTable()) {
             onClickedOnTable(t);
@@ -160,7 +154,8 @@ public class Waiter
     }
   }
 
-  private void onClickedOnKitchen() {
+  private void onClickedOnKitchen()
+  {
     if (kitchen.currentOrder != null && kitchen.currentOrder.isMouseOverOrder()) {
       state = WaiterState.MOVING_TO_PICK_UP_ORDER;
     } else {
@@ -173,7 +168,8 @@ public class Waiter
     state = WaiterState.MOVING_TO_DRINK_COFFEE;
   }
 
-  private void onClickedOnTable(Table t) {
+  private void onClickedOnTable(Table t)
+  {
     if (t.state != TableState.EMPTY) {
       state = WaiterState.MOVING_TO_TABLE;
       currentTable = t;
@@ -183,11 +179,13 @@ public class Waiter
   /**
    * Called every mainloop-cycle
    */
-  public void frameUpdate() {
+  public void frameUpdate()
+  {
     checkForStrikesAndRemoveCustomers();
   }
 
-  private void checkForStrikesAndRemoveCustomers() {
+  private void checkForStrikesAndRemoveCustomers()
+  {
     ArrayList<Customer> toRemove = new ArrayList<Customer>();
 
     for (Customer c : customers) {
@@ -204,8 +202,8 @@ public class Waiter
       t.sittingCustomer = null;
 
       t.state = TableState.EMPTY;
-      for(int i = 0; i<finishedOrders.length ; i++)
-        if(finishedOrders[i] != null && finishedOrders[i].equals(t.order))
+      for (int i = 0; i<finishedOrders.length ; i++)
+        if (finishedOrders[i] != null && finishedOrders[i].equals(t.order))
           finishedOrders[i] = null;  
 
       t.order = null;
@@ -215,121 +213,118 @@ public class Waiter
   //Moves to the specified coordinates
   void moveToStateTarget()
   {
-    switch(state)
-    {
-    case MOVING_TO_PICK_UP_ORDER:
-      goTo(kitchen.x+250, kitchen.y);
-      break;
-
-    case MOVING_TO_PLACE_ORDER:
-      goTo(kitchen.x-15, kitchen.y);
-      break;
-
-    case MOVING_TO_TABLE:
-      goTo(currentTable.x+105, currentTable.y-15);
-      break;
-      
-    case MOVING_TO_DRINK_COFFEE:
-      goTo((int) cvm.position.x + 30, (int) cvm.position.y + 20);
-      break;
+    switch(state) {
+      case MOVING_TO_PICK_UP_ORDER:
+        goTo(kitchen.x + 250, kitchen.y);
+        break;
+  
+      case MOVING_TO_PLACE_ORDER:
+        goTo(kitchen.x - 15, kitchen.y);
+        break;
+  
+      case MOVING_TO_TABLE:
+        goTo(currentTable.x + 105, currentTable.y - 15);
+        break;
+        
+      case MOVING_TO_DRINK_COFFEE:
+        goTo((int) cvm.position.x + 30, (int) cvm.position.y + 20);
+        break;
     }
 
     delay(10);
   }
 
   //Goes to the target X and Y coordinates by incrementing by 10 each time the function is invoked if the waiter is not yet at those coordinates.
-  void goTo(int targetX, int targetY) {
+  void goTo(int targetX, int targetY)
+  {
     if(!isAtCoffeeVendingMachine){
       moveToXPosition(targetX);
       if(position.x == targetX)
         moveToYPosition(targetY);
-     }
-     else{
+    } else {
       moveToYPosition(targetY);
       if(position.y == targetY)
         moveToXPosition(targetX);
-     }
+    }
       
-      if(position.x == targetX && position.y == targetY){
-        isMoving = false;
-        onReachedTargetPosition();
-      }
+    if (position.x == targetX && position.y == targetY) {
+      isMoving = false;
+      onReachedTargetPosition();
+    }
   }
   
   void moveToXPosition(int targetX)
   {
-  if (position.x < targetX) {
+    if (position.x < targetX) {
       if (position.x + 8 > targetX) {
         position.x = targetX;
         return;
       }
-      position.x+=8;
+      position.x += 8;
     } else if (position.x > targetX) {
-      position.x-=8;
+      position.x -= 8;
     }
   }
   
   void moveToYPosition(int targetY)
   {
-      if (position.y < targetY) {
-        if (position.y + 8 > targetY) {
-          position.y = targetY;
-          return;
-        }
-        position.y+=8;
-      } else if (position.y > targetY) {
-        position.y-=8;
+    if (position.y < targetY) {
+      if (position.y + 8 > targetY) {
+        position.y = targetY;
+        return;
       }
+      position.y += 8;
+    } else if (position.y > targetY) {
+      position.y -= 8;
+    }
   }
 
-  void onReachedTargetPosition() {
+  void onReachedTargetPosition()
+  {
     performAction();
   }
 
   void performAction()
   {
     isAtCoffeeVendingMachine = false;
-    switch(state)
-    {
-    case MOVING_TO_PICK_UP_ORDER:
-      if (kitchen.currentOrder.getTable().sittingCustomer == null)
-      {
-        //println("The customer has already left...");
-        kitchen.currentOrder.getTable().order = null;
-        kitchen.currentOrder = null;
-        return;
-      }
-      if (finishedOrders[0] == null) {
-        finishedOrders[0] = kitchen.currentOrder;
-        kitchen.currentOrder = null;
-      } 
-      if (finishedOrders[1] == null) {
-        finishedOrders[1] = kitchen.currentOrder;
-        kitchen.currentOrder = null;
-      }
-      break;
-
-    case MOVING_TO_PLACE_ORDER:
-      if (orders.size() > 0)
-      {
-        for(Order o : orders) {
-          kitchen.addLastToPending(o);
+    switch(state) {
+      case MOVING_TO_PICK_UP_ORDER:
+        if (kitchen.currentOrder.getTable().sittingCustomer == null)
+        {
+          //println("The customer has already left...");
+          kitchen.currentOrder.getTable().order = null;
+          kitchen.currentOrder = null;
+          return;
         }
+        if (finishedOrders[0] == null) {
+          finishedOrders[0] = kitchen.currentOrder;
+          kitchen.currentOrder = null;
+        } 
+        if (finishedOrders[1] == null) {
+          finishedOrders[1] = kitchen.currentOrder;
+          kitchen.currentOrder = null;
+        }
+        break;
+  
+      case MOVING_TO_PLACE_ORDER:
+        if (orders.size() > 0) {
+          for(Order o : orders) {
+            kitchen.addLastToPending(o);
+          }
+          
+          orders.clear();
+        }
+        break;
+  
+      case MOVING_TO_TABLE:
+        performActionOnTable(currentTable);
+        break;
         
-        orders.clear();
-      }
-      break;
-
-    case MOVING_TO_TABLE:
-      performActionOnTable(currentTable);
-      break;
-      
-      
-    case MOVING_TO_DRINK_COFFEE:
-      isAtCoffeeVendingMachine = true;
-      cvm.drinkCoffee();
-      points -= coffeeEffectUsageCost;
-      break;
+      case MOVING_TO_DRINK_COFFEE:
+        isAtCoffeeVendingMachine = true;
+        cvm.drinkCoffee();
+        points -= coffeeEffectUsageCost;
+        break;
     }
     
     state = WaiterState.IDLE;
@@ -340,60 +335,54 @@ public class Waiter
    */
   void performActionOnTable(Table t)
   {    
-    switch(t.state)
-    {
-    case CUSTOMER_READING_MENU_OR_READY_TO_ORDER:
-      if (!t.sittingCustomer.wait.pause) {
-        //println("took order of table " + t.tableNum);
-        orders.add(t.getOrder());
-        t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
-        t.sittingCustomer.state = CustomerState.SITTING_ON_TABLE;
-      }
-      break;
-
-    case CUSTOMER_WAITING_FOR_FOOD_OR_EATING:
-      if (finishedOrders[0] != null)
-      {
-        if (finishedOrders[0].getTable().tableNum == t.tableNum)
-        {
-          //println("served order of table " + t.tableNum);
-          finishedOrders[0] = null;
-          t.order.state = OrderState.ON_TABLE_OR_KITCHEN;
+    switch(t.state) {
+      case CUSTOMER_READING_MENU_OR_READY_TO_ORDER:
+        if (!t.sittingCustomer.wait.pause) {
+          //println("took order of table " + t.tableNum);
+          orders.add(t.getOrder());
           t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
-          t.sittingCustomer.wait.pauseTime();
+          t.sittingCustomer.state = CustomerState.SITTING_ON_TABLE;
         }
-      }
-      if (finishedOrders[1] != null)
-      {
-        if (finishedOrders[1].getTable().tableNum == t.tableNum)
-        {
-          //println("served order of table " + t.tableNum);
-          finishedOrders[1] = null;
-          t.order.state = OrderState.ON_TABLE_OR_KITCHEN;
-          t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
-          t.sittingCustomer.wait.pauseTime();
+        break;
+  
+      case CUSTOMER_WAITING_FOR_FOOD_OR_EATING:
+        if (finishedOrders[0] != null) {
+          if (finishedOrders[0].getTable().tableNum == t.tableNum) {
+            //println("served order of table " + t.tableNum);
+            finishedOrders[0] = null;
+            t.order.state = OrderState.ON_TABLE_OR_KITCHEN;
+            t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
+            t.sittingCustomer.wait.pauseTime();
+          }
         }
-      }
-      break;
-
-    case CUSTOMER_READY_TO_PAY:
-      if (!t.sittingCustomer.wait.pause)
-      {
-        //println("finished serving table " + t.tableNum);
-        removeCustomer(t.sittingCustomer);
-        success.play();
-        success.amp(speechVol);
-        success.pan(t.tableNum);
-        t.sittingCustomer = null;
-        t.order = null;
-        t.state = TableState.EMPTY;
-      }
-      break;
+        if (finishedOrders[1] != null) {
+          if (finishedOrders[1].getTable().tableNum == t.tableNum) {
+            //println("served order of table " + t.tableNum);
+            finishedOrders[1] = null;
+            t.order.state = OrderState.ON_TABLE_OR_KITCHEN;
+            t.state = TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING;
+            t.sittingCustomer.wait.pauseTime();
+          }
+        }
+        break;
+  
+      case CUSTOMER_READY_TO_PAY:
+        if (!t.sittingCustomer.wait.pause) {
+          //println("finished serving table " + t.tableNum);
+          removeCustomer(t.sittingCustomer);
+          success.play();
+          success.amp(speechVol);
+          success.pan(t.tableNum);
+          t.sittingCustomer = null;
+          t.order = null;
+          t.state = TableState.EMPTY;
+        }
+        break;
     }
   }
 
   //Mutators
-
+  
   //adds a customer to the customers ArrayList
   public void addCustomer(Customer c) 
   {
@@ -405,8 +394,7 @@ public class Waiter
   public void removeCustomer(Customer c) 
   {
     if (c.state == CustomerState.LEFT_RESTAURANT_ANGRY) {
-    } else
-    {
+    } else {
       //The points increase the higher the VIP number of the customer
       points += customerPoints;
     }
@@ -414,13 +402,14 @@ public class Waiter
     customers.remove(c);
   }
 
-  private int calculatePointsFromCustomer(Customer c) {
+  private int calculatePointsFromCustomer(Customer c)
+  {
     // Smaller VIP-num, less bonus?
-    
     return customerPoints;
   }
 
   // Accessors
+  
   public ArrayList<Customer> getCustomerList()
   {
     return customers;

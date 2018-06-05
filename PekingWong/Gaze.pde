@@ -10,15 +10,16 @@ class Gaze
   public float brightness = 0.10f;
   public PImage backgroundImage = null;
   
-  public Gaze() {
+  public Gaze()
+  {
     gazemask = loadImage("Images/gazemask3.png");
     layer_gazeMask = createGraphics(width, height, P3D);
     layer_cutObjects = createGraphics(width, height, P3D);
     layer_cutBackground = createGraphics(1280, 720, P3D);
   }
   
-  public void display() {
-    
+  public void display()
+  {
     removeGameObjects();
     
     layer_gazeMask.beginDraw();
@@ -34,8 +35,9 @@ class Gaze
     blendMode(BLEND);
   }
   
-  public void removeGameObjects() {
-    if(backgroundImage == null) {
+  public void removeGameObjects()
+  {
+    if (backgroundImage == null) {
       return;
     }
     
@@ -63,7 +65,8 @@ class Gaze
     blendMode(BLEND);
   }
   
-  private void drawGazeSpotOntoLayer(PGraphics layer) {
+  private void drawGazeSpotOntoLayer(PGraphics layer)
+  {
     layer.pushMatrix();
     layer.scale(size);
     

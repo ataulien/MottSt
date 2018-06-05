@@ -47,8 +47,7 @@ public class Order
   //Displays the order if the state is 1 (on table or on kitchen), otherwise no
   void display()
   {
-    if (state == OrderState.ON_TABLE_OR_KITCHEN)
-    {
+    if (state == OrderState.ON_TABLE_OR_KITCHEN) {
       image(image, table.x+30, table.y-10);
       return;
     } else {
@@ -59,7 +58,8 @@ public class Order
   }
 
   //Checks if the mouse if over the order
-  boolean isMouseOverOrder() {
+  boolean isMouseOverOrder()
+  {
     if (mouseScaledX >= 750 && mouseScaledX <= 800 && 
       mouseScaledY >= 180 && mouseScaledY <= 230) {
       println("over");

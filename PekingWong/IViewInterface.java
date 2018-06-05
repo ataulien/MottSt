@@ -6,7 +6,8 @@ class IViewInterface
   private Native dllMisc1;
   private Native dllMisc2;
 
-  public class IViewException extends Exception {
+  public class IViewException extends Exception
+  {
     public IViewException(String msg) {
       super(msg);
     }
@@ -14,15 +15,17 @@ class IViewInterface
 
   /* ---------------- */
 
-  public IViewInterface(String dllSearchPath) {
-      dll = (IViewNative)Native.loadLibrary(dllSearchPath + "\\iViewXAPI.dll", IViewNative.class);
-      
-      // Must load these two DLLs as well, otherwise we get errorcode 401 (func not loaded) from all function calls to iview
-      Native.loadLibrary(dllSearchPath + "\\iViewXAPIL.dll", IViewNative.class);
-      Native.loadLibrary(dllSearchPath + "\\iViewXAPIR.dll", IViewNative.class);
+  public IViewInterface(String dllSearchPath)
+  {
+    dll = (IViewNative)Native.loadLibrary(dllSearchPath + "\\iViewXAPI.dll", IViewNative.class);
+    
+    // Must load these two DLLs as well, otherwise we get errorcode 401 (func not loaded) from all function calls to iview
+    Native.loadLibrary(dllSearchPath + "\\iViewXAPIL.dll", IViewNative.class);
+    Native.loadLibrary(dllSearchPath + "\\iViewXAPIR.dll", IViewNative.class);
   }
 
-  public void connect(String sendIP, int sendPort, String receiveIP, int receivePort) throws IViewException {
+  public void connect(String sendIP, int sendPort, String receiveIP, int receivePort) throws IViewException
+  {
     int result = dll.iV_Connect(sendIP, sendPort, receiveIP, receivePort);
 
     throwOnErrorCode(result);
@@ -35,7 +38,7 @@ class IViewInterface
     throwOnErrorCode(result);
   }
   
-    public void calibrate() throws IViewException
+  public void calibrate() throws IViewException
   {
     int result = dll.iV_Calibrate();
     
@@ -67,14 +70,15 @@ class IViewInterface
     throwOnErrorCode(result);
   }
 
-  public void disconnect() throws IViewException {
+  public void disconnect() throws IViewException
+  {
     int result = dll.iV_Disconnect();
 
     throwOnErrorCode(result);
   }
 
-  public IViewNative.SampleData getSample() throws IViewException {
-
+  public IViewNative.SampleData getSample() throws IViewException
+  {
     final IViewNative.SampleData sampleData = new IViewNative.SampleData();
 
     int result = dll.iV_GetSample(sampleData); 

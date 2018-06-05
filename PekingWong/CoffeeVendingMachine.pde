@@ -44,17 +44,13 @@ class CoffeeVendingMachine
   
   public void update()
   {
-    if(startedDrinking && !startedCoffeeEffect)
-    {
-      if(drinkWait.getElapsed() <= drinkTime)
-      {
+    if (startedDrinking && !startedCoffeeEffect) {
+      if (drinkWait.getElapsed() <= drinkTime) {
         pushMatrix();
         scale(.2f);
         image(progressBarImages[(int) drinkWait.getElapsed()], position.x * 5, position.y * 5);
         popMatrix();
-      }
-      else if(drinkWait.getElapsed() > drinkTime)
-      {
+      } else if (drinkWait.getElapsed() > drinkTime) {
         startedDrinking = false;
         drinkWait.endTime();
 
@@ -64,11 +60,8 @@ class CoffeeVendingMachine
         lDrinking.play();
         lDrinking.amp(speechVol);
       }
-    }
-    else if(!startedDrinking && startedCoffeeEffect)
-    {
-      if(effectWait.getElapsed() > effectTime)
-      {
+    } else if (!startedDrinking && startedCoffeeEffect) {
+      if (effectWait.getElapsed() > effectTime) {
         effectWait.endTime();
         startedCoffeeEffect = false;
         Level.gazeMaskSize = oldGazeMaskSize;
@@ -78,8 +71,7 @@ class CoffeeVendingMachine
   
   public void drinkCoffee()
   {
-    if(!startedDrinking && !startedCoffeeEffect)
-    {
+    if (!startedDrinking && !startedCoffeeEffect) {
       drinkWait.startTime();
       startedDrinking = true;
       oldGazeMaskSize = Level.gazeMaskSize;
@@ -89,7 +81,7 @@ class CoffeeVendingMachine
   boolean isMouseOverCoffeeVendingMachine()
   {
     if (mouseScaledX >= position.x && mouseScaledX <= position.x + size.x &&
-      mouseScaledY >= position.y && mouseScaledY <= position.y + size.y) {
+        mouseScaledY >= position.y && mouseScaledY <= position.y + size.y) {
       return true;
     } else {
       return false;

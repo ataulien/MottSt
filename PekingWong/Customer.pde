@@ -28,9 +28,8 @@ public class Customer extends Draggable //implements Comparable<Customer>
   int rand = (int) random(1,5);
   int tableNum = 1;
   Time wait;
-  PFont fontFood = createFont("AFont.ttf", 20);
-  
   SoundFile gWaiting, gOrdering, gHungry, gReceipt;
+  PFont fontFood = createFont("AFont.ttf", 20);
 
   //Constructor: populates order with random dishes
   public Customer()
@@ -61,6 +60,7 @@ public class Customer extends Draggable //implements Comparable<Customer>
     smiley5 = loadImage("Images/Smiley/smil5.png");
     smiley6 = loadImage("Images/Smiley/smil6.png");
     
+    //Sounds male/female
     if (rand == 2 || rand == 3) {
       gWaiting = fWaiting;
       gOrdering = fOrdering;
@@ -100,17 +100,17 @@ public class Customer extends Draggable //implements Comparable<Customer>
       by = table.y-50;
       image(sitting, bx, by);
     }
-    if(state == CustomerState.READY_TO_PAY){
+    if(state == CustomerState.READY_TO_PAY) {
       bx = table.x - 50;
       by = table.y - 50;
       image(paying, bx, by);
     }
-    if(state == CustomerState.READY_TO_ORDER){
+    if(state == CustomerState.READY_TO_ORDER) {
       bx = table.x - 50;
       by = table.y - 50;
       image(attention, bx, by);
     }
-    if(state == CustomerState.READING_MENU){
+    if(state == CustomerState.READING_MENU) {
       bx = table.x - 50;
       by = table.y - 50;
       image(reading, bx, by);
@@ -119,7 +119,9 @@ public class Customer extends Draggable //implements Comparable<Customer>
       image(waiting, waitx, waity);
       displayMood(waitx,waity);
     } 
-    if (state == CustomerState.STANDING_ON_SIDE || state == CustomerState.STANDING_ON_SIDE_ANGRY || state == CustomerState.SITTING_ON_TABLE || state == CustomerState.SITTING_ON_TABLE_HUNGRY || state == CustomerState.READY_TO_PAY || state == CustomerState.READING_MENU || state == CustomerState.READY_TO_ORDER) {
+    if (state == CustomerState.STANDING_ON_SIDE || state == CustomerState.STANDING_ON_SIDE_ANGRY ||
+        state == CustomerState.SITTING_ON_TABLE || state == CustomerState.SITTING_ON_TABLE_HUNGRY ||
+        state == CustomerState.READY_TO_PAY || state == CustomerState.READING_MENU || state == CustomerState.READY_TO_ORDER) {
       displayMood(bx,by);
   }
 }
@@ -127,24 +129,19 @@ public class Customer extends Draggable //implements Comparable<Customer>
   //Checks if the customer has been waiting a certain amount of time. 
   void update()
   {
-    if (wait != null && state != CustomerState.HIDDEN)
-    {
-      mood = 10 - (int)(((float)wait.getElapsed()/wait.target) * 10);
-      if (mood <= 0)
-      {
+    if (wait != null && state != CustomerState.HIDDEN) {
+      mood = 10 - (int)(((float)wait.getElapsed() / wait.target) * 10);
+      if (mood <= 0) {
         state = CustomerState.LEFT_RESTAURANT_ANGRY;
         fail.play();
         fail.amp(speechVol);
         fail.pan(tableNum);
       }
-      if (wait.pause)
-      {
-        if (!wait.endInterval() && table.state == TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER)
-        {
+      if (wait.pause) {
+        if (!wait.endInterval() && table.state == TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER) {
           state = CustomerState.READING_MENU;
         }
-        if (wait.endInterval() && table.state == TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER)
-        {
+        if (wait.endInterval() && table.state == TableState.CUSTOMER_READING_MENU_OR_READY_TO_ORDER) {
           wait.endPause();
           state = CustomerState.READY_TO_ORDER;
           //println("Table " + table.tableNum + " is ready to order.");
@@ -152,8 +149,7 @@ public class Customer extends Draggable //implements Comparable<Customer>
           gOrdering.amp(speechVol);
           gOrdering.pan(table.tableNum);
         } else {
-          if (wait.endInterval() && table.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING)
-          {
+          if (wait.endInterval() && table.state == TableState.CUSTOMER_WAITING_FOR_FOOD_OR_EATING) {
             //println("Table " + table.tableNum + " finished eating.");
             wait.endPause();
             table.order.state = OrderState.HIDDEN;
@@ -171,46 +167,49 @@ public class Customer extends Draggable //implements Comparable<Customer>
   //If the customer not on a table, return to original x and y coordinates
   void checkState()
   {
-    if (state == CustomerState.STANDING_ON_SIDE || state == CustomerState.STANDING_ON_SIDE_ANGRY)
-    {
-      if (locked) 
-      {
+    if (state == CustomerState.STANDING_ON_SIDE || state == CustomerState.STANDING_ON_SIDE_ANGRY) {
+      if (locked) {
         bx = mouseScaledX-xOffset; 
         by = mouseScaledY-yOffset;
-      } else
-      {
+      } else {
         bx = origX; 
         by = origY;
       }
     }
   }
   
-  void displayMood(float posx, float posy){
-  
-    if(mood == 10){ 
-      image(smiley1, posx+30, posy-25); }
-    if(mood == 9 || mood == 8){ 
-      image(smiley2, posx+30, posy-25); }
-    if(mood == 7 || mood == 6){ 
-      image(smiley3, posx+30, posy-25); }
-    if(mood == 5 || mood == 4){ 
+  void displayMood(float posx, float posy)
+  {
+    if (mood == 10) { 
+      image(smiley1, posx + 30, posy - 25);
+    }
+    if (mood == 9 || mood == 8) { 
+      image(smiley2, posx + 30, posy - 25);
+    }
+    if (mood == 7 || mood == 6) { 
+      image(smiley3, posx + 30, posy - 25);
+    }
+    if (mood == 5 || mood == 4) { 
       if (state == CustomerState.SITTING_ON_TABLE) {
         gHungry.play();
         gHungry.amp(speechVol);
         gHungry.pan(table.tableNum);
         state = CustomerState.SITTING_ON_TABLE_HUNGRY;
       } 
-      image(smiley4, posx+30, posy-25); }
-    if(mood == 3 || mood == 2){
+      image(smiley4, posx + 30, posy - 25);
+    }
+    if (mood == 3 || mood == 2) {
       if (state == CustomerState.STANDING_ON_SIDE) {
         gWaiting.play();
         gWaiting.amp(speechVol);
         gWaiting.pan(tableNum);
         state = CustomerState.STANDING_ON_SIDE_ANGRY;
       }
-      image(smiley5, posx+30, posy-25); }
-    if(mood == 1){ 
-      image(smiley6, posx+30, posy-25); } 
+      image(smiley5, posx + 30, posy - 25);
+    }
+    if (mood == 1) { 
+      image(smiley6, posx + 30, posy - 25);
+    } 
   }
 
   //two customers are equal if they are sitting at the same table
@@ -220,6 +219,7 @@ public class Customer extends Draggable //implements Comparable<Customer>
   }
 
   //Mutators
+  
   //sets the table for the customer
   public void setTable(Table t)
   {

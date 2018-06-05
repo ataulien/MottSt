@@ -6,9 +6,9 @@ import com.sun.jna.Structure;
 import java.util.List;
 import java.util.Arrays;
 
-interface IViewNative extends Library {
-
-  public static final int RET_SUCCESS = 1;                             // Intended functionality has been fulfilled
+interface IViewNative extends Library
+{
+  public static final int RET_SUCCESS = 1;  // Intended functionality has been fulfilled
 
   // RET_SUCCESS                                                 1
   // RET_NO_VALID_DATA                                           2
@@ -64,11 +64,14 @@ interface IViewNative extends Library {
   // ERR_INITIALIZATION                                          400
   // ERR_FUNC_NOT_LOADED                                         401
 
-  public static class EyeData extends Structure {
-    public static class ByReference extends EyeData implements Structure.ByReference {
+  public static class EyeData extends Structure
+  {
+    public static class ByReference extends EyeData implements Structure.ByReference
+    {
     }
 
-    protected List<String> getFieldOrder() {
+    protected List<String> getFieldOrder()
+    {
       return Arrays.asList(new String[] { 
         "gazeX", 
         "gazeY", 
@@ -87,11 +90,14 @@ interface IViewNative extends Library {
     public double eyePositionZ;
   }
   
-  public static class CalibrationStruct extends Structure {
-    public static class ByReference extends EyeData implements Structure.ByReference {
+  public static class CalibrationStruct extends Structure
+  {
+    public static class ByReference extends EyeData implements Structure.ByReference
+    {
     }
 
-    protected List<String> getFieldOrder() {
+    protected List<String> getFieldOrder()
+    {
       return Arrays.asList(new String[] { 
         "method", 
         "visualization", 
@@ -106,24 +112,26 @@ interface IViewNative extends Library {
         });
     }
 
-      public int method;                
-      public int visualization;          
-      public int displayDevice;        
-      public int speed;              
-      public int autoAccept;              
-      public int foregroundColor;              
-      public int backgroundColor;              
-      public int targetShape;                
-      public int targetSize;                
-      public String targetFilename;
+    public int method;                
+    public int visualization;          
+    public int displayDevice;        
+    public int speed;              
+    public int autoAccept;              
+    public int foregroundColor;              
+    public int backgroundColor;              
+    public int targetShape;                
+    public int targetSize;                
+    public String targetFilename;
   }
   
-  public static class SampleData extends Structure {
-    public static class ByReference extends SampleData implements Structure.ByReference {
+  public static class SampleData extends Structure
+  {
+    public static class ByReference extends SampleData implements Structure.ByReference
+    {
     }
 
-
-    protected List<String> getFieldOrder() {
+    protected List<String> getFieldOrder()
+    {
       return Arrays.asList(new String[] { 
         "timestamp", 
         "leftEye", 
