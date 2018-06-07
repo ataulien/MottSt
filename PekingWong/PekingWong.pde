@@ -55,10 +55,10 @@ void setup()
     iview = new IViewInterface(sketchPath("") + "Data");
   
     try {
-      iview.setLogger(1, "d:/iview.log");
+      //iview.setLogger(1, "d:/iview.log");
   
       String iviewLaptopIP = "192.168.188.34";
-      String thisComputerIP = "192.168.188.33";
+      String thisComputerIP = "192.168.188.39";
   
       iview.connect(iviewLaptopIP, 4444, thisComputerIP, 5555);
   
