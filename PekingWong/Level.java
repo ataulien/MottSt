@@ -15,17 +15,17 @@ class Level
     switch(num) {
       case 1:
         numTables = 4;
-        numCustomers = 20;
+        numCustomers = 10;
         gazeMaskSize = 1.0f;
         break;
       case 2:
         numTables = 5;
-        numCustomers = 25;
+        numCustomers = 15;
         gazeMaskSize = 1.0f;
         break;
       case 3:
         numTables = 6;
-        numCustomers = 30;
+        numCustomers = 20;
         gazeMaskSize = 0.75f;
         break;
       default:
