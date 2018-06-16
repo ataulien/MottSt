@@ -146,7 +146,7 @@ public class Kitchen
   public void addLastToPending(Order order)
   {
     placeOrder.play();
-    placeOrder.amp(speechVol);
+    placeOrder.amp(speechVol * 0.4f);
     pendingFoodList.addLast(order);
   }
 
